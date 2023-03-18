@@ -1,6 +1,9 @@
 <script lang="ts">
 	import '../reset.css';
 	import { bg } from '@img';
+	import { dev } from '$app/environment';
+	import { inject } from '@vercel/analytics';
+	inject({ mode: dev ? 'development' : 'production' });
 </script>
 
 <img src={bg} alt="" />

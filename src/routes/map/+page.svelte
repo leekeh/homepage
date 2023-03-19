@@ -23,10 +23,6 @@
 	let showModal = false;
 </script>
 
-<svelte:head>
-	<link rel="stylesheet" href="node_modules/ol/ol.css" />
-</svelte:head>
-
 <div id="map" class="map" draggable="false" />
 
 <menu>

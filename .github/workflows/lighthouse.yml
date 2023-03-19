@@ -1,0 +1,15 @@
+name: Latest Lighthouse statistics
+run-name: Lighthouse runner
+on: [deployment]
+jobs:
+  lighthouse:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
+      - run: npm ci
+      - run: npm install -g lighthouse
+      - run: lighthouse https://www.leekeh.com/ --output-json
+

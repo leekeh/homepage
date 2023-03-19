@@ -9,8 +9,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 18
-          cache: 'npm'
       - run: npm ci
       - run: npm install -g lighthouse
+      - run: chrome-debug --no-sandbox
       - run: lighthouse https://www.leekeh.com/ --output-json
 

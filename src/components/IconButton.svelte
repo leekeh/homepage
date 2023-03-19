@@ -14,6 +14,7 @@
 		border-radius: 100%;
 		padding: 8px;
 		position: relative;
+		-webkit-tap-highlight-color: transparent;
 	}
 
 	a:hover,

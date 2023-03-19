@@ -6,6 +6,10 @@
 	inject({ mode: dev ? 'development' : 'production' });
 </script>
 
+<svelte:head>
+	<meta name="theme-color" content="#19483a" />
+</svelte:head>
+
 <Background />
 
 <slot />

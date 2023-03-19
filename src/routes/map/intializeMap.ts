@@ -7,7 +7,8 @@ export const initializeMap = () => {
 	const map = new Map({
 		layers: [
 			new TileLayer({
-				source: new OSM()
+				source: new OSM({ transition: 0 }),
+				preload: 5
 			})
 		],
 		controls: [],

@@ -1,4 +1,4 @@
 import portrait from './portrait.jpeg';
-import bg from './bg.jpg';
+import Background from './bg/Background.svelte';
 
-export { portrait, bg };
+export { portrait, Background };

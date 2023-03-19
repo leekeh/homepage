@@ -21,6 +21,10 @@
 		font-family: 'Source Serif Pro', serif;
 	}
 
+	:global(a) {
+		color: var(--accent);
+	}
+
 	/* CSS Variables */
 	:root {
 		--bg-primary: #ececec;

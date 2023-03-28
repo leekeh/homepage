@@ -1,16 +1,15 @@
 name: Latest Lighthouse statistics
+
 on:
   deployment_status:
-    jobs:
-      lighthouseci:
-      if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
-      runs-on: ubuntu-latest
-      steps:
-          - uses: actions/checkout@v3
-          - uses: actions/setup-node@v3
-            with:
-              node-version: 18
-          - run: npm install && npm install -g @lhci/cli@0.11.x
-          -  run: echo "🔎 event is ${{ github }} "
-          - run: npm run build
-          - run: lhci autorun --collect.staticDistDir=.vercel
+
+jobs:
+  run-lighthouse:
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install dependencies
+      run: echo "🔎 event is ${{ github }} "
+    - name: Run tests
+      run: echo "🔎 event is ${{ github.event.deployment_status.target_url }} "

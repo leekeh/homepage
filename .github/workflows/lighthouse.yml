@@ -3,13 +3,13 @@ name: Post deployment statistics
 on:
   deployment_status:
 
-    jobs:
-      run-lighthouse:
-        if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
-        runs-on: ubuntu-latest
-        steps:
-        - uses: actions/setup-node@v3
-        - name: Install dependencies
-          run: npm ci lighthouse
-        - name: Run lighthouse
-          run: lighthouse ${{ github.event.deployment_status.target_url }} --output=json 
+jobs:
+  run-lighthouse:
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/setup-node@v3
+    - name: Install dependencies
+      run: npm ci lighthouse
+    - name: Run lighthouse
+      run: lighthouse ${{ github.event.deployment_status.target_url }} --output=json 

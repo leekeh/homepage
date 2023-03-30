@@ -14,3 +14,6 @@ jobs:
         with:
           urls: ${{ github.event.deployment_status.target_url }}
           temporaryPublicStorage: true
+      - env:
++       LHCI_GITHUB_TOKEN: ${{ secrets.LHCI_GITHUB_TOKEN }}
+        

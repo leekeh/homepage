@@ -4,23 +4,13 @@ on:
   deployment_status:
 
 jobs:
-  run-lighthouse:
-    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+  lighthouse:
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/setup-node@v3
-    - uses: actions/checkout@v3
-    - name: Setup node env
-      run: npm ci
-    - name: Install dependencies
-      run: npm ci lighthouse
-    - name: Run lighthouse
-      run: npx lighthouse ${{ github.event.deployment_status.target_url }} --chrome-flags="--headless" --output=json 
-    - name: Post results
-      run: mkdir -p path/to/artifact
-    - name: Post results
-      run: echo hello > path/to/artifact/world.txt
-    - uses: actions/upload-artifact@v3
-      with:
-        name: my-artifact
-        path: path/to/artifact/world.txt
+      - uses: actions/checkout@v3
+      - name: Run Lighthouse on urls and validate with lighthouserc
+        uses: treosh/lighthouse-ci-action@v9
+        with:
+          urls: ${{ github.event.deployment_status.target_url }}
+          configPath: './lighthouserc.json'

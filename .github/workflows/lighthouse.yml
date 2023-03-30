@@ -16,3 +16,10 @@ jobs:
       run: npm ci lighthouse
     - name: Run lighthouse
       run: npx lighthouse ${{ github.event.deployment_status.target_url }} --chrome-flags="--headless" --output=json 
+    - name: Post results
+    - run: mkdir -p path/to/artifact
+    - run: echo hello > path/to/artifact/world.txt
+    - uses: actions/upload-artifact@v3
+      with:
+        name: my-artifact
+        path: path/to/artifact/world.txt

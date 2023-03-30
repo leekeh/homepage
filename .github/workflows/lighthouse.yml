@@ -13,4 +13,4 @@ jobs:
         uses: treosh/lighthouse-ci-action@v9
         with:
           urls: ${{ github.event.deployment_status.target_url }}
-          configPath: './lighthouserc.json'
+          temporaryPublicStorage: true

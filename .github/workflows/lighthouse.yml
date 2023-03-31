@@ -17,7 +17,7 @@ jobs:
       uses: foo-software/lighthouse-check-action@master
       with:
         urls: '${{ github.event.deployment_status.target_url }},${{ github.event.deployment_status.target_url }}/map'
-        commentUrl: https://api.github.com/repos/leekeh/homepage/pulls/${{ steps.findPr.outputs.pr }}/comments
+        commentUrl: https://api.github.com/repos/leekeh/homepage/pulls/1/comments
         device: all
         gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
         prCommentEnabled: true

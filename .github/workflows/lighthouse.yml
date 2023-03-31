@@ -79,6 +79,7 @@ jobs:
             </table>
               `
       - run: echo "${{steps.format-message.outputs.result}}" >> $GITHUB_STEP_SUMMARY
+      - run: echo "${{github.ref}}
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
       - uses: marocchino/sticky-pull-request-comment@v2

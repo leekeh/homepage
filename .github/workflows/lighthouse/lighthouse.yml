@@ -1,4 +1,4 @@
-name: Post-deployment statistics
+name: Post deployment statistics
 
 env:
   LHCI_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

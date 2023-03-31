@@ -7,41 +7,23 @@ jobs:
   generate_lighthouse_audit:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v3
-      - name: Audit preview URL with Lighthouse
-        id: lighthouse_audit
-        uses: treosh/lighthouse-ci-action@v9
-        with:
-          urls: |
-            ${{ github.event.deployment_status.target_url }}
-          uploadArtifacts: true
-          temporaryPublicStorage: true
-      - name: Format lighthouse score
-        id: format_lighthouse_score
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const result = ${{ steps.lighthouse_audit.outputs.manifest }}[0].summary
-            const links = ${{ steps.lighthouse_audit.outputs.links }}
-            const formatResult = (res) => Math.round((res * 100))
-            Object.keys(result).forEach(key => result[key] = formatResult(result[key]))
-            const score = res => res >= 90 ? '🟢' : res >= 50 ? '🟠' : '🔴'
-            const comment = [
-                `⚡️ [Lighthouse report](${Object.values(links)[0]}) for the changes in this PR:`,
-                '| Category | Score |',
-                '| --- | --- |',
-                `| ${score(result.performance)} Performance | ${result.performance} |`,
-                `| ${score(result.accessibility)} Accessibility | ${result.accessibility} |`,
-                `| ${score(result['best-practices'])} Best practices | ${result['best-practices']} |`,
-                `| ${score(result.seo)} SEO | ${result.seo} |`,
-                `| ${score(result.pwa)} PWA | ${result.pwa} |`,
-                ' ',
-                `*Lighthouse ran on [${Object.keys(links)[0]}](${Object.keys(links)[0]})*`
-            ].join('\n')
-             core.setOutput("comment", comment); 
-      - uses: riskledger/update-pr-description@v2
-        with:
-          body: ${{ steps.format_lighthouse_score.outputs.comment }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@master
+    - run: echo ${{ <context> }}
+    - name: Run lighthouse checks
+      id: lighthouseCheck
+      uses: foo-software/lighthouse-check-action@master
+      with:
+        urls: '${{ github.event.deployment_status.target_url }},${{ github.event.deployment_status.target_url }}/map'
+        # commentUrl: https://api.github.com/repos/:owner/:repo/commits/:commit_sha/comments
+        gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
+    - name: Verify Lighthouse Check results
+      uses: foo-software/lighthouse-check-status-action@master
+      with:
+        lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
+        minAccessibilityScore: "90"
+        minBestPracticesScore: "50"
+        minPerformanceScore: "50"
+        minProgressiveWebAppScore: "50"
+        minSeoScore: "50"

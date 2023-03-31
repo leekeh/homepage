@@ -21,25 +21,16 @@ jobs:
             ${{ github.event.deployment_status.target_url }}/map
           temporaryPublicStorage: true
           configPath: '.github/workflows/lighthouse/assertions.json'
-      - name: Comment on PR
-        uses: actions/github-script@v5
-        if: failure()
-        with:
-          script: |
-            console.log(JSON.stringify(${{steps.lighthouseScore.outputs}}))
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: "foo"
-            })
       - uses: actions/github-script@v6
         id: format-message
+        env: 
+         LINKS: ${{ steps.lighthouseScore.outputs.links }}
+         MANIFESTS: ${{ steps.lighthouseScore.outputs.manifest }}
         with:
           result-encoding: string
           script: |
-            const manifests = ${{ steps.lighthouseScore.outputs }}
-            const links = ${{ steps.lighthouseScore.outputs }}
+            const links = process.env.LINKS
+            const manifests = process.env.MANIFESTS
             let tableHeaders = '';
             let tableCells = '';
             manifest.forEach((item) => {

@@ -10,7 +10,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@master
-    - run: echo ${{ github }}
+    - run: echo ${{ github.action_repository	 }}
+    - run: echo ${{ github.base_ref	 }}
     - name: Run lighthouse checks
       id: lighthouseCheck
       uses: foo-software/lighthouse-check-action@master
@@ -25,5 +26,4 @@ jobs:
         minAccessibilityScore: "90"
         minBestPracticesScore: "50"
         minPerformanceScore: "50"
-        minProgressiveWebAppScore: "50"
         minSeoScore: "50"

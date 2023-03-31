@@ -31,3 +31,4 @@ jobs:
         message: |
           Test ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults.data[0].scores.accessibility }} ended successfully.
           This message is from a push.
+    - run: echo "${{ steps.lighthouseCheck.outputs.lighthouseCheckResults.data[0].scores.accessibility}} "

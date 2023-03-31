@@ -1,4 +1,4 @@
-name: Post deployment statistics
+name: Post-deployment statistics
 
 env:
   LHCI_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -18,7 +18,7 @@ jobs:
           urls: |
             ${{ github.event.deployment_status.target_url }}
           temporaryPublicStorage: true
-          configPath: '.github/lighthouse/assertions.json'
+          configPath: '.github/workflows/assertions.json'
       - run: echo "${{steps.lighthouseScore.outputs}}" >> $GITHUB_STEP_SUMMARY
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr

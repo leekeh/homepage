@@ -33,7 +33,7 @@ jobs:
             const manifests = process.env.MANIFESTS
             let tableHeaders = '';
             let tableCells = '';
-            manifest.forEach((item) => {
+            manifests.forEach((item) => {
               const title = item.url.endsWith('/')
                 ? 'Landing page'
                 : item.url.substring(item.url.indexOf('vercel.app/') + 11);

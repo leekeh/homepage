@@ -20,14 +20,62 @@ jobs:
             ${{ github.event.deployment_status.target_url }}
             ${{ github.event.deployment_status.target_url }}/map
           temporaryPublicStorage: true
-          configPath: '.github/workflows/assertions.json'
-      - run: echo "${{ fromJson(steps.lighthouseScore.outputs.links)["github.event.deployment_status.target_url"]}}"
-      - run: echo "${{steps.lighthouseScore.outputs}}" >> $GITHUB_STEP_SUMMARY
+          configPath: '.github/workflows/lighthouse/assertions.json'
+      - uses: actions/github-script@v6
+        id: format-message
+        with:
+          result-encoding: string
+          script: |
+          const manifests = ${{fromJson(steps.lighthouseScore.outputs.manifest)}}
+          const links = ${{fromJson(steps.lighthouseScore.outputs.links)}}
+          let tableHeaders = '';
+          let tableCells = '';
+          manifest.forEach((item) => {
+            const title = item.url.endsWith('/')
+              ? 'Landing page'
+              : item.url.substring(item.url.indexOf('vercel.app/') + 11);
+            tableHeaders = tableHeaders.concat(`<th><a href=${item.url} target="_blank">${title}</a></th>`);
+            tableCells = tableCells.concat(`
+        <td align="center">
+          
+        |||
+        |--|--|
+        | Performance | ${
+              item.summary.performance > 0.9 ? '🍏' : item.summary.performance < 0.6 ? '🍓' : '🍊'
+            }  ${item.summary.performance * 100} |
+        | Accessibility | ${
+              item.summary.accessibility > 0.95 ? '🍏' : item.summary.accessibility < 0.9 ? '🍓' : '🍊'
+            } ${item.summary.accessibility * 100} |
+        | Best practices | ${
+              item.summary['best-practices'] > 0.9
+                ? '🍏'
+                : item.summary['best-practices'] < 0.8
+                ? '🍓'
+                : '🍊'
+            }  ${item.summary['best-practices'] * 100} |
+        | SEO | ${item.summary.seo > 0.85 ? '🍏' : item.summary.seo < 0.6 ? '🍓' : '🍊'} ${
+              item.summary.seo * 100
+            } |
+        
+        [View full report](${
+              links[item.url]
+            })
+        </td>`);
+          });
+        
+        return `
+        ![Japanese_Wave_Pattern svg](https://user-images.githubusercontent.com/71131586/229189192-0c68aaa7-e366-4b2c-9537-4552723f26c3.png)
+        # Lighthouse scores
+        
+        <table>
+        <tr>${tableHeaders}</tr>
+        <tr>${tableCells}</tr> 
+        </table>
+          `
+      - run: echo "${{steps.format-message.outputs.result}}" >> $GITHUB_STEP_SUMMARY
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
           number: ${{ steps.findPr.outputs.pr }}
-          message: |
-            ### Lighthouse Audit Results
-            - Accessibility Score: ${{ steps.lighthouseScore.outputs.manifest[0].summary.performance }}
+          message: ${{steps.format-message.outputs.result}}

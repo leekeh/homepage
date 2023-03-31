@@ -8,15 +8,6 @@ jobs:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
-      - name: Add comment to PR
-        id: loading_comment_to_pr
-        uses: marocchino/sticky-pull-request-comment@v1
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          number: ${{ github.event.issue.number }}
-          header: lighthouse
-          message: |
-            Running Lighthouse audit...
       - uses: actions/checkout@v3
       - name: Audit preview URL with Lighthouse
         id: lighthouse_audit
@@ -50,12 +41,7 @@ jobs:
                 `*Lighthouse ran on [${Object.keys(links)[0]}](${Object.keys(links)[0]})*`
             ].join('\n')
              core.setOutput("comment", comment); 
-      - name: Add comment to PR
-        id: comment_to_pr
-        uses: marocchino/sticky-pull-request-comment@v1
+      - uses: riskledger/update-pr-description@dev
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          number: ${{ github.event.issue.number }}
-          header: lighthouse
-          message: |
-            ${{ steps.format_lighthouse_score.outputs.comment }}
+          body: ${{ steps.format_lighthouse_score.outputs.comment }}
+          token: ${{ secrets.GITHUB_TOKEN }}

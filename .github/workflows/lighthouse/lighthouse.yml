@@ -5,7 +5,6 @@ env:
 
 on:
   deployment_status:
-
 jobs:
   generate_lighthouse_audit:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'

@@ -10,15 +10,12 @@ jobs:
     
     steps:
     - uses: actions/checkout@master
-    - run: echo ${{ github.action_repository	 }}
-    - run: echo ${{ github.base_ref	 }}
-    - run: echo ${{ github.event.issue.number }}
     - name: Run lighthouse checks
       id: lighthouseCheck
       uses: foo-software/lighthouse-check-action@master
       with:
         urls: '${{ github.event.deployment_status.target_url }},${{ github.event.deployment_status.target_url }}/map'
-        commentUrl: https://api.github.com/repos/leekeh/homepage/commits/${{$GITHUB_SHA}}/comments
+        commentUrl: https://api.github.com/repos/leekeh/homepage/commits/${{github.sha}}/comments
         gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
     - name: Verify Lighthouse Check results
       uses: foo-software/lighthouse-check-status-action@master

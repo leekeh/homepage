@@ -12,6 +12,7 @@ jobs:
     - uses: actions/checkout@master
     - run: echo ${{ github.action_repository	 }}
     - run: echo ${{ github.base_ref	 }}
+    - run: echo ${{ github.event.issue.number }}
     - name: Run lighthouse checks
       id: lighthouseCheck
       uses: foo-software/lighthouse-check-action@master

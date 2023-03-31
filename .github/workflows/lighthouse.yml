@@ -26,8 +26,8 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const manifests = ${{ steps.lighthouseScore.outputs).manifests }}
-            const links = ${{ fromJson(steps.lighthouseScore.outputs.links )}}
+            const manifests = ${{ fromJson(steps.lighthouseScore.outputs.manifests) }}
+            const links = ${{ fromJson(steps.lighthouseScore.outputs.links) }}
             let tableHeaders = '';
             let tableCells = '';
             manifest.forEach((item) => {

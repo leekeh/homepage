@@ -88,7 +88,7 @@ jobs:
               const sha = await github.rest.repos.getContent({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              path: "README.md,
+              path: "README.md",
             }).data["content-directory"].sha;
               github.rest.repos.createOrUpdateFileContents({
               owner: context.repo.owner,

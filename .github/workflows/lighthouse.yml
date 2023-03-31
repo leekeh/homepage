@@ -15,7 +15,6 @@ jobs:
         with:
           urls: |
             {{ github.event.deployment_status.target_url }}
-            {{ github.event.deployment_status.target_url }}/map
           temporaryPublicStorage: true 
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr

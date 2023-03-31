@@ -30,12 +30,16 @@ jobs:
           script: |
             const links = JSON.parse(process.env.LINKS)
             const manifests = JSON.parse(process.env.MANIFESTS)
+            const formatHeader = (input) => {
+              const relPath = input.substring((input.indexOf('.app') !== -1 ? input.indexOf('.app') : input.indexOf('.com'))+5) 
+              return relPath.charAt(0).toUpperCase() +  relPath.slice(1).replace(/-/g, ' ');
+            }
             let tableHeaders = '';
             let tableCells = '';
             manifests.forEach((item) => {
               const title = item.url.endsWith('/')
                 ? 'Landing page'
-                : item.url.substring(item.url.indexOf('vercel.app/') + 11);
+                : formatHeader(item.url);
               tableHeaders = tableHeaders.concat(`<th><a href=${item.url} target="_blank">${title}</a></th>`);
               tableCells = tableCells.concat(`
             <td align="center">

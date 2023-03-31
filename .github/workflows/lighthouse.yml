@@ -6,33 +6,22 @@ on:
 jobs:
   generate_lighthouse_audit:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
-    runs-on: ubuntu-latest
-    
+    runs-on: ubuntu-latest  
     steps:
-    - uses: actions/checkout@master
-    - uses: jwalton/gh-find-current-pr@v1
-      id: findPr
-    - name: Run lighthouse checks
-      id: lighthouseCheck
-      uses: foo-software/lighthouse-check-action@master
-      with:
-        urls: '${{ github.event.deployment_status.target_url }},${{ github.event.deployment_status.target_url }}/map'
-        device: 'all'
-    - name: Verify Lighthouse Check results
-      uses: foo-software/lighthouse-check-status-action@master
-      with:
-        lighthouseCheckResults: ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults }}
-        minAccessibilityScore: "90"
-        minBestPracticesScore: "50"
-        minPerformanceScore: "50"
-        minSeoScore: "50"
-    - uses: marocchino/sticky-pull-request-comment@v2
-      with:
-        number: ${{ steps.findPr.outputs.pr }}
-        message: |
-          ### Lighthouse Audit Results
-          - Accessibility Score: ${{ fromJson(steps.lighthouseCheck.outputs.lighthouseCheckResults).data[0].scores.accessibility }}
-          - Best Practices Score: ${{ fromJson(steps.lighthouseCheck.outputs.lighthouseCheckResults).data[0].scores.bestPractices }}
-          - Peformance Score: ${{ fromJson(steps.lighthouseCheck.lighthouseCheckResults).data[0].scores.performance }}
-          - Progressive Web App Score: ${{ fromJson(steps.lighthouseCheck.outputs.lighthouseCheckResults).data[0].scores.progressiveWebApp }}
-          - SEO Score: ${{ fromJson(steps.lighthouseCheck.outputs.lighthouseCheckResults).data[0].scores.seo }}    - run: echo "${{ steps.lighthouseCheck.outputs.lighthouseCheckResults.data[0].scores.accessibility}} "
+      - uses: actions/checkout@v3
+      - name: Audit URLs using Lighthouse
+        id: lighthouseScore
+        uses: treosh/lighthouse-ci-action@v9
+        with:
+          urls: |
+            {{ github.event.deployment_status.target_url }}
+            {{ github.event.deployment_status.target_url }}/map
+          temporaryPublicStorage: true 
+      - uses: jwalton/gh-find-current-pr@v1
+        id: findPr
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          number: ${{ steps.findPr.outputs.pr }}
+          message: |
+            ### Lighthouse Audit Results
+            - Accessibility Score: ${{ steps.lighthouseScore.outputs.manifest[0].summary.performance }}

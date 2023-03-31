@@ -1,13 +1,15 @@
 name: Post deployment statistics
+
 env:
-  LHCI_GITHUB_TOKEN: ${{ secrets.LHCI_GITHUB_TOKEN }}
+  LHCI_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 on:
   deployment_status:
 
 jobs:
   generate_lighthouse_audit:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
-    runs-on: ubuntu-latest  
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: Audit URLs using Lighthouse
@@ -16,7 +18,9 @@ jobs:
         with:
           urls: |
             ${{ github.event.deployment_status.target_url }}
-          temporaryPublicStorage: true 
+          temporaryPublicStorage: true
+          configPath: './lighthouserc.json'
+      - run: echo "${{steps.lighthouseScore.outputs}}" >> $GITHUB_STEP_SUMMARY
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr
       - uses: marocchino/sticky-pull-request-comment@v2

@@ -21,7 +21,7 @@ jobs:
             ${{ github.event.deployment_status.target_url }}/map
           temporaryPublicStorage: true
           configPath: '.github/workflows/assertions.json'
-      - run: echo "${{ fromJson(steps.lighthouseScore.outputs.links)[github.event.deployment_status.target_url]}}"
+      - run: echo "${{ fromJson(steps.lighthouseScore.outputs.links)}}"
       - run: echo "${{steps.lighthouseScore.outputs}}" >> $GITHUB_STEP_SUMMARY
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr

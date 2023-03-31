@@ -17,6 +17,7 @@ jobs:
       uses: foo-software/lighthouse-check-action@master
       with:
         urls: '${{ github.event.deployment_status.target_url }},${{ github.event.deployment_status.target_url }}/map'
+        device: 'all'
     - name: Verify Lighthouse Check results
       uses: foo-software/lighthouse-check-status-action@master
       with:
@@ -29,6 +30,9 @@ jobs:
       with:
         number: ${{ steps.findPr.outputs.pr }}
         message: |
-          Test ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults.data[0].scores.accessibility }} ended successfully.
-          This message is from a push.
-    - run: echo "${{ steps.lighthouseCheck.outputs.lighthouseCheckResults.data[0].scores.accessibility}} "
+          ### Lighthouse Audit Results
+          - Accessibility Score: ${{ fromJson(steps.lighthouseCheck.outputs.lighthouseCheckResults).data[0].scores.accessibility }}
+          - Best Practices Score: ${{ fromJson(steps.lighthouseCheck.outputs.lighthouseCheckResults).data[0].scores.bestPractices }}
+          - Peformance Score: ${{ fromJson(steps.lighthouseCheck.lighthouseCheckResults).data[0].scores.performance }}
+          - Progressive Web App Score: ${{ fromJson(steps.lighthouseCheck.outputs.lighthouseCheckResults).data[0].scores.progressiveWebApp }}
+          - SEO Score: ${{ fromJson(steps.lighthouseCheck.outputs.lighthouseCheckResults).data[0].scores.seo }}    - run: echo "${{ steps.lighthouseCheck.outputs.lighthouseCheckResults.data[0].scores.accessibility}} "

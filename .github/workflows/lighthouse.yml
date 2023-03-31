@@ -10,22 +10,17 @@ jobs:
     
     steps:
     - uses: actions/checkout@master
-    - run: echo "{{ github.base_ref}} "
-    - uses: actions/checkout@v1
     - uses: jwalton/gh-find-current-pr@v1
       id: findPr
-    - run: echo "Your PR is ${PR}"
-      if: success() && steps.findPr.outputs.number
-      env:
-        PR: ${{ steps.findPr.outputs.pr }}
     - name: Run lighthouse checks
       id: lighthouseCheck
       uses: foo-software/lighthouse-check-action@master
       with:
         urls: '${{ github.event.deployment_status.target_url }},${{ github.event.deployment_status.target_url }}/map'
+        commentUrl: https://api.github.com/repos/leekeh/homepage/pulls/${{ steps.findPr.outputs.pr }}/comments
+        device: all
         gitHubAccessToken: ${{ secrets.GITHUB_TOKEN }}
         prCommentEnabled: true
-        device: all
     - name: Verify Lighthouse Check results
       uses: foo-software/lighthouse-check-status-action@master
       with:

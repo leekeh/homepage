@@ -10,6 +10,8 @@ jobs:
     
     steps:
     - uses: actions/checkout@master
+    - run: echo "${{github.sha}}"
+    - run: echo "${{github}}"
     - name: Run lighthouse checks
       id: lighthouseCheck
       uses: foo-software/lighthouse-check-action@master

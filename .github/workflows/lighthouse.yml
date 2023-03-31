@@ -41,7 +41,7 @@ jobs:
                 `*Lighthouse ran on [${Object.keys(links)[0]}](${Object.keys(links)[0]})*`
             ].join('\n')
              core.setOutput("comment", comment); 
-      - uses: riskledger/update-pr-description@dev
+      - uses: riskledger/update-pr-description@v2
         with:
           body: ${{ steps.format_lighthouse_score.outputs.comment }}
           token: ${{ secrets.GITHUB_TOKEN }}

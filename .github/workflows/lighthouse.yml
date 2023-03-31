@@ -29,5 +29,5 @@ jobs:
       with:
         number: ${{ steps.findPr.outputs.pr }}
         message: |
-          Test ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults.data.scores.accessibility }} ended successfully.
+          Test ${{ steps.lighthouseCheck.outputs.lighthouseCheckResults.data[0].scores.accessibility }} ended successfully.
           This message is from a push.

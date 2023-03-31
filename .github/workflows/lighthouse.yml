@@ -26,8 +26,8 @@ jobs:
         with:
           result-encoding: string
           script: |
-            const manifests = ${{ steps.lighthouseScore.outputs.manifests }}
-            const links = ${{ steps.lighthouseScore.outputs.links }}
+            const manifests = ${{ steps.lighthouseScore.outputs }}
+            const links = ${{ steps.lighthouseScore.outputs }}
             let tableHeaders = '';
             let tableCells = '';
             manifest.forEach((item) => {

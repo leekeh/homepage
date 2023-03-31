@@ -15,10 +15,13 @@ jobs:
         id: lighthouseScore
         uses: treosh/lighthouse-ci-action@v9
         with:
+          #@todo: generate affected urls
           urls: |
             ${{ github.event.deployment_status.target_url }}
+            ${{ github.event.deployment_status.target_url }}/map
           temporaryPublicStorage: true
           configPath: '.github/workflows/assertions.json'
+      - run: echo "${{ fromJson(steps.lighthouseScore.outputs.links) }}"
       - run: echo "${{steps.lighthouseScore.outputs}}" >> $GITHUB_STEP_SUMMARY
       - uses: jwalton/gh-find-current-pr@v1
         id: findPr

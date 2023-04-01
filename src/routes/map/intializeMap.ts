@@ -1,7 +1,8 @@
 import Map from 'ol/Map.js';
-import Stamen from 'ol/source/Stamen.js';
 import View from 'ol/View.js';
 import { Tile as TileLayer } from 'ol/layer.js';
+import Stamen from 'ol/source/Stamen';
+import { routeLayer } from './routeLayer';
 
 export const initializeMap = () => {
 	const map = new Map({
@@ -19,7 +20,8 @@ export const initializeMap = () => {
 					layer: 'terrain-labels',
 					cacheSize: 1000
 				})
-			})
+			}),
+			routeLayer
 		],
 		controls: [],
 		target: 'map',

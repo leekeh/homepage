@@ -64,6 +64,7 @@
 	.map {
 		width: 100vw;
 		height: 100vh;
+		background-color: #78e4e5;
 	}
 
 	h2 {

@@ -7,17 +7,17 @@ export const initializeMap = () => {
 	const map = new Map({
 		layers: [
 			new TileLayer({
+				preload: Infinity,
 				source: new Stamen({
 					layer: 'watercolor',
-					cacheSize: 1000,
-					transition: 0
+					cacheSize: 1000
 				})
 			}),
 			new TileLayer({
+				preload: Infinity,
 				source: new Stamen({
 					layer: 'terrain-labels',
-					cacheSize: 1000,
-					transition: 0
+					cacheSize: 1000
 				})
 			})
 		],

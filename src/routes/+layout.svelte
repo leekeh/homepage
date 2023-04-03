@@ -1,6 +1,5 @@
 <script lang="ts">
 	import '../reset.css';
-	import { Background } from '@img';
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
 	inject({ mode: dev ? 'development' : 'production' });
@@ -9,8 +8,6 @@
 <svelte:head>
 	<meta name="theme-color" content="#19483a" />
 </svelte:head>
-
-<Background />
 
 <slot />
 

@@ -24,6 +24,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@turf/bezier-spline": "^6.5.0",
 		"@vercel/analytics": "^0.1.11",
 		"esbuild": "^0.17.14",
 		"ol": "^7.3.0"

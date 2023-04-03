@@ -1,6 +1,5 @@
 <script lang="ts">
 	import '../reset.css';
-	import { Background } from '@img';
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
 	inject({ mode: dev ? 'development' : 'production' });
@@ -10,8 +9,6 @@
 	<meta name="theme-color" content="#19483a" />
 </svelte:head>
 
-<Background />
-
 <slot />
 
 <style>
@@ -19,6 +16,10 @@
 	:global(body) {
 		background-color: var(--bg-primary);
 		font-family: 'Source Serif Pro', serif;
+	}
+
+	:global(a) {
+		color: var(--accent);
 	}
 
 	/* CSS Variables */

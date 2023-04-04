@@ -18,13 +18,14 @@ jobs:
           urls: |
             ${{ github.event.deployment_status.target_url }}
             ${{ github.event.deployment_status.target_url }}/map
+            ${{ github.event.deployment_status.target_url }}/tutorial
           temporaryPublicStorage: true
           configPath: '.github/workflows/lighthouse/assertions.json'
       - uses: actions/github-script@v6
         id: format-message
-        env: 
-         LINKS: ${{ steps.lighthouseScore.outputs.links }}
-         MANIFESTS: ${{ steps.lighthouseScore.outputs.manifest }}
+        env:
+          LINKS: ${{ steps.lighthouseScore.outputs.links }}
+          MANIFESTS: ${{ steps.lighthouseScore.outputs.manifest }}
         with:
           result-encoding: string
           script: |

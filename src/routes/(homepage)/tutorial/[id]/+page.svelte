@@ -9,13 +9,16 @@
 <div class="grid">
 	{#if $isDesktop}
 		<aside>sidebar</aside>
-	{:else}
-		<IconButton href="/" alt="tem[" style="position: absolute; right: 4px; top: 4px;"
-			><Meatball /></IconButton
-		>
 	{/if}
 
 	<div>
+		{#if !$isDesktop}
+			<IconButton href="/" alt="tem[" style="float: right; margin: 1rem"><Meatball /></IconButton>
+		{/if}
+
+		As much mud in the streets as if the waters had but newly retired from the face of the earth,
+		and it would not be wonderful to meet a Megalosaurus, forty feet long or so, waddling like an
+		elephantine lizard up Holborn Hill.
 		<h1>{title}</h1>
 		<main>
 			<svelte:component this={page} />
@@ -25,12 +28,18 @@
 
 <style>
 	aside {
-		border-right: 2px solid var(--accent);
+		border-right: var(--border-width) solid var(--accent);
 	}
 	.grid {
 		display: grid;
-		grid-template-columns: 1fr 4fr;
+		grid-template-columns: 1fr;
 		align-items: stretch;
 		height: 100%;
+	}
+
+	@media (min-width: 1024px) {
+		.grid {
+			grid-template-columns: 1fr 4fr;
+		}
 	}
 </style>

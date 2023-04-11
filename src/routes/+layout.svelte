@@ -46,5 +46,6 @@
 		--accent: #19483a;
 		--max-width: 1040px;
 		--border-radius: 1rem;
+		--border-width: 0.15rem;
 	}
 </style>

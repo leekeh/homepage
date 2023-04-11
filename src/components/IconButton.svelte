@@ -13,15 +13,15 @@
 		color: var(--accent);
 		text-decoration: none;
 		border-radius: 100%;
-		padding: 8px;
+		padding: 0.5rem;
 		position: relative;
 		-webkit-tap-highlight-color: transparent;
 	}
 
 	a:hover,
 	a:focus-visible {
-		outline: 2px solid var(--accent);
-		outline-offset: -2px;
+		outline: var(--border-width) solid var(--accent);
+		outline-offset: calc(var(--border-width) * -1);
 	}
 
 	a:active {

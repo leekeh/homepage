@@ -3,6 +3,28 @@
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
 	inject({ mode: dev ? 'development' : 'production' });
+	import { isDesktop, isTablet, isLargeScreen } from '@stores';
+	import { onMount } from 'svelte';
+
+	onMount(() => {
+		const mqTablet = window.matchMedia('(min-width: 768px)');
+		const mqDesktop = window.matchMedia('(min-width: 1024px)');
+		const mqLargeScreen = window.matchMedia('(min-width: 1440px)');
+
+		isTablet.set(mqTablet.matches);
+		isDesktop.set(mqDesktop.matches);
+		isLargeScreen.set(mqLargeScreen.matches);
+
+		mqTablet.onchange = (e) => {
+			isTablet.set(e.matches);
+		};
+		mqDesktop.onchange = (e) => {
+			isDesktop.set(e.matches);
+		};
+		mqLargeScreen.onchange = (e) => {
+			isLargeScreen.set(e.matches);
+		};
+	});
 </script>
 
 <svelte:head>

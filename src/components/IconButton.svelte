@@ -1,9 +1,10 @@
 <script lang="ts">
 	export let href: string;
 	export let alt: string;
+	export let style: string = '';
 </script>
 
-<a {href} aria-label={alt} target="_blank"><slot /></a>
+<a {href} aria-label={alt} target="_blank" {style}><slot /></a>
 
 <style>
 	a {

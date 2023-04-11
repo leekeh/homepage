@@ -13,7 +13,7 @@
 
 	<div>
 		{#if !$isDesktop}
-			<IconButton href="/" alt="tem[" style="float: right; margin: 1rem"><Meatball /></IconButton>
+			<IconButton href="/" alt="tem[" style="float: right; margin:0.5rem"><Meatball /></IconButton>
 		{/if}
 
 		As much mud in the streets as if the waters had but newly retired from the face of the earth,

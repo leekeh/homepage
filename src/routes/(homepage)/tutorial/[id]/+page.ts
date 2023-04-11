@@ -3,7 +3,12 @@ import { error } from '@sveltejs/kit';
 
 import type { ComponentType, SvelteComponentTyped } from 'svelte';
 
-export const load = async ({ params, data }) => {
+// export default {
+// 	introduction: { title: 'Introduction', isOptional: false },
+// 	temp2: { title: 'Temp 2', isOptional: true }
+// } as const;
+
+export const load = async ({ params }) => {
 	const id = params.id;
 	const comps = import.meta.glob<Record<string, ComponentType<SvelteComponentTyped>>>(
 		'../pages/**/*.svelte'
@@ -21,6 +26,6 @@ export const load = async ({ params, data }) => {
 
 	return {
 		page,
-		...data
+		title: 'dd'
 	};
 };

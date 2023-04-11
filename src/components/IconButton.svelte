@@ -10,7 +10,7 @@
 	a {
 		width: 3rem;
 		height: 3rem;
-		color: inherit;
+		color: var(--accent);
 		text-decoration: none;
 		border-radius: 100%;
 		padding: 8px;

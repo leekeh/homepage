@@ -1,6 +1,7 @@
 <script>
 	import { IconButton } from '@components';
 	import { isDesktop } from '@stores';
+	import { Meatball } from '@icons';
 	export let data;
 	const { title, page } = data;
 </script>
@@ -10,7 +11,7 @@
 		<aside>sidebar</aside>
 	{:else}
 		<IconButton href="/" alt="tem[" style="position: absolute; right: 4px; top: 4px;"
-			>test</IconButton
+			><Meatball /></IconButton
 		>
 	{/if}
 

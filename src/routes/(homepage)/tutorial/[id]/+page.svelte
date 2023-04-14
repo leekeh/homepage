@@ -10,18 +10,19 @@
 	{#if $isDesktop}
 		<aside>sidebar</aside>
 	{/if}
-
-	<div>
+	<div class="mainContainer">
 		{#if !$isDesktop}
-			<IconButton href="/" alt="tem[" style="float: right; margin:0.5rem"><Meatball /></IconButton>
+			<IconButton
+				href="/"
+				alt="Menu todo"
+				style="float: right; margin: -1.5rem -1.5rem 0.5rem 0.5rem"><Meatball /></IconButton
+			>
 		{/if}
-
-		As much mud in the streets as if the waters had but newly retired from the face of the earth,
-		and it would not be wonderful to meet a Megalosaurus, forty feet long or so, waddling like an
-		elephantine lizard up Holborn Hill.
-		<h1>{title}</h1>
 		<main>
-			<svelte:component this={page} />
+			<h1>{title}</h1>
+			<article>
+				<svelte:component this={page} />
+			</article>
 		</main>
 	</div>
 </div>
@@ -29,6 +30,18 @@
 <style>
 	aside {
 		border-right: var(--border-width) solid var(--accent);
+	}
+
+	.mainContainer {
+		padding: 2rem;
+		height: 100%;
+		width: 100%;
+		overflow: auto;
+		box-sizing: border-box;
+	}
+
+	h1 {
+		font-size: 2rem;
 	}
 	.grid {
 		display: grid;
@@ -40,6 +53,10 @@
 	@media (min-width: 1024px) {
 		.grid {
 			grid-template-columns: 1fr 4fr;
+		}
+
+		h1 {
+			font-size: 3rem;
 		}
 	}
 </style>

@@ -38,12 +38,19 @@
 	:global(body) {
 		background-color: var(--bg-primary);
 		font-family: 'Source Serif Pro', serif;
+		color: var(--foreground);
+	}
+
+	:global(::selection) {
+		background: var(--accent-subtle);
 	}
 
 	/* CSS Variables */
 	:root {
 		--bg-primary: #ececec;
 		--accent: #19483a;
+		--accent-subtle: #00725036;
+		--foreground: #113228;
 		--max-width: 1040px;
 		--border-radius: 1rem;
 		--border-width: 0.15rem;

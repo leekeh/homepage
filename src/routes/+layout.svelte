@@ -39,6 +39,7 @@
 		background-color: var(--bg-primary);
 		font-family: 'Source Serif Pro', serif;
 		color: var(--foreground);
+		accent-color: var(--accent);
 	}
 
 	:global(::selection) {

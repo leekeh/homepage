@@ -15,6 +15,7 @@
 			calc(var(--spacing) + env(safe-area-inset-left));
 		background: var(--bg-primary);
 		border-radius: var(--border-radius);
+		overflow: auto;
 	}
 
 	@media (min-width: 768px) {

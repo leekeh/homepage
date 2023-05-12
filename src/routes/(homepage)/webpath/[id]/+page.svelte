@@ -1,23 +1,20 @@
 <script>
 	import { IconButton } from '@components';
-	import { isDesktop } from '@stores';
 	import { Meatball } from '@icons';
 	export let data;
 	const { title, page } = data;
 </script>
 
 <div class="grid">
-	{#if $isDesktop}
-		<aside>sidebar</aside>
-	{/if}
+	<aside>sidebar</aside>
 	<div class="mainContainer">
-		{#if !$isDesktop}
+		<div class="buttonContainer">
 			<IconButton
 				href="/"
 				alt="Menu todo"
 				style="float: right; margin: -1.5rem -1.5rem 0.5rem 0.5rem"><Meatball /></IconButton
 			>
-		{/if}
+		</div>
 		<main>
 			<h1>{title}</h1>
 			<article>
@@ -29,7 +26,9 @@
 
 <style>
 	aside {
+		display: none;
 		border-right: var(--border-width) solid var(--accent);
+		min-width: 20rem;
 	}
 
 	.mainContainer {
@@ -51,8 +50,15 @@
 	}
 
 	@media (min-width: 1024px) {
+		aside {
+			display: block;
+		}
 		.grid {
 			grid-template-columns: 1fr 4fr;
+		}
+
+		.buttonContainer {
+			display: none;
 		}
 
 		h1 {

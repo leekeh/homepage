@@ -35,6 +35,8 @@
 
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Source+Serif+Pro:ital,wght@0,200;0,400;0,600;1,200;1,400&display=swap');
+	@import url('https://fonts.googleapis.com/css2?family=Wix+Madefor+Display&display=swap');
+
 	:global(body) {
 		background-color: var(--bg-primary);
 		font-family: 'Source Serif Pro', serif;
@@ -55,5 +57,6 @@
 		--max-width: 1040px;
 		--border-radius: 1rem;
 		--border-width: 0.15rem;
+		--transition: 0.2s ease;
 	}
 </style>

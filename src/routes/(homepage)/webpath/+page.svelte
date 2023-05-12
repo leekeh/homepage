@@ -1,46 +1,61 @@
 <script lang="ts">
-	import { LoadingSpinner } from '@components';
+	import { LoadingSpinner, Button, RadioGroup } from '@components';
 	import { hasProgrammed } from './stores';
 	import { onMount } from 'svelte';
 
 	let mounted = false;
+	let inputValue: string;
 
 	onMount(() => {
 		mounted = true;
 	});
+
+	const confirmChoice = (e: Event) => {
+		e.preventDefault();
+		inputValue !== undefined
+			? hasProgrammed.set(inputValue)
+			: alert('Please pick an option before starting');
+		//TODO navigate to first page in tutorial
+	};
 </script>
 
 <LoadingSpinner isLoading={!mounted}>
-	{#if $hasProgrammed === null}
-		<h1>leekeh's path to web development</h1>
-		<p>
-			Hiya! Welcome to my path to web development. In this course I put some basic information that
-			I thought would be useful for anyone interested in learning web development.
-		</p>
-		<p>
-			As someone who got into coding frontend a few years ago, I feel like there are a lot of
-			resources available online, but it is difficult to discern the most important stuff and not
-			get overwhelmed. In this free resource, I put together just the essentials that will enable
-			you to indepentently work on projects and keep learning. Each topic will include at least one
-			test in which you can put these new ideas to practise. As this tutorial is not supported by
-			any sort of funding, you will have to be critical and judge whether you feel ready to move on.
-			But that in itself should be a good lesson :)
-		</p>
+	<main>
+		{#if $hasProgrammed === null}
+			<h1>leekeh's path to web development</h1>
 
-		<p>Before we start, I want to ask you one question:</p>
+			<p>
+				Welcome to my web development course! I've put together the essential information you need
+				to be ready to work on independent projects and kick-start your path to becoming a pro.
+			</p>
+			<p>
+				We will cover HTML, CSS, JavaScript (including basic TypeScript), and other key topics. Some
+				common pitfalls are also tackled, to ensure that you can write clean code and create
+				accessible experiences from the get-go.
+			</p>
+			<p>
+				Each topic includes some questions for hands-on practice. Since this is a free and unfunded
+				tutorial we cannot afford personal mentors, so use your judgement to decide when you're
+				ready to move on.
+			</p>
 
-		<fieldset>
-			<legend>Have you programmed before?</legend>
+			<!-- TODO: add an expected duration -->
 
-			<label>
-				<input bind:group={$hasProgrammed} type="radio" name="hasProgrammed" value={true} /> Yes
-			</label>
-			<label>
-				<input bind:group={$hasProgrammed} type="radio" value={false} /> No
-			</label>
-		</fieldset>
-	{:else}
-		<main>
+			<p>Before we start, I want to ask you one question:</p>
+
+			<form on:submit={confirmChoice}>
+				<RadioGroup
+					label="Have you programmed before?"
+					hint="This will affect how much time will be spent explaining basic programming principles"
+					options={[
+						{ label: 'Yes', value: true },
+						{ label: 'No', value: false }
+					]}
+					bind:value={inputValue}
+				/>
+				<Button>Start</Button>
+			</form>
+		{:else}
 			<p>Some friendly landing page text.</p>
 			<nav>
 				<button>introduction</button><button>HTML</button> <button>CSS</button> <button>jss</button>
@@ -56,6 +71,29 @@
 			<label for="progress">Progress</label>
 			<progress id="progress" value="32" max="100" />
 			<br />
-		</main>
-	{/if}
+		{/if}
+	</main>
 </LoadingSpinner>
+
+<style>
+	h1 {
+		font-size: 2rem;
+		text-align: center;
+	}
+
+	p {
+		max-width: 60rem;
+	}
+
+	main {
+		padding: min(2%, 25px);
+	}
+
+	main,
+	form {
+		display: flex;
+		flex-direction: column;
+		align-items: start;
+		gap: 1rem;
+	}
+</style>

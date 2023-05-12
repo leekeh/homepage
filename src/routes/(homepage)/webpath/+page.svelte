@@ -2,6 +2,9 @@
 	import { LoadingSpinner, Button, RadioGroup } from '@components';
 	import { hasProgrammed } from './stores';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+	import metadata from './[id]/metadata';
 
 	let mounted = false;
 	let inputValue: string;
@@ -12,10 +15,13 @@
 
 	const confirmChoice = (e: Event) => {
 		e.preventDefault();
-		inputValue !== undefined
-			? hasProgrammed.set(inputValue)
-			: alert('Please pick an option before starting');
-		//TODO navigate to first page in tutorial
+		if (inputValue !== undefined) {
+			hasProgrammed.set(inputValue);
+			mounted = false;
+			goto(`${$page.url.pathname}/${metadata[0].pages[0].id}`);
+		} else {
+			alert('Please pick an option before starting');
+		}
 	};
 </script>
 
@@ -25,7 +31,7 @@
 			<h1>leekeh's path to web development</h1>
 
 			<p>
-				Welcome to my web development course! I've put together the essential information you need
+				Welcome to my web development course. I've put together the essential information you need
 				to be ready to work on independent projects and kick-start your path to becoming a pro.
 			</p>
 			<p>

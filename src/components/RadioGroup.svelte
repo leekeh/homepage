@@ -58,22 +58,27 @@
 		background-color: transparent;
 		border-radius: 100%;
 		transition: color var(--transition), background-color var(--transition);
-	}
-
-	input:checked::before {
-		color: var(--accent);
 		background-image: radial-gradient(
 			circle at center,
 			currentColor 50%,
 			transparent 52%,
 			transparent 0
 		);
+		color: transparent;
+	}
+
+	input:checked::before {
+		color: var(--accent);
 	}
 
 	input:hover::before,
 	input:focus-visible::before {
 		color: var(--foreground);
-		background-color: var(--accent-subtle);
+	}
+
+	input:hover:not(:checked)::before,
+	input:focus-visible:not(:checked)::before {
+		color: var(--accent-subtle);
 	}
 
 	input:focus-visible {

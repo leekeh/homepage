@@ -2,11 +2,9 @@
 import { error } from '@sveltejs/kit';
 
 import type { ComponentType, SvelteComponentTyped } from 'svelte';
+import pagesMap from './metadata';
 
-// export default {
-// 	introduction: { title: 'Introduction', isOptional: false },
-// 	temp2: { title: 'Temp 2', isOptional: true }
-// } as const;
+const pagesArray = pagesMap.map((section) => section.pages).flat();
 
 export const load = async ({ params }) => {
 	const id = params.id;
@@ -16,16 +14,23 @@ export const load = async ({ params }) => {
 
 	const match = comps[`../pages/${id}.svelte`];
 
-	if (!match) {
+	const index = pagesArray.findIndex((page) => page.id === params.id);
+
+	if (!match || index === -1) {
 		throw error(404, {
 			message: 'Not found'
 		});
 	}
 
 	const page = (await match()).default;
+	const metadata = pagesArray[index];
+	const previous = pagesArray[index - 1]?.id;
+	const next = pagesArray[index + 1]?.id;
 
 	return {
 		page,
-		title: 'dd'
+		title: metadata.title,
+		next,
+		previous
 	};
 };

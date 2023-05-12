@@ -1,8 +1,8 @@
 <script>
-	import { IconButton } from '@components';
+	import { IconButton, Button } from '@components';
 	import { Meatball } from '@icons';
 	export let data;
-	const { title, page } = data;
+	const { title, page, next, previous } = data;
 </script>
 
 <div class="grid">
@@ -21,6 +21,14 @@
 				<svelte:component this={page} />
 			</article>
 		</main>
+
+		{#if next}
+			<Button href={next}>next</Button>
+		{/if}
+
+		{#if previous}
+			<Button href={previous}>previous</Button>
+		{/if}
 	</div>
 </div>
 

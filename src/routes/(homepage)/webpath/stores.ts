@@ -2,9 +2,9 @@ import { writable, type Writable } from 'svelte/store';
 import { browser } from '$app/environment';
 
 function createStore(key: string, initialValue?: string | boolean | object | null) {
-	const prefacedKey = `webpath-${key}`;
+	const prefixedKey = `webpath-${key}`;
 	// Get the value from localStorage if it exists
-	const cachedValue = browser && localStorage.getItem(prefacedKey);
+	const cachedValue = browser && localStorage.getItem(prefixedKey);
 	const initial = cachedValue ? JSON.parse(cachedValue) : initialValue;
 
 	// Create a writable store with the initial value
@@ -12,7 +12,7 @@ function createStore(key: string, initialValue?: string | boolean | object | nul
 
 	// Update localStorage whenever the store value changes
 	subscribe((value) => {
-		browser && localStorage.setItem(prefacedKey, JSON.stringify(value));
+		browser && localStorage.setItem(prefixedKey, JSON.stringify(value));
 	});
 
 	// Return the store methods

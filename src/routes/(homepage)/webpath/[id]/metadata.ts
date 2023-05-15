@@ -1,6 +1,7 @@
 export type PageMetaData = {
 	id: string;
 	title: string;
+	glossary?: { term: string; explanation: string }[];
 	isOptional?: boolean;
 };
 
@@ -13,8 +14,21 @@ const metadata: Section[] = [
 	{
 		sectionName: 'Introduction',
 		pages: [
-			{ id: 'intro', title: 'Introduction' },
-			{ id: 'test2', title: 'Introduction' }
+			{
+				id: 'intro',
+				title: 'Introduction',
+				glossary: [
+					{ term: 'DNS', explanation: 'todo' },
+					{ term: 'IP ADRESS', explanation: 'todo' },
+					{ term: 'DOM TREE', explanation: 'todo' },
+					{ term: 'HTML', explanation: 'todo' },
+					{ term: 'CSS', explanation: 'todo' },
+					{ term: 'Javascript', explanation: 'todo' },
+					{ term: 'SPA', explanation: 'Single-page application' },
+					{ term: 'Vanilla Javascript', explanation: 'todo' }
+				]
+			},
+			{ id: 'temp2', title: 'Introduction2' }
 		]
 	},
 	{

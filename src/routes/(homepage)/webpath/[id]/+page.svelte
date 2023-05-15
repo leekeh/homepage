@@ -1,9 +1,32 @@
 <script>
-	import { IconButton, Button } from '@components';
-	import { Meatball } from '@icons';
+	import { IconButton, Button, Bar } from '@components';
+	import { Meatball, Alert } from '@icons';
+	import { hasProgrammed } from '../stores';
+	import { onMount } from 'svelte';
 	export let data;
 	const { title, page, next, previous } = data;
+
+	let isMounted = false;
+
+	onMount(() => {
+		isMounted = true;
+	});
 </script>
+
+{#if $hasProgrammed === null && isMounted}
+	<Bar>
+		<h2><Alert /> Missing setup</h2>
+		<p>
+			We would like to know whether you have programmed before. This will make sure the course is
+			better tailored to your needs.
+		</p>
+		<p>Do you have any prior coding experience?</p>
+		<span>
+			<Button onClick={() => hasProgrammed.set('true')}>Yes</Button>
+			<Button onClick={() => hasProgrammed.set('false')}>No</Button></span
+		>
+	</Bar>
+{/if}
 
 <div class="grid">
 	<aside>sidebar</aside>
@@ -15,20 +38,22 @@
 				style="float: right; margin: -1.5rem -1.5rem 0.5rem 0.5rem"><Meatball /></IconButton
 			>
 		</div>
-		<main>
+
+		<main id="main">
 			<h1>{title}</h1>
 			<article>
 				<svelte:component this={page} />
 			</article>
+			<!-- TODO figure out why these don't update -->
+
+			{#if previous}
+				<Button href={previous}>previous</Button>
+			{/if}
+
+			{#if next}
+				<Button href={next}>next</Button>
+			{/if}
 		</main>
-
-		{#if next}
-			<Button href={next}>next</Button>
-		{/if}
-
-		{#if previous}
-			<Button href={previous}>previous</Button>
-		{/if}
 	</div>
 </div>
 
@@ -72,5 +97,33 @@
 		h1 {
 			font-size: 3rem;
 		}
+	}
+
+	span {
+		display: inline-flex;
+		gap: 1rem;
+		flex-wrap: true;
+	}
+
+	p {
+		max-width: min(40rem, 85%);
+		text-align: center;
+	}
+
+	h2 {
+		font-weight: bold;
+		font-size: 1.8rem;
+		display: inline-flex;
+		gap: 0.6rem;
+		align-items: center;
+		line-height: 0.1px;
+	}
+
+	article,
+	main {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+		align-items: start;
 	}
 </style>

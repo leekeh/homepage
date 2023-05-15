@@ -44,6 +44,11 @@
 		accent-color: var(--accent);
 	}
 
+	:global(ol) {
+		list-style: decimal;
+		list-style-position: outside;
+	}
+
 	:global(::selection) {
 		background: var(--accent-subtle);
 	}

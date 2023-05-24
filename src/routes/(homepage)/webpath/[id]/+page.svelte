@@ -4,7 +4,7 @@
 	import { hasProgrammed } from '../stores';
 	import { onMount } from 'svelte';
 	export let data;
-	const { title, page, next, previous } = data;
+	const { metadata, page, next, previous } = data;
 
 	let isMounted = false;
 
@@ -32,15 +32,13 @@
 	<aside>sidebar</aside>
 	<div class="mainContainer">
 		<div class="buttonContainer">
-			<IconButton
-				href="/"
-				alt="Menu todo"
-				style="float: right; margin: -1.5rem -1.5rem 0.5rem 0.5rem"><Meatball /></IconButton
+			<IconButton href="/" alt="Menu todo" style="float: right; margin: -1rem -1rem 0.5rem 0.5rem"
+				><Meatball /></IconButton
 			>
 		</div>
 
 		<main id="main">
-			<h1>{title}</h1>
+			<h1>{metadata.title}</h1>
 			<article>
 				<svelte:component this={page} />
 			</article>
@@ -65,7 +63,7 @@
 	}
 
 	.mainContainer {
-		padding: 2rem;
+		padding: 1rem;
 		height: 100%;
 		width: 100%;
 		overflow: auto;
@@ -80,6 +78,14 @@
 		grid-template-columns: 1fr;
 		align-items: stretch;
 		height: 100%;
+	}
+
+	article,
+	main {
+		display: flex;
+		flex-direction: column;
+		gap: 0.6rem;
+		align-items: start;
 	}
 
 	@media (min-width: 1024px) {
@@ -97,33 +103,9 @@
 		h1 {
 			font-size: 3rem;
 		}
-	}
 
-	span {
-		display: inline-flex;
-		gap: 1rem;
-		flex-wrap: true;
-	}
-
-	p {
-		max-width: min(40rem, 85%);
-		text-align: center;
-	}
-
-	h2 {
-		font-weight: bold;
-		font-size: 1.8rem;
-		display: inline-flex;
-		gap: 0.6rem;
-		align-items: center;
-		line-height: 0.1px;
-	}
-
-	article,
-	main {
-		display: flex;
-		flex-direction: column;
-		gap: 0.6rem;
-		align-items: start;
+		.mainContainer {
+			padding: 2rem;
+		}
 	}
 </style>

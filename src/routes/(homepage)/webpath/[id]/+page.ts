@@ -2,19 +2,24 @@
 import { error } from '@sveltejs/kit';
 
 import type { ComponentType, SvelteComponentTyped } from 'svelte';
-import pagesMap from './metadata';
+import pageMap from './pageMap';
+import type { PageMetaData } from '../types';
 
-const pagesArray = pagesMap.map((section) => section.pages).flat();
+const pagesArray = pageMap.map((section) => section.pages).flat();
 
 export const load = async ({ params }) => {
 	const id = params.id;
-	const comps = import.meta.glob<Record<string, ComponentType<SvelteComponentTyped>>>(
-		'../pages/**/*.svelte'
-	);
 
-	const match = comps[`../pages/${id}.svelte`];
+	const pagesGlob = import.meta.glob<Record<string, any>>('../pages/**/*.svelte');
 
-	const index = pagesArray.findIndex((page) => page.id === params.id);
+	const match = pagesGlob[`../pages/${id}.svelte`];
+	const module = await match();
+	const page = module.default as ComponentType<SvelteComponentTyped>;
+	const metadata = module.metadata as PageMetaData;
+
+	const index = pagesArray.findIndex((page) => page === params.id);
+	const previous = pagesArray[index - 1];
+	const next = pagesArray[index + 1];
 
 	if (!match || index === -1) {
 		throw error(404, {
@@ -22,14 +27,9 @@ export const load = async ({ params }) => {
 		});
 	}
 
-	const page = (await match()).default;
-	const metadata = pagesArray[index];
-	const previous = pagesArray[index - 1]?.id;
-	const next = pagesArray[index + 1]?.id;
-
 	return {
-		page,
-		title: metadata.title,
+		page: page,
+		metadata,
 		next,
 		previous
 	};

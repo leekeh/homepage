@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import metadata from './[id]/metadata';
+	import pageMap from './[id]/pageMap';
 
 	let mounted = false;
 	let inputValue: string;
@@ -18,7 +18,7 @@
 		if (inputValue !== undefined) {
 			hasProgrammed.set(inputValue);
 			mounted = false;
-			goto(`${$page.url.pathname}/${metadata[0].pages[0].id}`);
+			goto(`${$page.url.pathname}/${pageMap[0].pages[0]}`);
 		} else {
 			alert('Please pick an option before starting');
 		}

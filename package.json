@@ -26,6 +26,7 @@
 	"type": "module",
 	"dependencies": {
 		"@vercel/analytics": "^0.1.11",
-		"esbuild": "^0.17.14"
+		"esbuild": "^0.17.14",
+		"highlight.js": "^11.8.0"
 	}
 }

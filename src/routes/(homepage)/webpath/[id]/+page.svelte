@@ -43,7 +43,8 @@
 				<svelte:component this={page} />
 			</article>
 			<!-- TODO figure out why these don't update -->
-
+		</main>
+		<nav>
 			{#if previous}
 				<Button href={previous}>previous</Button>
 			{/if}
@@ -51,7 +52,7 @@
 			{#if next}
 				<Button href={next}>next</Button>
 			{/if}
-		</main>
+		</nav>
 	</div>
 </div>
 

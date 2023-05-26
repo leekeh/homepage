@@ -7,5 +7,17 @@ import RadioGroup from './RadioGroup.svelte';
 import Heading from './Heading.svelte';
 import Details from './Details.svelte';
 import List from './List.svelte';
+import Code from './Code.svelte';
 
-export { Banner, Bar, IconButton, LoadingSpinner, Button, RadioGroup, Heading, Details, List };
+export {
+	Banner,
+	Bar,
+	Code,
+	IconButton,
+	LoadingSpinner,
+	Button,
+	RadioGroup,
+	Heading,
+	Details,
+	List
+};

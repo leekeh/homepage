@@ -1,7 +1,8 @@
 <script lang="ts" context="module">
 	import { Heading, Details, List } from '@components';
+	import type { PageMetaData } from '../types';
 
-	export const metadata = {
+	export const metadata: PageMetaData = {
 		glossary: {
 			DNS: `Lorem ipsum dolor, sit amet consectetur adipisicing elit. Consectetur expedita ab architecto nisi
 quo veritatis eum id, veniam cum! Aut cum dolorum minus voluptatum consectetur esse, modi minima

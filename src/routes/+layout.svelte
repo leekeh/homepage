@@ -2,7 +2,7 @@
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
 	inject({ mode: dev ? 'development' : 'production' });
-	import { isDesktop, isTablet, isLargeScreen } from '@stores';
+	import { isDesktop, isTablet, isLargeScreen, platform } from '@stores';
 	import { onMount } from 'svelte';
 
 	onMount(() => {
@@ -23,6 +23,23 @@
 		mqLargeScreen.onchange = (e) => {
 			isLargeScreen.set(e.matches);
 		};
+
+		const ua = navigator.userAgent.toLowerCase();
+		console.log(ua);
+
+		if (ua.includes('windows')) {
+			platform.set('Windows');
+		} else if (ua.includes('macintosh') || ua.includes('mac os x')) {
+			platform.set('Mac');
+		} else if (ua.includes('linux')) {
+			platform.set('Linux');
+		} else if (ua.includes('ipad')) {
+			platform.set('iPad');
+		} else if (ua.includes('android')) {
+			platform.set('Android');
+		} else {
+			return 'Unknown';
+		}
 	});
 </script>
 

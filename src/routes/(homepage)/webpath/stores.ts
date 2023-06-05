@@ -1,17 +1,18 @@
 import { writable, type Writable } from 'svelte/store';
 import { browser } from '$app/environment';
+import type { Progress } from './types';
 
-function createStore(key: string, initialValue?: string | boolean | object | null) {
+function createStore<T>(key: string, initialValue?: T | null) {
 	const prefixedKey = `webpath-${key}`;
 	// Get the value from localStorage if it exists
 	const cachedValue = browser && localStorage.getItem(prefixedKey);
 	const initial = cachedValue ? JSON.parse(cachedValue) : initialValue;
 
 	// Create a writable store with the initial value
-	const { subscribe, set, update } = writable(initial);
+	const { subscribe, set, update } = writable<T>(initial);
 
 	// Update localStorage whenever the store value changes
-	subscribe((value) => {
+	subscribe((value: T) => {
 		browser && localStorage.setItem(prefixedKey, JSON.stringify(value));
 	});
 
@@ -23,4 +24,6 @@ function createStore(key: string, initialValue?: string | boolean | object | nul
 	};
 }
 
-export const hasProgrammed: Writable<string> = createStore('hasProgrammed', null);
+export const hasProgrammed = createStore<string>('hasProgrammed', null);
+
+export const progress = createStore<Progress>('webpath-progress', {});

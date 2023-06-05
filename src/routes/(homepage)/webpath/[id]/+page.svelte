@@ -89,6 +89,10 @@
 		align-items: start;
 	}
 
+	nav {
+		padding-top: 0.6rem;
+	}
+
 	@media (min-width: 1024px) {
 		aside {
 			display: block;

@@ -6,7 +6,7 @@ export type Section = {
 const pageMap: Section[] = [
 	{
 		sectionName: 'Introduction',
-		pages: ['intro']
+		pages: ['intro', 'setup']
 	},
 	{
 		sectionName: 'HTML',

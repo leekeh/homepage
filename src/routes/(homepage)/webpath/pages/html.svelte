@@ -25,6 +25,7 @@
     <title>My test page</title>
   </head>
   <body>
+    <h1>My website</h1>
     <img src="images/firefox-icon.png" alt="My test image" />
   </body>
 </html>`}

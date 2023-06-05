@@ -1,1 +1,1 @@
-export { isTablet, isDesktop, isLargeScreen } from './general.stores';
+export { isTablet, isDesktop, isLargeScreen, platform } from './general.stores';

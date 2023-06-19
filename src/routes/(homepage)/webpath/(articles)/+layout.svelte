@@ -4,7 +4,7 @@
 	import { hasProgrammed } from '../stores';
 	import { onMount } from 'svelte';
 	export let data;
-	const { metadata, page, next, previous } = data;
+	const { metadata, next, previous } = data;
 
 	let isMounted = false;
 
@@ -40,9 +40,8 @@
 		<main id="main">
 			<h1>{metadata.title}</h1>
 			<article>
-				<svelte:component this={page} />
+				<slot />
 			</article>
-			<!-- TODO figure out why these don't update -->
 		</main>
 		<nav>
 			{#if previous}

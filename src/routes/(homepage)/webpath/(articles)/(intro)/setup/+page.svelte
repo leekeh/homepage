@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import type { PageMetaData } from '../types';
+	import type { PageMetaData } from '../../../types';
 
 	export const metadata: PageMetaData = {
 		title: 'Setting up our environment',
@@ -9,7 +9,7 @@
 
 <script lang="ts">
 	import { platform } from '@stores';
-	import { hasProgrammed } from '../stores';
+	import { hasProgrammed } from '../../../stores';
 	import Details from '@components/Details.svelte';
 
 	const getSamplePlatform = (platform: string) => {

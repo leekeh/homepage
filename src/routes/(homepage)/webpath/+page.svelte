@@ -4,7 +4,7 @@
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
-	import pageMap from './[id]/pageMap';
+	import pageMap from './(articles)/pageMap';
 
 	let mounted = false;
 	let inputValue: string;

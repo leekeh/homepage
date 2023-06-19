@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import { Heading, Details, List } from '@components';
-	import type { PageMetaData } from '../types';
+	import type { PageMetaData } from '../../../types';
 
 	export const metadata: PageMetaData = {
 		glossary: {

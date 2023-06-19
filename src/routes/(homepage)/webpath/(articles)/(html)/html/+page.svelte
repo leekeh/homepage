@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-	import type { PageMetaData } from '../types';
+	import type { PageMetaData } from '../../../types';
 	import { Heading, Code } from '@components';
 
 	export const metadata: PageMetaData = {

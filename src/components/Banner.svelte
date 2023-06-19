@@ -28,7 +28,7 @@
 <style>
 	header {
 		background-color: var(--bg-primary);
-		border: 2px solid var(--accent);
+		border: var(--border-width) solid var(--accent);
 		margin: min(5%, 20px);
 		padding: 1rem;
 		border-radius: var(--border-radius);
@@ -53,7 +53,7 @@
 		min-width: 80px;
 		max-width: 130px;
 		border-radius: 100%;
-		border: 2px solid var(--accent);
+		border: var(--border-width) solid var(--accent);
 		flex-grow: 0;
 		flex-shrink: 1;
 	}

@@ -194,4 +194,9 @@
 		border-collapse: collapse;
 		border-spacing: 0;
 	}
+
+	:global(a) {
+		color: inherit;
+		text-decoration: none;
+	}
 </style>

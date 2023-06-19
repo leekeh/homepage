@@ -1,32 +1,47 @@
 export type Section = {
 	sectionName: string;
-	pages: string[];
+	pages: { url: string; title: string }[];
 };
 
 const pageMap: Section[] = [
 	{
 		sectionName: 'Introduction',
-		pages: ['intro', 'setup']
+		pages: [
+			{ url: 'intro', title: 'Journey of a webpage' },
+			{ url: 'setup', title: 'Setting up our environment' }
+		]
 	},
 	{
 		sectionName: 'HTML',
-		pages: ['html']
+		pages: [{ url: 'html', title: 'Introduction to HTML' }]
 	},
 	{
 		sectionName: 'CSS',
-		pages: ['intro', 'temp2']
+		pages: [
+			{ url: 'intr3o', title: 'Introduction' },
+			{ url: 'temp2', title: 'temp2' }
+		]
 	},
 	{
 		sectionName: 'JavaScript',
-		pages: ['intro', 'temp2']
+		pages: [
+			{ url: 'int2ro', title: 'Introduction' },
+			{ url: 'temp2', title: 'temp2' }
+		]
 	},
 	{
 		sectionName: 'Other things',
-		pages: ['intro', 'temp2']
+		pages: [
+			{ url: 'intr2o', title: 'Introduction' },
+			{ url: 'temp2', title: 'temp2' }
+		]
 	},
 	{
 		sectionName: 'Conclusion',
-		pages: ['intro', 'temp2']
+		pages: [
+			{ url: 'intr1o', title: 'Introduction' },
+			{ url: 'temp2', title: 'temp2' }
+		]
 	}
 ];
 

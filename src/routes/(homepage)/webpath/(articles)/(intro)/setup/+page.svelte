@@ -2,7 +2,6 @@
 	import type { PageMetaData } from '../../../types';
 
 	export const metadata: PageMetaData = {
-		title: 'Setting up our environment',
 		glossary: { IDE: 'This description is coming soon to a place near you.', openSource: 'TODO' }
 	};
 </script>

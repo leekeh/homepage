@@ -21,8 +21,7 @@ quo veritatis eum id, veniam cum! Aut cum dolorum minus voluptatum consectetur e
 maiores, expedita totam quam inventore? Natus laborum obcaecati mollitia ipsum earum numquam
 voluptates, consequatur facilis ullam ab excepturi nesciunt nulla exercitationem saepe sunt
 assumenda corporis asperiores maiores eius libero? `
-		},
-		title: 'Introduction'
+		}
 	};
 
 	const glossary = metadata.glossary;

@@ -4,7 +4,9 @@
 	import { hasProgrammed } from '../stores';
 	import { onMount } from 'svelte';
 	export let data;
-	const { metadata, next, previous } = data;
+	const { metadata, next, previous, title } = data;
+
+	import SideBar from './sidebar.svelte';
 
 	let isMounted = false;
 
@@ -29,7 +31,7 @@
 {/if}
 
 <div class="grid">
-	<aside>sidebar</aside>
+	<SideBar />
 	<div class="mainContainer">
 		<div class="buttonContainer">
 			<IconButton href="/" alt="Menu todo" style="float: right; margin: -1rem -1rem 0.5rem 0.5rem"
@@ -38,30 +40,24 @@
 		</div>
 
 		<main id="main">
-			<h1>{metadata.title}</h1>
+			<h1>{title}</h1>
 			<article>
 				<slot />
 			</article>
 		</main>
 		<nav>
 			{#if previous}
-				<Button href={previous}>previous</Button>
+				<Button href={previous.url}>previous</Button>
 			{/if}
 
 			{#if next}
-				<Button href={next}>next</Button>
+				<Button href={next.url}>next</Button>
 			{/if}
 		</nav>
 	</div>
 </div>
 
 <style>
-	aside {
-		display: none;
-		border-right: var(--border-width) solid var(--accent);
-		min-width: 20rem;
-	}
-
 	.mainContainer {
 		padding: 1rem;
 		height: 100%;
@@ -93,9 +89,6 @@
 	}
 
 	@media (min-width: 1024px) {
-		aside {
-			display: block;
-		}
 		.grid {
 			grid-template-columns: 1fr 4fr;
 		}

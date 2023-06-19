@@ -3,7 +3,6 @@
 	import { Heading, Code } from '@components';
 
 	export const metadata: PageMetaData = {
-		title: 'Introduction to HTML',
 		glossary: {}
 	};
 </script>

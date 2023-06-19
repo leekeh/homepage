@@ -4,7 +4,7 @@
 
 	import { Cog, Home } from '@icons';
 
-	const activePath = $page.url.pathname.slice($page.url.pathname.lastIndexOf('/') + 1);
+	$: activePath = $page.url.pathname.slice($page.url.pathname.lastIndexOf('/') + 1);
 </script>
 
 <aside>

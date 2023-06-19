@@ -4,9 +4,9 @@
 	import { hasProgrammed } from '../stores';
 	import { onMount } from 'svelte';
 	export let data;
-	const { metadata, next, previous, title } = data;
-
 	import SideBar from './sidebar.svelte';
+
+	$: ({ metadata, next, previous, title } = data);
 
 	let isMounted = false;
 

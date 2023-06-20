@@ -18,7 +18,7 @@
 		if (inputValue !== undefined) {
 			hasProgrammed.set(inputValue);
 			mounted = false;
-			goto(`${$page.url.pathname}/${pageMap[0].pages[0]}`);
+			goto(`${$page.url.pathname}/${pageMap[0].pages[0].url}`);
 		} else {
 			alert('Please pick an option before starting');
 		}

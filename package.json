@@ -25,6 +25,6 @@
 	"type": "module",
 	"dependencies": {
 		"@vercel/analytics": "^1.0.1",
-		"esbuild": "^0.17.19"
+		"esbuild": "^0.18.4"
 	}
 }

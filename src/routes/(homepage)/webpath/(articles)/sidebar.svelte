@@ -1,8 +1,18 @@
-<script>
+<script lang="ts">
 	import pageMap from './pageMap';
 	import { page } from '$app/stores';
 
 	import { Cog, Home } from '@icons';
+	import Check from '@icons/Check.svelte';
+
+	import { progress } from '../stores';
+
+	$: checkCompletion = (id: string) => {
+		return (
+			$progress[id]?.read &&
+			($progress[id].exercises ? $progress[id].exercises?.every((item) => item.completed) : true)
+		);
+	};
 
 	$: activePath = $page.url.pathname.slice($page.url.pathname.lastIndexOf('/') + 1);
 </script>
@@ -36,8 +46,11 @@
 						{#each pages as page}
 							<li>
 								<a href={page.url} aria-current={page.url === activePath}
-									>{page.title} {page.url === activePath ? ' (current)' : ''}</a
-								>
+									>{page.title}
+									{#if checkCompletion(page.url)}
+										<Check />
+									{/if}
+								</a>
 							</li>
 						{/each}
 					</ol>
@@ -66,20 +79,19 @@
 	}
 
 	a {
+		display: flex;
+		gap: 8px;
+		cursor: pointer;
+		transition: background-color var(--transition);
+		position: relative;
+	}
+
+	a:not(.menu) {
 		padding-left: 24px;
 	}
 
 	.menu {
 		padding-left: 16px;
-		display: flex;
-		gap: 8px;
-	}
-
-	a {
-		cursor: pointer;
-		transition: background-color var(--transition);
-		display: block;
-		position: relative;
 	}
 
 	a:hover {

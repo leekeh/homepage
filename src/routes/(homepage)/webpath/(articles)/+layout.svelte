@@ -1,17 +1,25 @@
 <script>
 	import { IconButton, Button, Bar } from '@components';
 	import { Meatball, Alert } from '@icons';
-	import { hasProgrammed } from '../stores';
-	import { onMount } from 'svelte';
+	import { hasProgrammed, lastVisited } from '../stores';
 	export let data;
 	import SideBar from './sidebar.svelte';
+	import { progress } from '../stores';
+	import { beforeNavigate, afterNavigate } from '$app/navigation';
+	import { onMount } from 'svelte';
 
-	$: ({ metadata, next, previous, title } = data);
+	$: ({ metadata, next, previous, title, id } = data);
 
 	let isMounted = false;
 
-	onMount(() => {
-		isMounted = true;
+	afterNavigate(() => {
+		lastVisited.set(id);
+	});
+
+	beforeNavigate(() => {
+		const copied = { ...$progress };
+		copied[id] = { read: true };
+		progress.set(copied);
 	});
 </script>
 

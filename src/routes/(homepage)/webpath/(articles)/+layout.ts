@@ -32,7 +32,8 @@ export const load = async ({ url }) => {
 				metadata,
 				next,
 				previous,
-				title
+				title,
+				id
 			};
 		}
 	}

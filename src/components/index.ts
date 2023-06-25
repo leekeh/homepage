@@ -8,6 +8,7 @@ import Heading from './Heading.svelte';
 import Details from './Details.svelte';
 import List from './List.svelte';
 import Code from './Code.svelte';
+import Link from './Link.svelte';
 
 export {
 	Banner,
@@ -19,5 +20,6 @@ export {
 	RadioGroup,
 	Heading,
 	Details,
-	List
+	List,
+	Link
 };

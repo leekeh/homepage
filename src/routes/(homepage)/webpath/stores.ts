@@ -1,4 +1,4 @@
-import { writable, type Writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 import { browser } from '$app/environment';
 import type { Progress } from './types';
 
@@ -27,3 +27,5 @@ function createStore<T>(key: string, initialValue?: T | null) {
 export const hasProgrammed = createStore<string>('hasProgrammed', null);
 
 export const progress = createStore<Progress>('webpath-progress', {});
+
+export const lastVisited = createStore<string>('last-visited', null);

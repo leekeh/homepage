@@ -3,7 +3,7 @@ export type Section = {
 	pages: { url: string; title: string }[];
 };
 
-const pageMap: Section[] = [
+const pageMap = [
 	{
 		sectionName: 'Introduction',
 		pages: [
@@ -43,6 +43,6 @@ const pageMap: Section[] = [
 			{ url: 'temp2', title: 'temp2' }
 		]
 	}
-];
+] as const;
 
 export default pageMap;

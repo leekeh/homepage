@@ -5,5 +5,6 @@ import Meatball from './Meatball.svelte';
 import Alert from './Alert.svelte';
 import Cog from './Cog.svelte';
 import Home from './Home.svelte';
+import Check from './Check.svelte';
 
-export { GitHubLogo, LinkedInLogo, InstagramLogo, Meatball, Alert, Cog, Home };
+export { GitHubLogo, LinkedInLogo, InstagramLogo, Meatball, Alert, Cog, Home, Check };

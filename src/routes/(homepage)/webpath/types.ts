@@ -14,8 +14,7 @@ type Exercise = {
 export type Progress = Record<
 	string,
 	{
-		id: string;
-		answer?: string;
-		completed: boolean;
+		exercises?: { id: string; answer?: string; completed: string }[];
+		read: boolean;
 	}
 >;

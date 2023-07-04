@@ -8,6 +8,7 @@
 	fill="none"
 	stroke-linecap="round"
 	stroke-linejoin="round"
+	style="flex-shrink: 0"
 >
 	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
 	<path

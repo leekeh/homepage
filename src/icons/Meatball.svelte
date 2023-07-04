@@ -6,6 +6,7 @@
 	fill="none"
 	stroke-linecap="round"
 	stroke-linejoin="round"
+	style="flex-shrink: 0"
 >
 	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
 	<path d="M5 12m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0" />

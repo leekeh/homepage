@@ -87,7 +87,10 @@
 	}
 
 	a:not(.menu) {
+		align-items: center;
+		justify-content: space-between;
 		padding-left: 24px;
+		padding-right: 24px;
 	}
 
 	.menu {

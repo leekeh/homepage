@@ -54,3 +54,5 @@ HTML is a markup language, meaning it uses a predefined set of tags to structure
 When combined with CSS (Cascading Style Sheets) and JavaScript, HTML forms the core technologies for building interactive and visually appealing websites and web applications.
 
 In summary, HTML is the foundation of the web, providing a standardized way to structure and present content on web pages. Understanding HTML is essential for anyone venturing into web development, as it forms the basis for creating engaging and accessible web experiences.`}
+
+Creating an HTML pages create an index.html files. in the same folder, create an about.html

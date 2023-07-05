@@ -2,6 +2,7 @@
 	import { LoadingSpinner, Link } from '@components';
 	import { hasProgrammed, lastVisited, progress } from '../stores';
 	import { onMount } from 'svelte';
+	import pageMap from '../(articles)/pageMap';
 
 	import Heading from '@components/Heading.svelte';
 	import MenuButton from './menubuttons/MenuButton.svelte';
@@ -31,9 +32,12 @@
 			<nav>
 				<ul>
 					<MenuButton href="html" type="HTML" />
-					<MenuButton href="CSS" type="CSS" />
-					<MenuButton href="JS" type="JS" />
-					<MenuButton href="?" type="other" />
+					<MenuButton href="css" type="CSS" />
+					<MenuButton href="js" type="JS" />
+					<MenuButton
+						href={pageMap.find((item) => item.sectionName === 'Other things')?.pages[0].url || ''}
+						type="other"
+					/>
 				</ul>
 			</nav>
 			<br />

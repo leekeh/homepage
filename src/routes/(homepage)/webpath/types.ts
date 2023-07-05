@@ -1,5 +1,5 @@
 export type PageMetaData = {
-	glossary: Record<string, string>;
+	glossary: Record<string, { description: string; summary: string }>;
 	isOptional?: boolean;
 	exercises?: Exercise[];
 };

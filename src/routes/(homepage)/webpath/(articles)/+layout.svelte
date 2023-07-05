@@ -16,6 +16,10 @@
 		lastVisited.set(id);
 	});
 
+	onMount(() => {
+		isMounted = true;
+	});
+
 	beforeNavigate(() => {
 		const copied = { ...$progress };
 		copied[id] = { read: true };
@@ -88,7 +92,7 @@
 	main {
 		display: flex;
 		flex-direction: column;
-		gap: 0.6rem;
+		gap: 1.5rem;
 		align-items: start;
 	}
 

@@ -10,6 +10,8 @@ import List from './List.svelte';
 import Code from './Code.svelte';
 import Link from './Link.svelte';
 
+import Image from './Image.svelte';
+
 export {
 	Banner,
 	Bar,
@@ -21,5 +23,6 @@ export {
 	Heading,
 	Details,
 	List,
-	Link
+	Link,
+	Image
 };

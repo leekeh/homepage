@@ -1,20 +1,24 @@
 export type PageMetaData = {
 	glossary: Record<string, { description: string; summary: string }>;
 	isOptional?: boolean;
-	exercises?: Exercise[];
+	exercises?: Record<string, Exercise>;
 };
 
-type Exercise = {
-	id: string;
+export type Exercise = {
 	title: string;
-	description: string;
-	type: 'multiple-choice' | 'assignment';
+	description?: string;
+} & MultipleChoice;
+
+type MultipleChoice = {
+	type: 'multiple-choice';
+	options: { value: string; label: string }[];
+	solution: string;
 };
 
 export type Progress = Record<
 	string,
 	{
-		exercises?: { id: string; answer?: string; completed: string }[];
+		exercises?: Record<string, { answer?: string; completed: boolean }>;
 		read: boolean;
 	}
 >;

@@ -6,5 +6,6 @@ import Alert from './Alert.svelte';
 import Cog from './Cog.svelte';
 import Home from './Home.svelte';
 import Check from './Check.svelte';
+import ListSearch from './ListSearch.svelte';
 
-export { GitHubLogo, LinkedInLogo, InstagramLogo, Meatball, Alert, Cog, Home, Check };
+export { GitHubLogo, LinkedInLogo, InstagramLogo, Meatball, Alert, Cog, Home, Check, ListSearch };

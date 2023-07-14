@@ -9,7 +9,6 @@
 	let mounted = false;
 
 	import FirstView from './FirstView.svelte';
-
 	onMount(() => {
 		mounted = true;
 	});

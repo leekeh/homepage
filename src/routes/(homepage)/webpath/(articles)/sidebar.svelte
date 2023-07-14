@@ -2,7 +2,7 @@
 	import pageMap from './pageMap';
 	import { page } from '$app/stores';
 
-	import { Cog, Home } from '@icons';
+	import { Cog, Home, ListSearch } from '@icons';
 	import Check from '@icons/Check.svelte';
 
 	import { progress } from '../stores';
@@ -10,7 +10,9 @@
 	$: checkCompletion = (id: string) => {
 		return (
 			$progress[id]?.read &&
-			($progress[id].exercises ? $progress[id].exercises?.every((item) => item.completed) : true)
+			($progress[id]?.exercises
+				? Object.values($progress[id].exercises).every((item) => item.completed)
+				: true)
 		);
 	};
 
@@ -31,6 +33,11 @@
 				</a>
 			</li>
 			<li>
+				<a href="/glossary" class="menu">
+					<ListSearch /> Glossary
+				</a>
+			</li>
+			<li>
 				<a
 					href="/settings"
 					class="menu"
@@ -39,6 +46,7 @@
 					<Cog /> Settings
 				</a>
 			</li>
+
 			{#each pageMap as { sectionName, pages }, i}
 				<li>
 					<h3>{sectionName}</h3>

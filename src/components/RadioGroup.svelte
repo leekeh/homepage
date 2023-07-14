@@ -4,8 +4,7 @@
 	export let value: string;
 	export let label: string;
 	export let hint: string = '';
-
-	const id = crypto.randomUUID();
+	const id = Math.random().toString(36).substring(2, 11);
 </script>
 
 <fieldset {style} aria-describedby={id}>
@@ -29,6 +28,7 @@
 	div {
 		margin: 1rem 0;
 		display: flex;
+		flex-direction: column;
 		gap: 1rem;
 	}
 	span {

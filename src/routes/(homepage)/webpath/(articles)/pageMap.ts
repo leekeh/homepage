@@ -54,7 +54,7 @@ const pageMap = [
 			{ url: 'objects', title: 'Objects & JSON' },
 			{ url: 'interactions', title: 'Adding interaction to a page' },
 			{ url: 'event-listeners', title: 'Listening to events' },
-			{ url: 'api', title: 'Connecting to a database' },
+			{ url: 'api', title: 'Fetching data' },
 			{ url: 'secrets', title: 'Hiding sensitive data' },
 			{ url: 'debugging', title: 'Debugging' },
 			{ url: 'pointers', title: 'Mutability & references' },

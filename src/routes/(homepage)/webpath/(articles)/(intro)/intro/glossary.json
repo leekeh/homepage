@@ -1,0 +1,54 @@
+{
+	"URL": {
+		"summary": "URL",
+		"description": "Uniform Resource Locator, also called web address. It specifies the location of a web resource on a network. URL's are shown in the address bars of browsers."
+	},
+	"DNSServer": {
+		"summary": "DNS Server",
+		"description": "DNS Servers or name servers transform URL's into IP addresses. They keep track of DNS records to know which IP relates to which domain."
+	},
+	"HTML": {
+		"summary": "HTML",
+		"description": "HyperText Markup Language is the standard markup language for documents designed to be displayed in a web browser."
+	},
+	"protocol": {
+		"summary": "protocol",
+		"description": "System of rules that defines how information is transferred between two entities. Important web protocols include HTTP, SSH, UDP, DNS and IP."
+	},
+	"HTTP": {
+		"summary": "HTTP",
+		"description": "HyperText Transfer Protocol. It describes the rules of how web documents are transferred. Clients such as a browser do requests to a server, which will send a response back. HTTP headers can be used to further fine-tune the way a request should be handled."
+	},
+	"HTTPS": {
+		"summary": "HTTPS",
+		"description": "Extension of HTTP that adds authentication and encryption."
+	},
+	"DOM": {
+		"summary": "DOM",
+		"description": "Domain Object Model. It describes that elements in a HTML (or XML) document follow a tree structure, in which each node can be a separate branch, and nodes can be nested in other branches as children. DOM methods allow us to programmatically access the tree."
+	},
+	"node": {
+		"summary": "node",
+		"description": "In computer science, a node is a unit that is part of a larger data structure. For example, in a HTML DOM tree, a node is a HTML element. Nodes that are nested in other nodes are called child nodes, the node above being the parent node"
+	},
+	"CSS": {
+		"summary": "CSS",
+		"description": "Cascading Style Sheets. It is the most common way of defining styling in HTML documents. Styles can be applied to certain elements such as buttons or headings, or grouped together in classes. CSS is written in one or more separate files that are imported in a HTML document."
+	},
+	"JS": {
+		"summary": "JavaScript",
+		"description": "A programming language that is commonly used to add functionality to web pages. The language has lots of built-in features that can be used to manipulate the DOM and fetch data. JavaScript can also be used to write scripts or backend code."
+	},
+	"SPA": {
+		"summary": "SPA",
+		"description": "Single-page application. A website that interacts with the user by dynamically rewriting the current web page with new data from the web server, instead of loading entire pages for each section. The goal is faster transitions that make the website feel more like a native app."
+	},
+	"react": {
+		"summary": "React",
+		"description": "React is a JavaScript framework used to build apps with components. It is maintained by Meta and is open-source. React components are written in JSX, which is a combination of JavaScript and HTML."
+	},
+	"angular": {
+		"summary": "Angular",
+		"description": "Angular is a JavaScript framework used to build apps with HTML templates and special JavaScript functions. It is maintained by Google and is open-source."
+	}
+}

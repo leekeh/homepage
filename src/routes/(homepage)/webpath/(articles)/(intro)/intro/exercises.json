@@ -1,0 +1,71 @@
+{
+	"urlConverter": {
+		"title": "When a browser requests a webpage, it first sends a request to a ________ to convert the URL into an IP address.",
+		"type": "multiple-choice",
+		"options": [
+			{ "label": "HTML Document", "value": "1" },
+			{ "label": "DNS Server", "value": "2" },
+			{ "label": "Rendering engine", "value": "3" },
+			{ "label": "CSS File", "value": "4" }
+		],
+		"solution": "2"
+	},
+	"domRole": {
+		"title": "What is the role of the DOM in web development?",
+		"type": "multiple-choice",
+		"options": [
+			{ "label": "Determining IP addresses", "value": "1" },
+			{ "label": "Specifying the layout of a webpage", "value": "2" },
+			{ "label": "Handling server-side requests", "value": "3" },
+			{ "label": "Creating a structural representation of a HTML document", "value": "4" }
+		],
+		"solution": "4"
+	},
+	"stylingLanguage": {
+		"title": "Which technology is responsible for defining the styles, colors, and fonts of a webpage?",
+		"type": "multiple-choice",
+		"options": [
+			{ "label": "JavaScript", "value": "1" },
+			{ "label": "HTML", "value": "2" },
+			{ "label": "CSS", "value": "3" },
+			{ "label": "DNS", "value": "4" }
+		],
+		"solution": "3"
+	},
+	"additionalResources": {
+		"title": "What is one type of the additional resource that a browser may request while rendering a webpage?",
+		"type": "multiple-choice",
+		"options": [
+			{ "label": "JavaScript files", "value": "1" },
+			{ "label": "HTML documents", "value": "2" },
+			{ "label": "DNS Servers", "value": "3" },
+			{ "label": "IP addresses", "value": "4" }
+		],
+		"solution": "1"
+	},
+	"renderingEngine": {
+		"title": "What is the purpose of a rendering engine in a browser?",
+		"type": "multiple-choice",
+		"options": [
+			{ "label": "Converting URLs into IP addresses", "value": "1" },
+			{ "label": "Authenticating servers using digital certificates", "value": "2" },
+			{ "label": "Converting the DOM into a visual representation", "value": "3" },
+			{ "label": "Encrypting data during transmission", "value": "4" }
+		],
+		"solution": "3"
+	},
+	"singlePageApplication": {
+		"title": "What is a Single-Page Application (SPA)?",
+		"type": "multiple-choice",
+		"options": [
+			{ "label": "An application that uses multiple HTML files for each subpage", "value": "1" },
+			{
+				"label": "An application that uses a single HTML file and JavaScript to update content dynamically",
+				"value": "2"
+			},
+			{ "label": "An application that relies on server-side rendering", "value": "3" },
+			{ "label": "An application that also works on a smartphone", "value": "4" }
+		],
+		"solution": "2"
+	}
+}

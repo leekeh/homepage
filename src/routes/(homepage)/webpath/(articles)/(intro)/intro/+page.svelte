@@ -3,91 +3,16 @@
 	import type { PageMetaData } from '../../../types';
 	import Image from '@components/Image.svelte';
 	import surfInternet from './surfInternet.webp';
+	import Exercise from '../../../components/Exercise.svelte';
+	import Test from '../../../components/Test.svelte';
+
+	import glossary from './glossary.json';
+	import exercises from './exercises.json';
 
 	export const metadata: PageMetaData = {
-		glossary: {
-			URL: {
-				summary: 'URL',
-				description: `Uniform Resource Locator, also called web address.
-			It specifies the location of a web resource on a network. URL's are shown 
-			in the address bars of browsers.`
-			},
-			DNSServer: {
-				summary: 'DNS Server',
-				description: `DNS Servers or name servers transform URL's into IP addresses. 
-			They keep track of DNS records to know which IP relates to which domain.`
-			},
-			HTML: {
-				summary: 'HTML',
-				description: `HyperText Markup Language is the standard markup language for 
-				documents designed to be displayed in a web browser.`
-			},
-			protocol: {
-				summary: 'protocol',
-				description: `System of rules that defines how information is tranferred between 
-			two entities. Important web protocols include HTTP, SSH, UDP, DNS and IP.`
-			},
-
-			HTTP: {
-				description: `HyperText Transfer Protocol. It describes the rules of how
-				web documents are transferred. Clients such as a browser do requests to a 
-				server, which will send a response back. HTTP headers can be used to further
-				finetune the way a request should be handled.`,
-				summary: 'HTTP'
-			},
-			HTTPS: {
-				description: 'Extension of HTTP that adds authentication and encryption.',
-				summary: 'HTTPS'
-			},
-			DOM: {
-				description: `Domain Object Model. It describes that elements in a HTML (or XML) 
-				document follow a tree structure, in which each node can be a separate branch, and 
-				nodes can be nested in other branches as children. DOM methods allow us to programatically
-				access the tree.`,
-				summary: 'DOM'
-			},
-			node: {
-				description: `In computer science, a node is a unit that is part of a 
-				larger data structure. For example, in a HTML DOM tree, a node is a HTML
-				element. Nodes that are nested in other nodes are called child nodes, the 
-				node above being the parent node`,
-				summary: 'node'
-			},
-			CSS: {
-				description: `Cascading Style Sheets. It is the most common way of defining styling
-				in HTML documents. Styles can be applied to certain elemens such as buttons or
-				headings, or grouped together in classes. CSS is written in one or more separate
-				files that are imported in a HTML document.`,
-				summary: 'CSS'
-			},
-			JS: {
-				description: `A programming language that is commonly used to add functionality to 
-				web pages. The language has lots of built-in features that can be used to manipulate 
-				the DOM and fetch data. JavaScript can also be used to write scripts or backend code.`,
-				summary: 'JavaScript'
-			},
-			SPA: {
-				description: `Single-page application. A website that interacts 
-				with the user by dynamically rewriting the current web page with new data from the 
-				web server, instead of loading entire pages for each section. 
-				The goal is faster transitions that make the website feel more like a native app.`,
-				summary: 'SPA'
-			},
-			react: {
-				description: `React is a JavaScript framework used to build apps with components.
-				It is maintained by Meta and is open-source. React components are written in JSX, 
-				which is a combination of JavaScript and HTML.`,
-				summary: 'React'
-			},
-			angular: {
-				description: `Angular.`,
-				summary: `Angular is a JavaScript framework used to build apps with HTML templates and 
-				special JavaScript functions. It is maintained by Google and is open-source. `
-			}
-		}
+		glossary,
+		exercises
 	} as const;
-
-	const glossary = metadata.glossary;
 </script>
 
 <p>
@@ -139,7 +64,8 @@
 		<Details {...glossary.DOM} /> tree, i.e. a hierarchical structure that branches out from a single
 		root. A branch of the DOM tree is called a <Details {...glossary.node} />. Just like a real
 		tree, each branch can split up into other branches, creating smaller branches. These are called
-		child nodes.
+		child nodes. The DOM represents the HTML document in a structured manner, so that it is easier
+		to access specific elements with programming languages.
 	</li>
 	<li>
 		As the browser works through the document, it will come accross additional resources that are
@@ -188,3 +114,12 @@
 	hard to keep up. If you focus on understanding of the underlying principles, you can always adept
 	and therefore more easily keep up with demands.
 </p>
+
+<Test>
+	<Exercise id="urlConverter" {...exercises.urlConverter} />
+	<Exercise id="additionalResources" {...exercises.additionalResources} />
+	<Exercise id="domRole" {...exercises.domRole} />
+	<Exercise id="renderingEngine" {...exercises.renderingEngine} />
+	<Exercise id="singlePageApplication" {...exercises.singlePageApplication} />
+	<Exercise id="stylingLanguage" {...exercises.stylingLanguage} />
+</Test>

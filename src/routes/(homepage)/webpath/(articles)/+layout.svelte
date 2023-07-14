@@ -7,6 +7,7 @@
 	import { progress } from '../stores';
 	import { beforeNavigate, afterNavigate } from '$app/navigation';
 	import { onMount } from 'svelte';
+	import Background from '@img/bg/Background.svelte';
 
 	$: ({ metadata, next, previous, title, id } = data);
 
@@ -21,9 +22,7 @@
 	});
 
 	beforeNavigate(() => {
-		const copied = { ...$progress };
-		copied[id] = { read: true };
-		progress.set(copied);
+		progress.update((prevState) => ({ ...prevState, [id]: { ...prevState[id], read: true } }));
 	});
 </script>
 
@@ -60,6 +59,8 @@
 		<nav>
 			{#if previous}
 				<Button href={previous.url}>previous</Button>
+			{:else}
+				<br />
 			{/if}
 
 			{#if next}
@@ -81,6 +82,11 @@
 	h1 {
 		font-size: 2rem;
 	}
+
+	h2 {
+		display: flex;
+		gap: 0.5rem;
+	}
 	.grid {
 		display: grid;
 		grid-template-columns: 1fr;
@@ -98,6 +104,8 @@
 
 	nav {
 		padding-top: 0.6rem;
+		display: flex;
+		justify-content: space-between;
 	}
 
 	@media (min-width: 1024px) {

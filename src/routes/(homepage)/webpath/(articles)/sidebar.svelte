@@ -20,7 +20,7 @@
 </script>
 
 <aside>
-	<h2>Navigation</h2>
+	<h2>leekeh's webpath</h2>
 	<nav aria-label="Course navigation">
 		<ul>
 			<li>

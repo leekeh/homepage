@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
 	import type { PageMetaData } from '../../../types';
-	import { Heading, Code } from '@components';
+	import { Heading, Editor } from '@components';
 
 	export const metadata: PageMetaData = {
 		glossary: {}
@@ -13,10 +13,8 @@
 <p>todo</p>
 
 <Heading as="h2">Layout of an HTML document</Heading>
-<Code
-	lang="HTML"
-	content={`
-<!DOCTYPE html>
+<Editor
+	defaultValue={`<!DOCTYPE html>
 <html lang="en-US">
   <head>
     <meta charset="utf-8" />

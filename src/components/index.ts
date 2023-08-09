@@ -9,7 +9,7 @@ import Details from './Details.svelte';
 import List from './List.svelte';
 import Code from './Code.svelte';
 import Link from './Link.svelte';
-
+import Editor from './Editor.svelte';
 import Image from './Image.svelte';
 
 export {
@@ -24,5 +24,6 @@ export {
 	Details,
 	List,
 	Link,
-	Image
+	Image,
+	Editor
 };

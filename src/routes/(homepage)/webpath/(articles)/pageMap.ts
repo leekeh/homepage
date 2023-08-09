@@ -23,7 +23,8 @@ const pageMap = [
 			{ url: 'tables', title: 'Tables' },
 			{ url: 'semantics', title: 'Accessibility: semantic HTML' },
 			{ url: 'meta', title: 'Metadata' },
-			{ url: 'svg', title: 'Icons & other graphics' }
+			{ url: 'svg', title: 'Icons & other graphics' },
+			{ url: 'overview', title: 'Overview & review' }
 		]
 	},
 	{

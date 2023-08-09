@@ -22,7 +22,8 @@
 	const basicSetup: Extension = [
 		keymap.of([...defaultKeymap, ...historyKeymap]),
 		drawSelection(),
-		syntaxHighlighting(defaultHighlightStyle, { fallback: true })
+		syntaxHighlighting(defaultHighlightStyle, { fallback: true }),
+		EditorView.lineWrapping
 	];
 
 	function updatePreview() {

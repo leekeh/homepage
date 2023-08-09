@@ -23,7 +23,8 @@
   </head>
   <body>
     <h1>My website</h1>
-    <img src="images/firefox-icon.png" alt="My test image" />
+    <p>Welcome to my page. Here's a pretty picture.</p>
+    <img src="https://tinyurl.com/5n84fdjv" width='200px' alt="Japanese woodblock print of a cat looking out of a window" />
   </body>
 </html>`}
 />

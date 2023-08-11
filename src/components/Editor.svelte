@@ -70,11 +70,13 @@
 </div>
 
 <Button
-	onClick={() =>
+	on:click={() =>
 		view.dispatch({
 			changes: { from: 0, to: view.state.doc.toString().length, insert: defaultValue }
-		})}>Reset</Button
+		})}
 >
+	Reset
+</Button>
 
 {#if !view}
 	<pre>{value ?? defaultValue}</pre>

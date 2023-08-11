@@ -1,0 +1,10 @@
+{
+	"ide": {
+		"summary": "IDE",
+		"description": "Integrated development environment. It is an application on your computer that allows you to write code."
+	},
+	"openSource": {
+		"summary": "open source",
+		"description": "The code of a piece of software is freely available for modification and redistribution."
+	}
+}

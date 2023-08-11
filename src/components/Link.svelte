@@ -1,15 +1,14 @@
 <script lang="ts">
 	export let style: string = '';
 	export let href: string | undefined = undefined;
-	export let onClick: undefined | (() => unknown) = undefined;
 </script>
 
 {#if href}
-	<a {style} on:click={onClick} {href}>
+	<a {style} on:click {href}>
 		<slot />
 	</a>
 {:else}
-	<button {style} on:click={onClick}>
+	<button {style} on:click>
 		<slot />
 	</button>
 {/if}

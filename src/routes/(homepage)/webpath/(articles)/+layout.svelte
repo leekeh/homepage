@@ -35,8 +35,8 @@
 		</p>
 		<p>Do you have any prior coding experience?</p>
 		<span>
-			<Button onClick={() => hasProgrammed.set('true')}>Yes</Button>
-			<Button onClick={() => hasProgrammed.set('false')}>No</Button></span
+			<Button on:click={() => hasProgrammed.set('true')}>Yes</Button>
+			<Button on:click={() => hasProgrammed.set('false')}>No</Button></span
 		>
 	</Bar>
 {/if}

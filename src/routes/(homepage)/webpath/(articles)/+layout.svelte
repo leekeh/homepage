@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { IconButton, Button, Bar } from '@components';
 	import { Meatball, Alert } from '@icons';
 	import { hasProgrammed, lastVisited } from '../stores';
@@ -24,6 +24,12 @@
 	beforeNavigate(() => {
 		progress.update((prevState) => ({ ...prevState, [id]: { ...prevState[id], read: true } }));
 	});
+
+	let mainContainer: HTMLDivElement;
+
+	afterNavigate(() => {
+		mainContainer.scrollTo(0, 0);
+	});
 </script>
 
 {#if $hasProgrammed === null && isMounted}
@@ -43,7 +49,7 @@
 
 <div class="grid">
 	<SideBar />
-	<div class="mainContainer">
+	<div class="mainContainer" bind:this={mainContainer}>
 		<div class="buttonContainer">
 			<IconButton href="/" alt="Menu todo" style="float: right; margin: -1rem -1rem 0.5rem 0.5rem"
 				><Meatball /></IconButton

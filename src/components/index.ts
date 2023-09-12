@@ -12,6 +12,8 @@ import Link from './Link.svelte';
 import Editor from './Editor.svelte';
 import Image from './Image.svelte';
 
+export { default as Card } from './Card.svelte';
+
 export {
 	Banner,
 	Bar,

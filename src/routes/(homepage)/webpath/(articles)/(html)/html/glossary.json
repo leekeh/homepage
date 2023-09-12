@@ -1,0 +1,14 @@
+{
+	"standard": {
+		"summary": "standard",
+		"description": "A specification or standard is an official set of rules on how a web technology should work. HTML, JavaScript and CSS all have official standards that are maintained by a globally recognized authority."
+	},
+	"hypertext": {
+		"summary": "hypertext",
+		"description": ""
+	},
+	"hyperlink": {
+		"summary": "hyperlink",
+		"description": ""
+	}
+}

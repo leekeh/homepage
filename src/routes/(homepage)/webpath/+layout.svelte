@@ -1,5 +1,7 @@
 <div>
-	<slot />
+	<!-- <slot /> -->
+	<p style={'padding: 8px'}>This section is under construction. Come back later :) </p>
+
 </div>
 
 <style>

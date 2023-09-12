@@ -16,7 +16,8 @@ const config = {
 			'@components': 'src/components',
 			'@icons': 'src/icons',
 			'@img': 'src/img',
-			'@stores': 'src/stores'
+			'@stores': 'src/stores',
+			'@util': 'src/util'
 		}
 	}
 };

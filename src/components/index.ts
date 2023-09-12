@@ -1,31 +1,14 @@
-import Banner from './Banner.svelte';
-import Bar from './Bar.svelte';
-import IconButton from './IconButton.svelte';
-import Button from './Button.svelte';
-import LoadingSpinner from './LoadingSpinner.svelte';
-import RadioGroup from './RadioGroup.svelte';
-import Heading from './Heading.svelte';
-import Details from './Details.svelte';
-import List from './List.svelte';
-import Code from './Code.svelte';
-import Link from './Link.svelte';
-import Editor from './Editor.svelte';
-import Image from './Image.svelte';
-
+export { default as Banner } from './Banner.svelte';
+export { default as Bar } from './Bar.svelte';
+export { default as Button } from './Button.svelte';
 export { default as Card } from './Card.svelte';
-
-export {
-	Banner,
-	Bar,
-	Code,
-	IconButton,
-	LoadingSpinner,
-	Button,
-	RadioGroup,
-	Heading,
-	Details,
-	List,
-	Link,
-	Image,
-	Editor
-};
+export { default as Code } from './Code.svelte';
+export { default as Details } from './Details.svelte';
+export { default as Editor } from './Editor.svelte';
+export { default as Heading } from './Heading.svelte';
+export { default as IconButton } from './IconButton.svelte';
+export { default as Image } from './Image.svelte';
+export { default as Link } from './Link.svelte';
+export { default as List } from './List.svelte';
+export { default as LoadingSpinner } from './LoadingSpinner.svelte';
+export { default as RadioGroup } from './RadioGroup.svelte';

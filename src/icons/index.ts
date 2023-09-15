@@ -1,23 +1,11 @@
-import GitHubLogo from './GitHubLogo.svelte';
-import LinkedInLogo from './LinkedInLogo.svelte';
-import InstagramLogo from './InstagramLogo.svelte';
-import Meatball from './Meatball.svelte';
-import Alert from './Alert.svelte';
-import Cog from './Cog.svelte';
-import Home from './Home.svelte';
-import Check from './Check.svelte';
-import ListSearch from './ListSearch.svelte';
-import Copy from './Copy.svelte';
-
-export {
-	GitHubLogo,
-	LinkedInLogo,
-	InstagramLogo,
-	Meatball,
-	Alert,
-	Cog,
-	Home,
-	Check,
-	ListSearch,
-	Copy
-};
+export { default as Alert } from './Alert.svelte';
+export { default as Check } from './Check.svelte';
+export { default as Cog } from './Cog.svelte';
+export { default as Copy } from './Copy.svelte';
+export { default as Cross } from './Cross.svelte';
+export { default as GitHubLogo } from './GitHubLogo.svelte';
+export { default as Home } from './Home.svelte';
+export { default as InstagramLogo } from './InstagramLogo.svelte';
+export { default as LinkedInLogo } from './LinkedInLogo.svelte';
+export { default as ListSearch } from './ListSearch.svelte';
+export { default as Meatball } from './Meatball.svelte';

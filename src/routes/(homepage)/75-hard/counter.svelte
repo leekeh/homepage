@@ -10,7 +10,7 @@
 
 	onMount(() => {
 		const interval = setInterval(() => {
-			daysSinceStart = differenceInDays(new Date(), $startDateStore) + 1; // recalculate the difference in days
+			daysSinceStart = differenceInDays(new Date(), new Date($startDateStore)) + 1; // recalculate the difference in days
 		}, 60000); // refresh once a minute
 		return () => clearInterval(interval); // clear the interval on destroy
 	});
@@ -55,5 +55,6 @@
 
 	.EndDate {
 		opacity: 80%;
+		font-size: max(2vw, 1.6rem);
 	}
 </style>

@@ -14,10 +14,11 @@
 	});
 </script>
 
-<Card as="section" style="width: 80vw">
-	<Heading as="h2">75 hard challenge</Heading>
+<Card as="section" style="width: max(300px, 80vw); padding: 0">
+	<Heading as="h2" style="font-size: max(2rem, 5vw); padding-top: 1rem">75 hard challenge</Heading>
+	<div class="Divider" />
 	<LoadingSpinner isLoading={!isMounted}>
-		<div>
+		<div class="FlexContainer">
 			{#if !hasStarted}
 				<InactiveView />
 			{:else}
@@ -28,11 +29,17 @@
 </Card>
 
 <style>
-	div {
+	.FlexContainer {
 		display: flex;
 		flex-direction: column;
 		gap: 1rem;
 		align-items: center;
 		gap: 5vw;
+		padding: 1rem;
+	}
+
+	.Divider {
+		border-top: var(--border-width) solid var(--accent);
+		width: 100%;
 	}
 </style>

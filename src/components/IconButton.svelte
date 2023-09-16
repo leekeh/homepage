@@ -29,6 +29,7 @@
 		border: none;
 		cursor: pointer;
 		background-color: transparent;
+		flex-shrink: 0;
 	}
 
 	a::before,

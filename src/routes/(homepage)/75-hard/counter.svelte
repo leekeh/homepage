@@ -45,7 +45,7 @@
 
 	.NumberRow {
 		display: flex;
-		gap: 1rem;
+		gap: 2vw;
 		justify-content: center;
 	}
 

@@ -3,6 +3,7 @@
 	import { onMount } from 'svelte';
 	import { startDateStore } from './stores';
 	import Counter from './counter.svelte';
+	import Rules from './rules.svelte';
 
 	const startTimer = () => {
 		startDateStore.set(new Date());
@@ -10,13 +11,11 @@
 	const stopTimer = () => {
 		startDateStore.set(null);
 	};
-	let isMounted = false;
-	onMount(() => {
-		isMounted = true;
-	});
 </script>
 
 <Counter />
+
+<Rules />
 
 <div>
 	<Button on:click={startTimer}>Restart</Button>

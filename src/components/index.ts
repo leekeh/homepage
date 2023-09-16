@@ -8,6 +8,7 @@ export { default as Editor } from './Editor.svelte';
 export { default as Heading } from './Heading.svelte';
 export { default as IconButton } from './IconButton.svelte';
 export { default as Image } from './Image.svelte';
+export { default as InputText } from './InputText.svelte';
 export { default as Link } from './Link.svelte';
 export { default as List } from './List.svelte';
 export { default as LoadingSpinner } from './LoadingSpinner.svelte';

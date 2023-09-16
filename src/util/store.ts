@@ -5,7 +5,6 @@ export function createCachedStore<T>(key: string, initialValue?: T | null) {
 	// Get the value from localStorage if it exists
 	const cachedValue = browser && localStorage.getItem(key);
 	const initial = cachedValue ? JSON.parse(cachedValue) : initialValue;
-
 	// Create a writable store with the initial value
 	const { subscribe, set, update } = writable<T>(initial);
 

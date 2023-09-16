@@ -3,6 +3,7 @@ export { default as Check } from './Check.svelte';
 export { default as Cog } from './Cog.svelte';
 export { default as Copy } from './Copy.svelte';
 export { default as Cross } from './Cross.svelte';
+export { default as Floppy } from './Floppy.svelte';
 export { default as GitHubLogo } from './GitHubLogo.svelte';
 export { default as Home } from './Home.svelte';
 export { default as InstagramLogo } from './InstagramLogo.svelte';

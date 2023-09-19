@@ -28,7 +28,7 @@
 		"@codemirror/commands": "^6.2.4",
 		"@codemirror/lang-html": "^6.4.5",
 		"@codemirror/state": "^6.2.1",
-		"@codemirror/view": "^6.16.0",
+		"@codemirror/view": "^6.19.0",
 		"@vercel/analytics": "^1.0.2",
 		"date-fns": "^2.30.0",
 		"esbuild": "^0.19.2",

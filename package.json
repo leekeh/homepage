@@ -12,9 +12,9 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@types/node": "^18.15.11",
 		"@sveltejs/adapter-vercel": "^3.0.2",
 		"@sveltejs/kit": "^1.22.6",
+		"@types/node": "^18.15.11",
 		"prettier": "^2.8.0",
 		"prettier-plugin-svelte": "^2.10.1",
 		"svelte": "^4.2.0",
@@ -29,8 +29,9 @@
 		"@codemirror/lang-html": "^6.4.6",
 		"@codemirror/state": "^6.2.1",
 		"@codemirror/view": "^6.16.0",
-		"highlight.js": "^11.8.0",
 		"@vercel/analytics": "^1.0.2",
-		"esbuild": "^0.19.2"
+		"date-fns": "^2.30.0",
+		"esbuild": "^0.19.2",
+		"highlight.js": "^11.8.0"
 	}
 }

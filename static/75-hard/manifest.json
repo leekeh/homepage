@@ -1,0 +1,18 @@
+{
+	"short_name": "75 Hard",
+	"name": "75 Day Hard Challenge",
+	"icons": [
+		{
+			"src": "/75-hard/icon.svg",
+			"type": "image/svg+xml",
+			"sizes": "500x500"
+		}
+	],
+	"id": "/75-hard?source=pwa",
+	"start_url": "/75-hard?source=pwa",
+	"background_color": "rgb(193, 211, 203)",
+	"display": "standalone",
+	"scope": "/75-hard",
+	"theme_color": "rgb(25, 72, 58)",
+	"description": "Counter to keep track of the 75 Hard Challenge progress. Rules can be configured."
+}

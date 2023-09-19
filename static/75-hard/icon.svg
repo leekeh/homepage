@@ -1,0 +1,7 @@
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <defs>
+    <style bx:fonts="EB Garamond">@import url(https://fonts.googleapis.com/css2?family=EB+Garamond%3Aital%2Cwght%400%2C400%3B0%2C500%3B0%2C600%3B0%2C700%3B0%2C800%3B1%2C400%3B1%2C500%3B1%2C600%3B1%2C700%3B1%2C800&amp;display=swap);</style>
+  </defs>
+  <ellipse style="paint-order: fill; fill: rgb(193, 211, 203);" cx="250" cy="250" rx="249.428" ry="249.428"></ellipse>
+  <text style="fill: rgb(25, 72, 58); font-family: EB Garamond; font-size: 368px; font-weight: 700; white-space: pre;" x="73.359" y="380.456">75</text>
+</svg>

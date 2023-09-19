@@ -3,15 +3,10 @@
 	export let href: string | undefined = undefined;
 </script>
 
-{#if href}
-	<a {style} on:click {href}>
-		<slot />
-	</a>
-{:else}
-	<button {style} on:click>
-		<slot />
-	</button>
-{/if}
+<svelte:element this={href ? 'a' : 'button'} {href} {style} on:click>
+	<slot name="icon" />
+	<span><slot /></span>
+</svelte:element>
 
 <style>
 	button,
@@ -29,7 +24,15 @@
 		font-size: inherit;
 		transition: background-color var(--transition);
 		user-select: none;
-		display: inline-block;
+		display: inline-flex;
+		gap: 0.5rem;
+		align-items: center;
+		justify-content: center;
+	}
+
+	button > *,
+	a > * {
+		vertical-align: middle;
 	}
 
 	button:hover,

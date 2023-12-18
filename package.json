@@ -12,26 +12,26 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-vercel": "^3.0.2",
+		"@sveltejs/adapter-vercel": "4.0.2",
 		"@sveltejs/kit": "^2.0.3",
 		"@types/node": "^20.10.5",
-		"prettier": "^3.0.3",
-		"prettier-plugin-svelte": "^2.10.1",
-		"svelte": "^4.2.0",
+		"prettier": "^3.1.1",
+		"prettier-plugin-svelte": "^3.1.2",
+		"svelte": "^4.2.8",
 		"svelte-check": "^3.6.2",
-		"tslib": "^2.6.1",
-		"typescript": "^5.1.6",
-		"vite": "^4.4.12"
+		"tslib": "^2.6.2",
+		"typescript": "^5.3.3",
+		"vite": "^5.0.10"
 	},
 	"type": "module",
 	"dependencies": {
 		"@codemirror/commands": "^6.3.2",
-		"@codemirror/lang-html": "^6.4.6",
-		"@codemirror/state": "^6.2.1",
-		"@codemirror/view": "^6.16.0",
-		"@vercel/analytics": "^1.0.2",
-		"date-fns": "^2.30.0",
-		"esbuild": "^0.19.3",
-		"highlight.js": "^11.8.0"
+		"@codemirror/lang-html": "^6.4.7",
+		"@codemirror/state": "^6.3.3",
+		"@codemirror/view": "^6.22.3",
+		"@vercel/analytics": "^1.1.1",
+		"date-fns": "^3.0.0",
+		"esbuild": "^0.19.9",
+		"highlight.js": "^11.9.0"
 	}
 }

@@ -27,7 +27,7 @@
 	"dependencies": {
 		"@codemirror/commands": "^6.3.2",
 		"@codemirror/lang-html": "^6.4.7",
-		"@codemirror/state": "^6.3.3",
+		"@codemirror/state": "^6.4.0",
 		"@codemirror/view": "^6.22.3",
 		"@vercel/analytics": "^1.1.1",
 		"date-fns": "^3.0.0",

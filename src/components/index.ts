@@ -13,3 +13,4 @@ export { default as Link } from './Link.svelte';
 export { default as List } from './List.svelte';
 export { default as LoadingSpinner } from './LoadingSpinner.svelte';
 export { default as RadioGroup } from './RadioGroup.svelte';
+export { Table } from './Table';

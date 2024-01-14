@@ -67,9 +67,11 @@
 	/* CSS Variables */
 	:root {
 		--bg-primary: #ececec;
+		--bg-inverted: var(--foreground);
 		--accent: #19483a;
 		--accent-subtle: #00725036;
 		--foreground: #113228;
+		--foreground-inverted: var(--bg-primary);
 		--max-width: 1040px;
 		--border-radius: 1rem;
 		--border-width: 0.15rem;

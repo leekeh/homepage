@@ -1,8 +1,6 @@
 <script lang="ts">
 	import type { Sentence } from '../../resources/types';
-
 	export let sentences: Sentence[];
-
 	import { Table } from '@components';
 </script>
 
@@ -27,15 +25,5 @@
 		padding: 1rem;
 		cursor: pointer;
 		transition: 0.3s ease background;
-	}
-
-	th {
-		background-color: var(--bg-inverted);
-		color: var(--foreground-inverted);
-	}
-
-	th,
-	td {
-		padding: 0.5rem;
 	}
 </style>

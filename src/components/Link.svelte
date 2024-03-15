@@ -28,8 +28,12 @@
 		display: inline-block;
 		background: linear-gradient(to right, var(--accent), var(--accent)),
 			linear-gradient(to right, var(--accent-subtle), var(--accent-subtle));
-		background-size: 100% 0.1em, 0 0.1em;
-		background-position: 100% 100%, 0 100%;
+		background-size:
+			100% 0.1em,
+			0 0.1em;
+		background-position:
+			100% 100%,
+			0 100%;
 		background-repeat: no-repeat;
 		transition: background-size 400ms;
 	}
@@ -38,7 +42,9 @@
 	button:focus-visible,
 	a:hover,
 	a:focus-visible {
-		background-size: 0 0.1em, 100% 0.1em;
+		background-size:
+			0 0.1em,
+			100% 0.1em;
 	}
 
 	button:focus-visible,

@@ -26,7 +26,9 @@
 			{/if}
 
 			<Heading as="h2">
-				{#if $lastVisited !== null} or {/if}jump to:</Heading
+				{#if $lastVisited !== null}
+					or
+				{/if}jump to:</Heading
 			>
 			<nav>
 				<ul>

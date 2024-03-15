@@ -57,7 +57,9 @@
 		border: var(--border-width) solid var(--foreground);
 		background-color: transparent;
 		border-radius: 100%;
-		transition: color var(--transition), background-color var(--transition);
+		transition:
+			color var(--transition),
+			background-color var(--transition);
 		background-image: radial-gradient(
 			circle at center,
 			currentColor 50%,

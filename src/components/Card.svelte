@@ -1,15 +1,13 @@
-<script lang='ts'>
-    export let as: Element['tagName'] = 'div';
-    export let style: string = '';
-
+<script lang="ts">
+	export let as: Element['tagName'] = 'div';
+	export let style: string = '';
 </script>
 
-
-<svelte:element class='Card' this={as} {style}><slot/></svelte:element>
+<svelte:element this={as} class="Card" {style}><slot /></svelte:element>
 
 <style>
-    .Card {
-        background-color: var(--bg-primary);
+	.Card {
+		background-color: var(--bg-primary);
 		border: var(--border-width) solid var(--accent);
 		margin: min(5%, 20px);
 		padding: 1rem;
@@ -20,6 +18,5 @@
 		align-items: center;
 		color: var(--accent);
 		text-align: center;
-    }
-
+	}
 </style>

@@ -44,7 +44,9 @@
 		outline: var(--border-width) solid var(--foreground);
 		border-radius: var(--border-radius);
 		padding: 0.5rem;
-		transition: outline-offset var(--transition), background-color var(--transition);
+		transition:
+			outline-offset var(--transition),
+			background-color var(--transition);
 		display: flex;
 		flex-direction: column;
 		justify-content: center;

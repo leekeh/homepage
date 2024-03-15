@@ -19,6 +19,7 @@
 		overflow: auto;
 		font-size: 1.3rem;
 		line-height: 1.2;
+		padding: max(2rem, 5%);
 	}
 
 	:global(body) {

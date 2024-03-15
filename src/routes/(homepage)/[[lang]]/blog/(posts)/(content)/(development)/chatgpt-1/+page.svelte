@@ -7,11 +7,11 @@
 		editDate: '2021-10-11',
 		nl: {
 			summary: 'loremiosumkdsnaflkjs;fdsjsfsadfs',
-			title: 'Lieke en André zoeken de beste patat van Nederland'
+			title: 'Dingen die ik deze maand aan AI vroeg'
 		},
 		en: {
 			summary: 'loremiosumkdsnaflkjs;fdsjsfsadfs',
-			title: 'Lieke & André rank the best Dutch fries'
+			title: 'Things I asked AI this month'
 		},
 		imageSrc: robot
 	};

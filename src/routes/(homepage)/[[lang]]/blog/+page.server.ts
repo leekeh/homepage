@@ -1,11 +1,10 @@
 /** @type {import('./$types').PageServerLoad} */
-import { error } from '@sveltejs/kit';
-import type { PostMetaData } from './types';
+import type { PostMetaData } from '../types';
 
-export const load = async ({ params }) => {
+export const load = async ({ params, cookies, request }) => {
 	const lang =
 		params.lang && ['en', 'nl'].includes(params.lang) ? (params.lang as 'nl' | 'en') : 'en';
-
+	console.log(request.headers.get('accept-language'));
 	const posts = await Promise.all(
 		Object.entries(import.meta.glob<Record<string, any>>('./**/+page.svelte')).map(
 			async ([key, value]) => {

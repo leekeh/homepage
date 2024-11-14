@@ -10,3 +10,4 @@ export { default as InstagramLogo } from './InstagramLogo.svelte';
 export { default as LinkedInLogo } from './LinkedInLogo.svelte';
 export { default as ListSearch } from './ListSearch.svelte';
 export { default as Meatball } from './Meatball.svelte';
+export { default as BlueskyLogo} from './Bluesky.svelte';

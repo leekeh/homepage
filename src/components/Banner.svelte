@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { GitHubLogo, LinkedInLogo, InstagramLogo } from '@icons';
+	import { GitHubLogo, LinkedInLogo, InstagramLogo, BlueskyLogo } from '@icons';
 	import { portrait } from '@img';
 	import IconButton from './IconButton.svelte';
 </script>
@@ -13,6 +13,10 @@
 	<nav>
 		<IconButton href="https://github.com/leekeh" alt="GitHub">
 			<GitHubLogo />
+		</IconButton>
+
+		<IconButton href="https://bsky.app/profile/leekeh.com" alt="Bluesky">
+			<BlueskyLogo />
 		</IconButton>
 
 		<IconButton href="https://www.linkedin.com/in/leekeh/" alt="LinkedIn">

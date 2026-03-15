@@ -1,0 +1,24 @@
+---
+/**
+ * SeeMoreLink — a compact "see more →" anchor styled after mujuu.jp.
+ *
+ * Usage:
+ *   <SeeMoreLink href="/blog">Read the blog</SeeMoreLink>
+ *   <SeeMoreLink href="/blog" />   ← uses default "see more" text
+ */
+
+type Props = {
+  href: string;
+  /** Override the link label. Defaults to "see more". */
+  text?: string;
+};
+
+const { href, text = "see more" } = Astro.props;
+---
+
+<a class="see-more" href={href}>
+  {text}
+  <span class="material-symbols-outlined arrow" aria-hidden="true"
+    >arrow_forward</span
+  >
+</a>

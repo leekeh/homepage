@@ -1,0 +1,14 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="16"
+  height="16"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.2"
+>
+  <rect x="2" y="2" width="12" height="9" rx="1" />
+  <line x1="6" y1="11" x2="6" y2="14" />
+  <line x1="10" y1="11" x2="10" y2="14" />
+  <line x1="4" y1="14" x2="12" y2="14" />
+</svg>

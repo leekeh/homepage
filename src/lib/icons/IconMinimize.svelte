@@ -1,0 +1,11 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="10"
+  height="10"
+  viewBox="0 0 10 10"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+>
+  <line x1="2" y1="8" x2="8" y2="8" />
+</svg>

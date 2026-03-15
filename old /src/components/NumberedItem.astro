@@ -1,0 +1,152 @@
+---
+/**
+ * NumberedItem — a numbered content block styled after mujuu.jp's product listing:
+ *
+ *   01
+ *   ( TAG )   label
+ *   Heading
+ *   Body text
+ *   see more →
+ */
+
+type Props = {
+  /** Zero-padded number, e.g. "01" */
+  number: string;
+  /** Parenthesised category label, e.g. "RELAX" — rendered as  ( RELAX ) */
+  tag?: string;
+  /** Short descriptor shown beside the tag, e.g. "ほぐす" */
+  label?: string;
+  /** Item heading */
+  heading: string;
+  /** Optional body copy */
+  body?: string;
+  /** "see more" link target */
+  href?: string;
+  /** Text for the see-more link */
+  linkText?: string;
+};
+
+const {
+  number,
+  tag,
+  label,
+  heading,
+  body,
+  href,
+  linkText = "see more",
+} = Astro.props;
+---
+
+<div class="numbered-item">
+  <div class="numbered-item__meta">
+    <span class="numbered-item__number">{number}</span>
+    {
+      (tag || label) && (
+        <div class="numbered-item__tags">
+          {tag && <span class="numbered-item__tag">( {tag} )</span>}
+          {label && <span class="numbered-item__label">{label}</span>}
+        </div>
+      )
+    }
+  </div>
+
+  <div class="numbered-item__content">
+    <h3 class="numbered-item__heading">{heading}</h3>
+
+    {body && <p class="numbered-item__body">{body}</p>}
+
+    <!-- Any extra content (e.g. price, image) -->
+    <slot />
+
+    {
+      href && (
+        <a class="see-more numbered-item__link" href={href}>
+          {linkText}
+          <span class="material-symbols-outlined arrow" aria-hidden="true">
+            arrow_forward
+          </span>
+        </a>
+      )
+    }
+  </div>
+</div>
+
+<style>
+  .numbered-item {
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+    gap: 2rem;
+    padding-block: 3rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  /* Number */
+  .numbered-item__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding-top: 0.25rem;
+  }
+
+  .numbered-item__number {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--color-muted);
+  }
+
+  .numbered-item__tags {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .numbered-item__tag {
+    font-family: var(--font-sans);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--color-accent);
+  }
+
+  .numbered-item__label {
+    font-family: var(--font-serif);
+    font-size: 0.875rem;
+    color: var(--color-text);
+  }
+
+  /* Content */
+  .numbered-item__content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .numbered-item__heading {
+    font-family: var(--font-serif);
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    font-weight: 600;
+    color: var(--color-heading);
+    line-height: 1.4;
+  }
+
+  .numbered-item__body {
+    font-family: var(--font-serif);
+    font-size: 0.9375rem;
+    line-height: 2.4;
+    color: var(--color-text);
+    max-width: 50ch;
+  }
+
+  .numbered-item__link {
+    margin-top: 0.25rem;
+  }
+
+  @media (max-width: 480px) {
+    .numbered-item {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+</style>

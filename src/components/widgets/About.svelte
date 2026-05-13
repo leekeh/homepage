@@ -70,7 +70,7 @@
 		sourced from
 		<a href="https://tabler.io/icons" target="_blank" rel="noopener">Tabler</a>.
 	</p>
-	<p>This site is still under active development.</p>
+	<p>This site is still under active development. Let me know if you run into anny issues!</p>
 	<a href="https://github.com/leekeh/homepage" target="_blank" rel="noopener">View source code</a>
 	<Button onclick={resetComputer}>Reset computer</Button>
 </Content>

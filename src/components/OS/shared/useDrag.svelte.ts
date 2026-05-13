@@ -1,3 +1,5 @@
+import type { Attachment } from 'svelte/attachments';
+
 type DragEndReason = 'pointerup' | 'pointercancel' | 'lostcapture';
 
 type DragPayload = {
@@ -10,13 +12,38 @@ type DragPayload = {
 };
 
 type UseDragOptions = {
+	/** Amount of movement (in pixels) required to start the drag */
 	threshold?: number;
+	/** Optional callback to determine if dragging should start based on the initial pointer event */
 	shouldStart?: (event: PointerEvent) => boolean;
+	/** Callback invoked when dragging starts */
 	onStart?: (payload: DragPayload) => void;
+	/** Callback invoked when dragging moves */
 	onMove?: (payload: DragPayload) => void;
+	/** Callback invoked when dragging ends */
 	onEnd?: (payload: DragPayload & { reason: DragEndReason }) => void;
 };
 
+/**
+ * Generates an attachment triggering drag events based on pointer interactions. Requires the user to manage the dragged element's position based on the provided callbacks.
+ *
+ * Usage:
+ * ```svelte
+ * <script lang="ts">
+ *  import { useDrag } from './useDrag.svelte';
+ * 	let x = $state(0);
+ * 	let y = $state(0);
+ *  const drag = useDrag({
+ *   threshold: 5,
+ *   onMove: ({ dx, dy }) => {
+ *     x = dx;
+ *     y = dy;
+ *   },
+ * });
+ * </script>
+ * 	<div {@attach drag} style="top: {y}px; left: {x}px; position: absolute;">Drag me!</div>
+ * ```
+ */
 export function useDrag(options: UseDragOptions = {}) {
 	const threshold = options.threshold ?? 0;
 
@@ -65,6 +92,7 @@ export function useDrag(options: UseDragOptions = {}) {
 		lastEvent = event;
 		activePointerId = event.pointerId;
 		captureElement = event.currentTarget as HTMLElement;
+		if (!captureElement) return;
 		captureElement.setPointerCapture(event.pointerId);
 
 		options.onStart?.(payloadFor(event));
@@ -109,11 +137,33 @@ export function useDrag(options: UseDragOptions = {}) {
 		finish(event, 'lostcapture');
 	}
 
-	return {
-		onPointerDown,
-		onPointerMove,
-		onPointerUp,
-		onPointerCancel,
-		onLostPointerCapture
+	function onDragStart(event: DragEvent) {
+		// Disable native drag-and-drop, which would interfere with our custom dragging logic.
+		event.preventDefault();
+	}
+
+	const dragAttachment: Attachment<HTMLElement> = (element) => {
+		element.addEventListener('pointerdown', onPointerDown);
+		element.addEventListener('pointermove', onPointerMove);
+		element.addEventListener('pointerup', onPointerUp);
+		element.addEventListener('pointercancel', onPointerCancel);
+		element.addEventListener('lostpointercapture', onLostPointerCapture);
+		element.addEventListener('dragstart', onDragStart);
+
+		return () => {
+			element.removeEventListener('pointerdown', onPointerDown);
+			element.removeEventListener('pointermove', onPointerMove);
+			element.removeEventListener('pointerup', onPointerUp);
+			element.removeEventListener('pointercancel', onPointerCancel);
+			element.removeEventListener('lostpointercapture', onLostPointerCapture);
+			element.removeEventListener('dragstart', onDragStart);
+
+			if (captureElement === element) {
+				releaseCapture();
+				reset();
+			}
+		};
 	};
+
+	return dragAttachment;
 }

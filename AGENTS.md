@@ -28,7 +28,7 @@ A progressively-enhanced personal website styled as a retro (Win95-esque) deskto
 - Widget source of truth is split between:
   - `widgets.config.ts` (widget definitions array)
   - `widgets.ts` (registry/query helpers)
-- `beforeNavigate()` intercepts navigation → opens widget via `wm.open()`
+- `beforeNavigate()` intercepts navigation → opens widget via `wm.open()`. This is automatic, global behavior.
 - URL synced via `pushState()` when window focused
 - Catch-all route prerender includes blog slugs
 
@@ -48,6 +48,7 @@ A progressively-enhanced personal website styled as a retro (Win95-esque) deskto
 - JS hydration (2-second startup delay): WindowManager takes over; windows become draggable/interactive
 - Hydration overlay (`js-hydrating` class) visible during SSR→hydration transition, hides automatically on mount
 - Async rendering enabled in `svelte.config.js` to support lazy widget component loading in SSR/client
+- "commandfor" attributes require recent browsers, polyfilled with javascript in `src/util/polyfills.ts` for unsupported browsers (e.g. older Safari)
 
 ## Conventions
 

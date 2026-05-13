@@ -41,32 +41,27 @@
 		menubar
 	}: Props = $props();
 
+	// Context
 	const wm = useWindowManager();
-
-	// ── Drag state ──
-	let dragging = $state(false);
-	let dragOffX = 0;
-	let dragOffY = 0;
+	const isActive = $derived(wm.activeWindow?.id === id);
 
 	// ── Resize state ──
 	let resizing = $state(false);
-	let resizeDir = '';
-	let resizeStartX = 0;
-	let resizeStartY = 0;
-	let resizeStartW = 0;
-	let resizeStartH = 0;
-	let resizeStartWinX = 0;
-	let resizeStartWinY = 0;
 	let isAnimating = $state(false);
 	let showBottomSnapPreview = $state(false);
 	let draggingMaximized = $state(false);
 	let maximizeDragStartY = 0;
 	let showMinimizePreview = $state(false);
 
-	const SNAP_PREVIEW_THRESHOLD = 28;
+	// ── Drag state ──
+	let dragging = $state(false);
+	let dragOffX = 0;
+	let dragOffY = 0;
+
 	const MAXIMIZED_MINIMIZE_THRESHOLD = 72;
 
 	const drag = useDrag({
+		shouldStart: (event) => !(event.target as HTMLElement).closest('.titlebar-buttons'),
 		onStart: ({ event }) => {
 			dragging = true;
 			showBottomSnapPreview = false;
@@ -92,7 +87,7 @@
 				const nextX = event.clientX - dragOffX;
 				const nextY = event.clientY - dragOffY;
 				wm.move(id, nextX, nextY);
-				showBottomSnapPreview = !maximized && shouldShowBottomSnapPreview(nextY);
+				showBottomSnapPreview = !maximized && shouldShowBottomSnapPreview();
 			}
 		},
 		onEnd: ({ event }) => {
@@ -117,70 +112,73 @@
 		}
 	});
 
-	function shouldShowBottomSnapPreview(nextY: number) {
+	function shouldShowBottomSnapPreview() {
 		// todo move this to window manager logic.
 		// const maxWindowY = wm.desktopHeight - WindowManager.TASKBAR_H - height;
-		// return nextY >= maxWindowY - SNAP_PREVIEW_THRESHOLD;
+		// return nextY >= maxWindowY - 28;
 		return false;
 	}
 
-	function onTitlePointerDown(e: PointerEvent) {
-		// Don't start drag when clicking window control buttons
-		if ((e.target as HTMLElement).closest('.titlebar-buttons')) return;
-		drag.onPointerDown(e);
-	}
+	function createResizeAttachment(dir: string) {
+		let startW = 0;
+		let startH = 0;
+		let startX = 0;
+		let startY = 0;
 
-	function onPointerMove(e: PointerEvent) {
-		drag.onPointerMove(e);
-		if (resizing) {
-			showBottomSnapPreview = false;
-			const dx = e.clientX - resizeStartX;
-			const dy = e.clientY - resizeStartY;
+		return useDrag({
+			shouldStart: (event) => {
+				if (!resizable || maximized) return false;
+				event.stopPropagation();
+				wm.focus(id);
+				return true;
+			},
+			onStart: () => {
+				resizing = true;
+				showBottomSnapPreview = false;
+				showMinimizePreview = false;
+				startW = width;
+				startH = height;
+				startX = x;
+				startY = y;
+			},
+			onMove: ({ dx, dy }) => {
+				let newW = startW;
+				let newH = startH;
+				let newX = startX;
+				let newY = startY;
 
-			let newW = resizeStartW;
-			let newH = resizeStartH;
-			let newX = resizeStartWinX;
-			let newY = resizeStartWinY;
+				if (dir.includes('e')) newW = startW + dx;
+				if (dir.includes('s')) newH = startH + dy;
+				if (dir.includes('w')) {
+					newW = startW - dx;
+					newX = startX + dx;
+				}
+				if (dir.includes('n')) {
+					newH = startH - dy;
+					newY = startY + dy;
+				}
 
-			if (resizeDir.includes('e')) newW = resizeStartW + dx;
-			if (resizeDir.includes('s')) newH = resizeStartH + dy;
-			if (resizeDir.includes('w')) {
-				newW = resizeStartW - dx;
-				newX = resizeStartWinX + dx;
+				if (newW >= 200 && newH >= 120) {
+					wm.resize(id, newW, newH);
+					wm.move(id, newX, newY);
+				}
+			},
+			onEnd: () => {
+				resizing = false;
+				showBottomSnapPreview = false;
+				showMinimizePreview = false;
 			}
-			if (resizeDir.includes('n')) {
-				newH = resizeStartH - dy;
-				newY = resizeStartWinY + dy;
-			}
-
-			if (newW >= 200 && newH >= 120) {
-				wm.resize(id, newW, newH);
-				wm.move(id, newX, newY);
-			}
-		}
+		});
 	}
 
-	function onPointerUp(e: PointerEvent) {
-		drag.onPointerUp(e);
-		resizing = false;
-		showBottomSnapPreview = false;
-		showMinimizePreview = false;
-	}
+	const resizeDirections = ['n', 's', 'e', 'w', 'ne', 'nw', 'se', 'sw'] as const;
+	type ResizeDirection = (typeof resizeDirections)[number];
 
-	function onResizePointerDown(e: PointerEvent, dir: string) {
-		if (!resizable || maximized) return;
-		e.stopPropagation();
-		resizing = true;
-		resizeDir = dir;
-		resizeStartX = e.clientX;
-		resizeStartY = e.clientY;
-		resizeStartW = width;
-		resizeStartH = height;
-		resizeStartWinX = x;
-		resizeStartWinY = y;
-		(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-	}
+	const resizeAttachments = Object.fromEntries(
+		resizeDirections.map((dir) => [dir, createResizeAttachment(dir)])
+	) as Record<ResizeDirection, ReturnType<typeof useDrag>>;
 
+	// Window management
 	function onFocus() {
 		wm.focus(id);
 	}
@@ -200,16 +198,19 @@
 	function onClose() {
 		wm.close(id);
 	}
-
-	let isActive = $derived(wm.activeWindow?.id === id);
 </script>
 
-<svelte:window onpointermove={onPointerMove} onpointerup={onPointerUp} />
+<!-- 
+@component
+OS-style window with title bar, optional menubar, and content area. Supports dragging, resizing, maximizing, minimizing, and closing.
+ -->
 
-<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <div
 	class="window"
 	class:maximized
+	class:minimized
+	class:resizing
 	class:inactive={!isActive}
 	tabindex={isActive ? 0 : -1}
 	style="
@@ -224,13 +225,8 @@
 	aria-hidden={!isActive}
 >
 	<!-- Title Bar -->
-	<div
-		class="titlebar"
-		onpointerdown={onTitlePointerDown}
-		onpointercancel={drag.onPointerCancel}
-		onlostpointercapture={drag.onLostPointerCapture}
-		ondblclick={onToggleMaximize}
-	>
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div class="titlebar" {@attach drag} ondblclick={onToggleMaximize} draggable="true">
 		<div class="titlebar-left">
 			{#if icon}
 				<span class="title-icon">{icon}</span>
@@ -268,14 +264,9 @@
 
 	<!-- Resize handles -->
 	{#if resizable && !maximized}
-		<div class="resize-handle n" onpointerdown={(e) => onResizePointerDown(e, 'n')}></div>
-		<div class="resize-handle s" onpointerdown={(e) => onResizePointerDown(e, 's')}></div>
-		<div class="resize-handle e" onpointerdown={(e) => onResizePointerDown(e, 'e')}></div>
-		<div class="resize-handle w" onpointerdown={(e) => onResizePointerDown(e, 'w')}></div>
-		<div class="resize-handle ne" onpointerdown={(e) => onResizePointerDown(e, 'ne')}></div>
-		<div class="resize-handle nw" onpointerdown={(e) => onResizePointerDown(e, 'nw')}></div>
-		<div class="resize-handle se" onpointerdown={(e) => onResizePointerDown(e, 'se')}></div>
-		<div class="resize-handle sw" onpointerdown={(e) => onResizePointerDown(e, 'sw')}></div>
+		{#each resizeDirections as dir (dir)}
+			<div class={`resize-handle ${dir}`} {@attach resizeAttachments[dir]}></div>
+		{/each}
 	{/if}
 </div>
 
@@ -304,6 +295,10 @@
 	.window.maximized {
 		border-radius: 0;
 		border: none;
+	}
+
+	.window.resizing {
+		user-select: none;
 	}
 
 	.snap-preview {

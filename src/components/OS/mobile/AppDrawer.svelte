@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { widgetNavigationData } from '../../widgets/widgets';
+	import { resolve } from '$app/paths';
 	import IconHome from '@icons/IconHome.svelte';
 	import { useTime } from '../shared/useTime.svelte';
 
@@ -7,18 +8,12 @@
 	const id = $props.id();
 	let time = $derived(useTime());
 
-	function closeMenu(event?: MouseEvent) {
-		event?.preventDefault();
-		if (!dialog) return;
-		if (dialog.open) {
-			dialog.close();
-		} else {
-			dialog.removeAttribute('open');
-		}
+	function closeMenu() {
+		dialog?.close();
 	}
 </script>
 
-<button class="home-btn" command="show-modal" title="Home" commandfor={id} aria-label="Home">
+<button command="show-modal" title="Home" commandfor={id} aria-label="Home">
 	<IconHome />
 </button>
 
@@ -26,26 +21,24 @@
 	<div class="app-drawer-surface">
 		<header class="app-menu-header">
 			<time datetime={time}>{time}</time>
-			<button
-				class="app-menu-close"
-				commandfor={id}
-				command="close"
-				onclick={closeMenu}
-				aria-label="Close menu"
-			>
+			<button class="app-menu-close" commandfor={id} command="close" aria-label="Close menu">
 				Close
 			</button>
 		</header>
 
-		<nav class="app-grid" aria-label="Applications">
-			{#each widgetNavigationData as widget (widget.id)}
-				<a class="app-grid-item" href={widget.route} onclick={closeMenu}>
-					<span class="app-grid-icon" aria-hidden="true">
-						<widget.icon />
-					</span>
-					<span class="app-grid-label">{widget.title}</span>
-				</a>
-			{/each}
+		<nav aria-label="Applications">
+			<ul class="app-grid">
+				{#each widgetNavigationData as widget (widget.id)}
+					<li>
+						<a class="app-grid-item" href={resolve(widget.route)} onclick={closeMenu}>
+							<span class="app-grid-icon" aria-hidden="true">
+								<widget.icon />
+							</span>
+							<span class="app-grid-label">{widget.title}</span>
+						</a>
+					</li>
+				{/each}
+			</ul>
 		</nav>
 	</div>
 </dialog>
@@ -106,6 +99,7 @@
 
 	.app-grid {
 		display: grid;
+		list-style: none;
 		grid-template-columns: repeat(4, minmax(0, 1fr));
 		gap: var(--space-6) var(--space-3);
 		overflow-y: auto;

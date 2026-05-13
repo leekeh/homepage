@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { getContext, onMount } from 'svelte';
-	import { WindowManager, WM_CONTEXT_KEY, NAVIGATE_KEY } from '../shared/windowManager.svelte';
+	import { getContext } from 'svelte';
+	import { WindowManager, WM_CONTEXT_KEY } from '../shared/windowManager.svelte';
 	import { getWidgetById, loadWidgetComponent, widgetNavigationData } from '../../widgets/widgets';
 	import Window from '../window/Window.svelte';
 	import MinimalWindow from '../window/MinimalWindow.svelte';
@@ -9,6 +9,7 @@
 	import IconStart from '@icons/IconStart.svelte';
 	import { useJsSupport } from '../shared/useJsSupport.svelte';
 	import { useTime } from '../shared/useTime.svelte';
+	import { resolve } from '$app/paths';
 
 	type Props = {
 		children?: Snippet;
@@ -16,67 +17,48 @@
 
 	let { children }: Props = $props();
 
+	// Context
 	const wm = getContext<WindowManager>(WM_CONTEXT_KEY);
-	const navigate =
-		getContext<(widgetId: string, data?: Record<string, unknown>) => void>(NAVIGATE_KEY);
+	const hasJsSupport = $derived(useJsSupport());
+	const time = $derived(useTime());
 
-	const hasJsSupport = useJsSupport();
-
-	onMount(() => {
-		wm.seedIconDefaults(widgetNavigationData);
-	});
-
-	const START_MENU_ID = 'desktop-start-menu';
-
-	function openWidget(widgetId: string, data?: Record<string, unknown>) {
-		navigate(widgetId, data);
-	}
-
+	// Interactions
 	function focusWindow(id: string) {
 		const win = wm.windows.find((w) => w.id === id);
 		if (win?.minimized) win.minimized = false;
 		wm.focus(id);
 	}
 
-	function onStartItemClick(event: MouseEvent, widgetId: string) {
+	const START_MENU_ID = 'desktop-start-menu';
+	function onStartItemClick(event: MouseEvent) {
 		event.preventDefault();
-		openWidget(widgetId);
 		const popover = document.getElementById(START_MENU_ID) as
 			| (HTMLElement & { hidePopover?: () => void })
 			| null;
 		popover?.hidePopover?.();
 	}
-
-	let time = $derived(useTime());
 </script>
 
-<div class="desktop-shell">
-	<div class="desktop-icons" class:no-js={!hasJsSupport}>
-		{#each widgetNavigationData as widget (widget.id)}
-			<DesktopIcon id={widget.id} label={widget.title} icon={widget.icon} href={widget.route} />
-		{/each}
-	</div>
+{#if !hasJsSupport || !wm.isMobile}
+	<div class="desktop-shell">
+		<div class="desktop-icons" class:no-js={!hasJsSupport}>
+			{#each widgetNavigationData as widget, i (widget.id)}
+				<DesktopIcon
+					id={widget.id}
+					label={widget.title}
+					icon={widget.icon}
+					href={widget.route}
+					index={i}
+				/>
+			{/each}
+		</div>
 
-	{@render children?.()}
-	{#each wm.windows as win (win.id)}
-		{#if !win.minimized}
-			{#if win.minimal}
-				<MinimalWindow
-					id={win.id}
-					bind:x={win.x}
-					bind:y={win.y}
-					width={win.width}
-					height={win.height}
-					zIndex={win.zIndex}
-				>
-					{@const WidgetComponent = await loadWidgetComponent(win.widgetId)}
-					{#if WidgetComponent}
-						<WidgetComponent {...win.data ?? {}} />
-					{/if}
-				</MinimalWindow>
-			{:else}
+		{@render children?.()}
+		{#each wm.windows as win (win.id)}
+			{#if !win.minimized}
+				{@const WindowComponent = win.minimal ? MinimalWindow : Window}
 				{@const def = getWidgetById(win.widgetId)}
-				<Window
+				<WindowComponent
 					id={win.id}
 					title={win.title}
 					bind:x={win.x}
@@ -93,64 +75,61 @@
 					{#if WidgetComponent}
 						<WidgetComponent {...win.data ?? {}} />
 					{/if}
-				</Window>
+				</WindowComponent>
 			{/if}
-		{/if}
-	{/each}
+		{/each}
 
-	<footer class="taskbar">
-		<button
-			class="start-button"
-			type="button"
-			popovertarget={START_MENU_ID}
-			popovertargetaction="toggle"
-		>
-			<IconStart />
-			<span>Start</span>
-		</button>
+		<footer class="taskbar">
+			<button class="start-button" popovertarget={START_MENU_ID} popovertargetaction="toggle">
+				<IconStart />
+				<span>Start</span>
+			</button>
 
-		<div class="divider"></div>
+			<hr class="divider" />
 
-		<div class="window-buttons">
-			{#each wm.windows as win (win.id)}
-				{@const isActive = wm.activeWindow?.id === win.id && !win.minimized}
-				<button
-					class="window-button"
-					class:active={isActive}
-					class:minimized={win.minimized}
-					onclick={() => focusWindow(win.id)}
-					title={win.title}
-				>
-					<span class="window-button-text">{win.title}</span>
-				</button>
-			{/each}
+			<ul class="window-buttons">
+				{#each wm.windows as win (win.id)}
+					{@const isActive = wm.activeWindow?.id === win.id && !win.minimized}
+					<li>
+						<button
+							class="window-button"
+							class:active={isActive}
+							class:minimized={win.minimized}
+							onclick={() => focusWindow(win.id)}
+							title={win.title}
+						>
+							<span class="window-button-text">{win.title}</span>
+						</button>
+					</li>
+				{/each}
+			</ul>
+
+			<div class="clock-area">
+				<time class="clock" datetime={time}>{time}</time>
+			</div>
+		</footer>
+
+		<div class="start-popover" id={START_MENU_ID} popover>
+			<div class="start-menu-sidebar">
+				<span class="sidebar-text">lieke.dev</span>
+			</div>
+			<nav class="start-menu-items" aria-label="Applications">
+				{#each widgetNavigationData as widget (widget.id)}
+					<a
+						class="start-menu-item"
+						href={resolve(widget.route)}
+						onclick={(e) => onStartItemClick(e)}
+					>
+						<span class="start-menu-icon" aria-hidden="true">
+							<widget.icon />
+						</span>
+						<span class="start-menu-label">{widget.title}</span>
+					</a>
+				{/each}
+			</nav>
 		</div>
-
-		<div class="clock-area">
-			<time class="clock" datetime={time}>{time}</time>
-		</div>
-	</footer>
-
-	<div class="start-popover" id={START_MENU_ID} popover>
-		<div class="start-menu-sidebar">
-			<span class="sidebar-text">lieke.dev</span>
-		</div>
-		<nav class="start-menu-items" aria-label="Applications">
-			{#each widgetNavigationData as widget (widget.id)}
-				<a
-					class="start-menu-item"
-					href={widget.route}
-					onclick={(e) => onStartItemClick(e, widget.id)}
-				>
-					<span class="start-menu-icon" aria-hidden="true">
-						<widget.icon />
-					</span>
-					<span class="start-menu-label">{widget.title}</span>
-				</a>
-			{/each}
-		</nav>
 	</div>
-</div>
+{/if}
 
 <style>
 	.desktop-shell {
@@ -237,6 +216,7 @@
 
 	.window-buttons {
 		display: flex;
+		list-style: none;
 		flex: 1;
 		gap: var(--space-1);
 		overflow: hidden;

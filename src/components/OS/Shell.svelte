@@ -1,48 +1,24 @@
 <script lang="ts">
-	import { getContext, onMount } from 'svelte';
+	import { getContext } from 'svelte';
 	import { page } from '$app/stores';
 	import { WindowManager, WM_CONTEXT_KEY } from './shared/windowManager.svelte';
-	import { widgetNavigationData, getWidgetByRoute, loadWidgetComponent } from '../widgets/widgets';
+	import { getWidgetByRoute, loadWidgetComponent } from '../widgets/widgets';
 
 	import Startup from './Startup.svelte';
 	import { useJsSupport } from './shared/useJsSupport.svelte';
 	import MobileShell from './mobile/MobileShell.svelte';
 	import DesktopShell from './desktop/DesktopShell.svelte';
 
+	// Context
 	const wm = getContext<WindowManager>(WM_CONTEXT_KEY);
-
-	const hasJsSupport = useJsSupport();
+	const hasJsSupport = $derived(useJsSupport());
 	const activeWindow = $derived(wm.activeWindow);
-
-	onMount(() => {
-		wm.seedIconDefaults(widgetNavigationData);
-	});
 
 	const routeMatch = $derived(getWidgetByRoute($page.url.pathname));
 	const fallbackWidgetId = $derived(routeMatch?.widget.id ?? 'about');
-
-	function onGlobalKeyDown(e: KeyboardEvent) {
-		if (!e.metaKey) return;
-		const active = wm.activeWindow;
-		if (!active) return;
-
-		if (e.key === 'ArrowLeft') {
-			e.preventDefault();
-			wm.snapToDirection(active.id, 'left');
-		} else if (e.key === 'ArrowRight') {
-			e.preventDefault();
-			wm.snapToDirection(active.id, 'right');
-		} else if (e.key === 'ArrowUp') {
-			e.preventDefault();
-			wm.snapToDirection(active.id, 'up');
-		} else if (e.key === 'ArrowDown') {
-			e.preventDefault();
-			wm.snapToDirection(active.id, 'down');
-		}
-	}
 </script>
 
-<svelte:window onkeydown={onGlobalKeyDown} />
+<Startup />
 
 {#snippet mainWindow()}
 	{#if activeWindow}
@@ -88,7 +64,6 @@
 
 	<MobileShell>{@render mainWindow?.()}</MobileShell>
 </div>
-<Startup />
 
 <style>
 	.shell {

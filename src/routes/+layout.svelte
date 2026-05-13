@@ -8,21 +8,21 @@
 		WM_CONTEXT_KEY,
 		NAVIGATE_KEY
 	} from '../components/OS/shared/windowManager.svelte.js';
-	import { getWidgetByRoute, getRouteForWindow } from '../components/widgets/widgets';
+	import {
+		getWidgetByRoute,
+		getRouteForWindow,
+		widgetNavigationData
+	} from '../components/widgets/widgets';
 	import { absoluteUrl, SITE_DESCRIPTION } from '../content/site';
 	import { WEBMENTION_ENDPOINT, WEBMENTION_PINGBACK } from '../content/webmentions';
 	import Shell from '../components/OS/Shell.svelte';
 	import { pushState } from '$app/navigation';
 	import { applyPolyfills } from '../util/polyfills';
-	import {
-		enableJsSupport,
-		initializeJsSupport
-	} from '../components/OS/shared/useJsSupport.svelte';
+	import { enableJsSupport } from '../components/OS/shared/useJsSupport.svelte';
 	import { initializeTime } from '@components/OS/shared/useTime.svelte.js';
+	import { resolve } from '$app/paths';
 
-	let { children, data } = $props();
-	initializeJsSupport();
-	initializeTime();
+	let { data } = $props();
 
 	// ── Window Manager ──
 	const wm = new WindowManager();
@@ -89,7 +89,7 @@
 		if (suppressUrlSync || typeof window === 'undefined') return;
 		const route = getRouteForWindow(win.widgetId, win.data);
 		if (window.location.pathname !== route) {
-			pushState(route, {});
+			pushState(resolve(route), {});
 		}
 	};
 
@@ -114,11 +114,13 @@
 	onMount(() => {
 		applyPolyfills();
 		enableJsSupport();
+		const stopClock = initializeTime();
 		const mq = window.matchMedia('(max-width: 768px)');
 		wm.isMobile = mq.matches;
 		wm.desktopWidth = window.innerWidth;
 		wm.desktopHeight = window.innerHeight;
 		wm.constrainWindowsToViewport();
+		wm.seedIconDefaults(widgetNavigationData);
 
 		function onMediaChange(e: MediaQueryListEvent) {
 			wm.isMobile = e.matches;
@@ -171,6 +173,7 @@
 		window.addEventListener('popstate', onPopState);
 
 		return () => {
+			stopClock();
 			mq.removeEventListener('change', onMediaChange);
 			window.removeEventListener('popstate', onPopState);
 			window.removeEventListener('resize', onResize);
@@ -217,9 +220,7 @@
 	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 </svelte:head>
 
-<Shell>
-	{@render children()}
-</Shell>
+<Shell />
 
 <style>
 	:global {

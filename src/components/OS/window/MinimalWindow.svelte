@@ -16,47 +16,35 @@
 
 	let { id, x = $bindable(), y = $bindable(), width, height, zIndex, children }: Props = $props();
 
+	// Context
 	const wm = useWindowManager();
 
-	let dragging = $state(false);
-	let dragOffX = 0;
-	let dragOffY = 0;
+	// State
+	let dragOffX = $state(0);
+	let dragOffY = $state(0);
 
+	// Interactions
 	const drag = useDrag({
 		onStart: ({ event }) => {
 			wm.focus(id);
-			dragging = true;
 			dragOffX = event.clientX - x;
 			dragOffY = event.clientY - y;
 		},
 		onMove: ({ event }) => {
 			wm.move(id, event.clientX - dragOffX, event.clientY - dragOffY);
-		},
-		onEnd: () => {
-			dragging = false;
 		}
 	});
-
-	function onPointerDown(e: PointerEvent) {
-		drag.onPointerDown(e);
-	}
-
-	function onPointerMove(e: PointerEvent) {
-		drag.onPointerMove(e);
-	}
-
-	function onPointerUp(e: PointerEvent) {
-		drag.onPointerUp(e);
-	}
 
 	function onClose() {
 		wm.close(id);
 	}
 </script>
 
-<svelte:window onpointermove={onPointerMove} onpointerup={onPointerUp} />
+<!-- 
+	@component
+	Window without built-in title bar. Minimal, stylistic widgets that should not be resized and should not look like traditional windows.
+ -->
 
-<!-- svelte-ignore a11y_no_static_element_interactions -->
 <div
 	class="minimal-window"
 	style="
@@ -66,9 +54,8 @@
 		height: {height}px;
 		z-index: {zIndex};
 	"
-	onpointerdown={onPointerDown}
-	onpointercancel={drag.onPointerCancel}
-	onlostpointercapture={drag.onLostPointerCapture}
+	draggable="true"
+	{@attach drag}
 >
 	<button class="minimal-close" onclick={onClose} title="Close">
 		<IconClose />

@@ -11,23 +11,27 @@
 		icon: Component;
 		id: string;
 		href: PathnameWithSearchOrHash;
+		index: number;
 	};
-	let { label, icon: Icon, id, href }: Props = $props();
+	let { label, icon: Icon, id, href, index }: Props = $props();
 
-	const hasJsSupport = useJsSupport();
+	// Context
+	const hasJsSupport = $derived(useJsSupport());
 	const wm = useWindowManager();
-	let { x, y } = $derived(wm.getIconPosition(id));
+	const iconPosition = $derived(wm.getIconPosition(id, index));
+
+	// State
+	let draggedPosition = $state<{ x: number; y: number } | null>(null);
 	let dragging = $state(false);
 	let offsetX = $state(0);
 	let offsetY = $state(0);
 	let suppressNextClick = $state(false);
+	const x = $derived(draggedPosition?.x ?? iconPosition.x);
+	const y = $derived(draggedPosition?.y ?? iconPosition.y);
+	const iconStyles = $derived(hasJsSupport ? `position: absolute; left: ${x}px; top: ${y}px;` : '');
 
-	const DRAG_THRESHOLD = 5;
-	const ICON_W = 80;
-	const ICON_H = 100;
-	const TASKBAR_H = 36;
-
-	// FIXME Dragging does not work, and also considering refactoring to use svelte attachments.
+	// Drag logic
+	const DRAG_THRESHOLD = 20;
 	const drag = useDrag({
 		threshold: DRAG_THRESHOLD,
 		onStart: ({ event }) => {
@@ -36,10 +40,8 @@
 			offsetY = event.clientY - y;
 		},
 		onMove: ({ event }) => {
-			const maxX = window.innerWidth - ICON_W;
-			const maxY = window.innerHeight - ICON_H - TASKBAR_H;
-			x = Math.max(0, Math.min(event.clientX - offsetX, maxX));
-			y = Math.max(0, Math.min(event.clientY - offsetY, maxY));
+			const clamped = wm.clampIconPos(event.clientX - offsetX, event.clientY - offsetY);
+			draggedPosition = clamped;
 		},
 		onEnd: ({ hasMoved }) => {
 			dragging = false;
@@ -47,6 +49,7 @@
 				suppressNextClick = true;
 				wm.moveIcon(id, x, y);
 			}
+			draggedPosition = null;
 		}
 	});
 
@@ -56,23 +59,17 @@
 			e.preventDefault();
 			return;
 		}
-		e.preventDefault();
-		wm.openWidget(id);
 	}
 </script>
 
 <a
 	class="desktop-icon"
+	draggable="true"
 	class:dragging
-	class:positioned={hasJsSupport}
 	href={resolve(href)}
-	style={hasJsSupport ? `left: ${x}px; top: ${y}px;` : undefined}
 	onclick={onClick}
-	onpointerdown={drag.onPointerDown}
-	onpointermove={drag.onPointerMove}
-	onpointerup={drag.onPointerUp}
-	onpointercancel={drag.onPointerCancel}
-	onlostpointercapture={drag.onLostPointerCapture}
+	{@attach drag}
+	style={iconStyles}
 >
 	<div class="icon-image">
 		<Icon />
@@ -98,24 +95,19 @@
 		transition:
 			background 0.1s,
 			border-color 0.1s;
-	}
 
-	.desktop-icon.positioned {
-		position: absolute;
-	}
+		&.dragging {
+			opacity: 0.8;
+			z-index: 9999;
+		}
 
-	.desktop-icon.dragging {
-		opacity: 0.8;
-		z-index: 9999;
-	}
-
-	.desktop-icon:hover {
-		background: rgba(212, 245, 214, 0.1);
-		border-color: rgba(212, 245, 214, 0.2);
-	}
-
-	.desktop-icon:active {
-		background: rgba(212, 245, 214, 0.2);
+		&:hover {
+			background: rgba(212, 245, 214, 0.1);
+			border-color: rgba(212, 245, 214, 0.2);
+		}
+		&:active {
+			background: rgba(212, 245, 214, 0.2);
+		}
 	}
 
 	.icon-image {
@@ -125,11 +117,11 @@
 		align-items: center;
 		justify-content: center;
 		color: var(--color-text-light);
-	}
 
-	.icon-image :global(svg) {
-		width: 32px;
-		height: 32px;
+		& :global(svg) {
+			width: 100%;
+			height: 100%;
+		}
 	}
 
 	.icon-label {

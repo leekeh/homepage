@@ -1,3 +1,4 @@
+import type { PathnameWithSearchOrHash } from '$app/types';
 import { widgetConfigs, type WidgetConfig } from './widgets.config';
 import type { Component } from 'svelte';
 
@@ -48,7 +49,10 @@ export function getWidgetByRoute(
 }
 
 /** Get the route path for a window, including any data params */
-export function getRouteForWindow(widgetId: string, data?: Record<string, unknown>): string {
+export function getRouteForWindow(
+	widgetId: string,
+	data?: Record<string, unknown>
+): PathnameWithSearchOrHash {
 	const def = getWidgetById(widgetId);
 	if (!def) return '/';
 	if (def.route.includes('[') && data) {

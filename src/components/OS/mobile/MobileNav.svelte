@@ -1,6 +1,7 @@
 <script lang="ts">
 	import IconMenu from '@icons/IconMenu.svelte';
 	import { widgetNavigationData } from '../../widgets/widgets';
+	import { resolve } from '$app/paths';
 
 	let popover: HTMLDivElement;
 	const id = $props.id();
@@ -24,7 +25,7 @@
 <div class="mobile-nav-popover" {id} bind:this={popover} popover>
 	<nav class="start-menu-items" aria-label="Applications">
 		{#each widgetNavigationData as widget (widget.id)}
-			<a class="start-menu-item" href={widget.route} onclick={closePopover}>
+			<a class="start-menu-item" href={resolve(widget.route)} onclick={closePopover}>
 				<span class="start-menu-icon" aria-hidden="true">
 					<widget.icon />
 				</span>

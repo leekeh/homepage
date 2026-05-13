@@ -1,30 +1,14 @@
-import { createContext } from 'svelte';
-
-const [getUserContext, setUserContext] = createContext<boolean>();
-
-export function initializeJsSupport() {
-	setUserContext(false);
-}
+/** True after client hydration, false during SSR / no-JS. */
+let jsSupport = $state(false);
 
 export function enableJsSupport() {
-	setUserContext(true);
+	jsSupport = true;
 }
 
 /**
- * Reusable hook to access the global JS support state.
- * Returns the shared state object initialized in the layout.
- * Returns false during SSR, true after client hydration.
- *
- * Usage:
- * ```
- * const hasJsSupport = useJsSupport();
- * {#if hasJsSupport}
- *   <!-- JS-dependent content -->
- * {:else}
- *   <!-- Fallback for no-JS -->
- * {/if}
- * ```
+ * Returns the module-level JS support state.
+ * False during SSR, true after client hydration.
  */
 export function useJsSupport() {
-	return getUserContext();
+	return jsSupport;
 }

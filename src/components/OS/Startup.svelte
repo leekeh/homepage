@@ -28,6 +28,10 @@
 	});
 </script>
 
+<!-- @component
+Startup animation overlay that automatically unrenders after set time.
+ -->
+
 <!-- toggle animation as soon as the document is ready, before it renders -->
 <svelte:head>
 	<script async fetchpriority="high" defer blocking="render">

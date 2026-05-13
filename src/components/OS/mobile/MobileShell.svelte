@@ -3,19 +3,22 @@
 	import { page } from '$app/state';
 	import { WindowManager, WM_CONTEXT_KEY } from '../shared/windowManager.svelte';
 	import { getWidgetByRoute, getRouteForWindow, widgetNavigationData } from '../../widgets/widgets';
-
+	import { resolve } from '$app/paths';
 	import AppDrawer from './AppDrawer.svelte';
 	import MobileNav from './MobileNav.svelte';
+	import { useJsSupport } from '../shared/useJsSupport.svelte';
 
 	type Props = { children: Snippet };
 
 	let { children }: Props = $props();
 
-	const routeMatch = $derived(getWidgetByRoute(page.url.pathname));
-
+	// Context
 	const wm = getContext<WindowManager>(WM_CONTEXT_KEY);
+	const hasJsSupport = $derived(useJsSupport());
 
+	// Find active tab - FIXME this seems too heavy here
 	const activeWindow = $derived(wm.activeWindow);
+	const routeMatch = $derived(getWidgetByRoute(page.url.pathname));
 
 	const activeTabRoute = $derived.by(() => {
 		if (activeWindow) {
@@ -30,25 +33,31 @@
 	});
 </script>
 
-<div class="mobile-shell">
-	<header class="mobile-header" aria-label="Mobile navigation">
-		<AppDrawer />
+{#if !hasJsSupport || wm.isMobile}
+	<div class="mobile-shell">
+		<header class="mobile-header" aria-label="Mobile navigation">
+			<AppDrawer />
 
-		<nav class="mobile-tabs" aria-label="Applications">
-			{#each widgetNavigationData as widget (widget.id)}
-				<a class="mobile-tab" class:active={activeTabRoute === widget.route} href={widget.route}>
-					{widget.title}
-				</a>
-			{/each}
-		</nav>
+			<nav class="mobile-tabs" aria-label="Applications">
+				{#each widgetNavigationData as widget (widget.id)}
+					<a
+						class="mobile-tab"
+						class:active={activeTabRoute === widget.route}
+						href={resolve(widget.route)}
+					>
+						{widget.title}
+					</a>
+				{/each}
+			</nav>
 
-		<MobileNav />
-	</header>
+			<MobileNav />
+		</header>
 
-	<div class="mobile-content">
-		{@render children?.()}
+		<div class="mobile-content">
+			{@render children?.()}
+		</div>
 	</div>
-</div>
+{/if}
 
 <style>
 	.mobile-shell {

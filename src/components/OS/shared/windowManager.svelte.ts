@@ -285,9 +285,8 @@ export class WindowManager {
 		};
 	}
 
-	getIconPosition(widgetId: string) {
-		// fixme why do we need a fallback at all
-		return this.iconPositions[widgetId] ?? { x: 0, y: 0 };
+	getIconPosition(widgetId: string, index = 0) {
+		return this.iconPositions[widgetId] ?? { x: 24, y: 24 + index * WindowManager.ICON_H };
 	}
 
 	/** Get all icon positions (pure read — returns defaults for unsaved icons). */
@@ -300,12 +299,43 @@ export class WindowManager {
 		return positions;
 	}
 
-	/** Seed default positions for icons that haven't been placed yet. */
+	/** Seed default positions for icons that haven't been placed yet, and resolve any overlaps. */
 	seedIconDefaults(shortcuts: { id: string }[]) {
-		for (let i = 0; i < shortcuts.length; i++) {
-			const id = shortcuts[i].id;
-			if (!this.iconPositions[id]) {
-				this.iconPositions[id] = { x: 24, y: 24 + i * 100 };
+		const W = WindowManager.ICON_W;
+		const H = WindowManager.ICON_H;
+		const maxY = this.desktopHeight - H - WindowManager.TASKBAR_H;
+		const posKey = (x: number, y: number) => `${x},${y}`;
+
+		// First pass: register icons that have a unique saved position
+		const claimed = new Map<string, string>(); // "x,y" → widgetId
+		for (const { id } of shortcuts) {
+			const pos = this.iconPositions[id];
+			if (pos) {
+				const key = posKey(pos.x, pos.y);
+				if (!claimed.has(key)) claimed.set(key, id);
+			}
+		}
+
+		// Find next free column-first grid slot
+		const findFreeSlot = (): { x: number; y: number } => {
+			for (let col = 0; ; col++) {
+				for (let row = 0; ; row++) {
+					const x = 24 + col * W;
+					const y = 24 + row * H;
+					if (y > maxY) break;
+					if (!claimed.has(posKey(x, y))) return { x, y };
+				}
+			}
+		};
+
+		// Second pass: assign free slots to icons with no position or a colliding position
+		for (const { id } of shortcuts) {
+			const pos = this.iconPositions[id];
+			const needsSlot = !pos || claimed.get(posKey(pos.x, pos.y)) !== id;
+			if (needsSlot) {
+				const slot = findFreeSlot();
+				this.iconPositions[id] = slot;
+				claimed.set(posKey(slot.x, slot.y), id);
 			}
 		}
 	}
@@ -361,30 +391,54 @@ export class WindowManager {
 	// ── Persistence ──
 
 	private saveTimeout: ReturnType<typeof setTimeout> | undefined;
+	private hasPersistenceHooks = false;
+
+	private buildSavedLayout(): SavedLayout {
+		return {
+			windows: this.windows.map((w) => ({
+				widgetId: w.widgetId,
+				title: w.title,
+				x: w.x,
+				y: w.y,
+				width: w.width,
+				height: w.height,
+				minimized: w.minimized,
+				maximized: w.maximized,
+				data: w.data
+			})),
+			iconPositions: { ...this.iconPositions }
+		};
+	}
+
+	private persistLayoutNow() {
+		const layout = this.buildSavedLayout();
+		try {
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
+		} catch {
+			// Storage full or unavailable — silently ignore
+		}
+	}
+
+	private ensurePersistenceHooks() {
+		if (this.hasPersistenceHooks || typeof window === 'undefined') return;
+		this.hasPersistenceHooks = true;
+
+		window.addEventListener('pagehide', () => {
+			if (this.saveTimeout) {
+				clearTimeout(this.saveTimeout);
+				this.saveTimeout = undefined;
+			}
+			this.persistLayoutNow();
+		});
+	}
 
 	saveLayout() {
 		if (typeof window === 'undefined') return;
+		this.ensurePersistenceHooks();
 		clearTimeout(this.saveTimeout);
 		this.saveTimeout = setTimeout(() => {
-			const layout: SavedLayout = {
-				windows: this.windows.map((w) => ({
-					widgetId: w.widgetId,
-					title: w.title,
-					x: w.x,
-					y: w.y,
-					width: w.width,
-					height: w.height,
-					minimized: w.minimized,
-					maximized: w.maximized,
-					data: w.data
-				})),
-				iconPositions: { ...this.iconPositions }
-			};
-			try {
-				localStorage.setItem(STORAGE_KEY, JSON.stringify(layout));
-			} catch {
-				// Storage full or unavailable — silently ignore
-			}
+			this.persistLayoutNow();
+			this.saveTimeout = undefined;
 		}, 300);
 	}
 

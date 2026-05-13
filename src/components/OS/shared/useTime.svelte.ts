@@ -1,18 +1,23 @@
-import { createContext } from 'svelte';
+const formatter = new Intl.DateTimeFormat([], { hour: '2-digit', minute: '2-digit' });
 
-const [getTime, setTime] = createContext<string>();
+let time = $state(formatTime());
 
-function updateClock() {
-	setTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+function formatTime() {
+	return formatter.format(new Date());
 }
 
-export function initializeTime() {
-	updateClock();
-	// FIXME i'm not allowed to run outside initialization,
-	// const interval = setInterval(updateClock, 30_000);
-	// return () => clearInterval(interval);
+/**
+ * Start the clock. Call once from onMount in the root layout.
+ * Returns a cleanup function to stop the interval.
+ */
+export function initializeTime(): () => void {
+	time = formatTime();
+	const interval = setInterval(() => {
+		time = formatTime();
+	}, 30_000);
+	return () => clearInterval(interval);
 }
 
 export function useTime() {
-	return getTime();
+	return time;
 }

@@ -1,88 +1,131 @@
 # Project: Retro Desktop Personal Site
 
-A personal website styled as a retro (Win95-esque) desktop, built with SvelteKit and Svelte 5.
+A progressively-enhanced personal website styled as a retro (Win95-esque) desktop, built with SvelteKit and Svelte 5.
 
 ## Stack
 
-- **SvelteKit 2** with **Svelte 5** (runes mode) and **TypeScript** (strict)
-- **Vite 7**, no CSS preprocessor, no Tailwind — plain CSS with custom properties
-- **`@sveltejs/adapter-static`** — all pages prerendered, `fallback: '404.html'` for SPA routing
-- No runtime dependencies — everything is a devDep
-- No linter or test framework configured
+- **SvelteKit 2** + **Svelte 5** (runes, TypeScript strict)
+- **Vite 7**, plain CSS (no preprocessor, no Tailwind)
+- **`@sveltejs/adapter-static`** with prerendering + fallback routing
+- Markdown content pipeline: `unified` + `remark-parse` + `remark-rehype` + `rehype-stringify`
+- Blog metadata plugins: `reading-time` + custom `rehype-excerpt` plugin
 
 ## Architecture
 
-### Desktop Shell
+**Shell & Windows**
 
-- Desktop mode (>768px): draggable/resizable windows on a desktop surface with icons and a taskbar
-- Mobile mode (≤768px): full-screen single-widget view with tab bar
-- Responsive switch via `matchMedia` in `+layout.svelte`
+- Unified `Shell.svelte` handles both desktop (>768px) and mobile (≤768px) via CSS media queries
+- **Desktop**: draggable/resizable windows, desktop icons, taskbar with Start menu
+- **Mobile**: full-screen tabs with app menu
+- `Shell.svelte` reads widget components from the shared registry (no local component map)
+- Widget components are lazy-loaded via async imports (Svelte async rendering enabled)
 
-### State Management
+**State & Routing**
 
-- **`WindowManager`** class in `src/lib/stores/windows.svelte.ts` — class-based reactive store using `$state` runes, not Svelte stores
-- Provided via **context** (`setContext`/`getContext` with `Symbol` keys), not imports
-- Window + icon positions persisted to `localStorage` with debounced saves
+- Use svelte runes for reactive state management, do not rely on `let` or `$:` reactive statements
+- `WindowManager` (class-based `$state` runes): window z-index, snap, minimize/maximize, localStorage persistence
+- Provided via context (`Symbol` keys), not imports
+- Widget source of truth is split between:
+  - `widgets.config.ts` (widget definitions array)
+  - `widgets.ts` (registry/query helpers)
+- `beforeNavigate()` intercepts navigation → opens widget via `wm.open()`
+- URL synced via `pushState()` when window focused
+- Catch-all route prerender includes blog slugs
 
-### Widget System
+**Content, SEO & Syndication**
 
-- Widgets registered in `src/lib/registry/widgets.ts` via `registerWidget()` with lazy `() => import(...)` component loading
-- Each widget maps to a route (e.g., `about` → `/`, `blog` → `/blog`, `blogpost` → `/blog/[slug]`)
-- `getWidgetByRoute(path)` resolves parameterized routes
+- Blog content is sourced from Markdown files in `src/content/blog/posts/*.md`
+- Blog collection utilities live in `src/content/blog/index.ts` (frontmatter parsing, HTML rendering, categories, reading-time)
+- Global SEO metadata (title, description, OG/Twitter/canonical) is generated in `src/routes/+layout.svelte`
+- RSS feeds are prerendered at:
+  - `/rss.xml` (all posts)
+  - `/rss/[category].xml` (one feed per category)
+- Webmention support is configured via `src/content/webmentions.ts` and `<link rel="webmention">`/`<link rel="pingback">` tags in layout head
 
-### Routing
+**Progressive Enhancement**
 
-- `+layout.svelte` intercepts SvelteKit navigation via `beforeNavigate()` and opens widgets instead
-- URL synced via `pushState()` when a window is focused (`wm.onFocusChange` callback)
-- Back/forward handled via `popstate` listener
-- All routes have `<noscript>` content for progressive enhancement
+- No-JS: routes render as static HTML; anchor links work
+- JS hydration (2-second startup delay): WindowManager takes over; windows become draggable/interactive
+- Hydration overlay (`js-hydrating` class) visible during SSR→hydration transition, hides automatically on mount
+- Async rendering enabled in `svelte.config.js` to support lazy widget component loading in SSR/client
 
-## Svelte 5 Conventions
+## Conventions
 
-- **Runes only**: `$state`, `$derived`, `$props`, `$bindable`, `$effect` — no legacy `let` reactivity or `$:` statements
-- **Snippets**, not slots: use `{#snippet}` / `{@render}` for component composition
-- **Event attributes**, not directives: `onclick={handler}`, not `on:click={handler}`. No event modifiers (`|stopPropagation` etc.) — call methods on the event object instead
-- **Never mutate `$state` inside `$derived`** — use `$effect` for side-effects that write to state
-- **`$bindable()` props** for two-way binding (e.g., window x/y/width/height)
+**Svelte 5 Runes**
 
-## Event Handling
+- `$state`, `$derived`, `$effect`; no legacy `let` or `$:`
+- `$props`, `$bindable` for two-way props
+- Snippets (`{#snippet}` / `{@render}`), not slots
 
-- **Pointer Events exclusively** for all drag/resize interactions (`onpointerdown`, `onpointermove`, `onpointerup`) — never mouse events. This ensures touch + mouse compatibility.
-- Use `setPointerCapture` / `releasePointerCapture` for reliable drag tracking
-- Set `touch-action: none` and `user-select: none` on draggable elements
-- Use a **drag threshold** (5px) to distinguish clicks from drags
+**Events**
 
-## Styling
+- Pointer events only (`onpointerdown`, `onpointermove`, `onpointerup`)
+- `setPointerCapture` / `releasePointerCapture` for drag tracking
+- Drag threshold: 5px to distinguish click from drag
 
-- **CSS custom properties** defined in `src/lib/styles/variables.css` — botanical green theme
-- Scoped `<style>` blocks in components, use `:global()` sparingly
-- Z-index layers: desktop(0) → icons(1) → windows(10+) → taskbar(1000) → start-menu(1001) → overlay(2000)
-- Fonts: `--font-mono` (Azeret Mono), `--font-serif` (Spectral)
+**Styling**
 
-## Progressive Enhancement
-
-- All routes must provide `<noscript>` fallback content with plain HTML/links
-- The desktop/mobile shell only renders client-side
-- Prerender everything (`export const prerender = true` in `+layout.ts`)
+- CSS custom properties in `variables.css` (botanical green theme)
+- Scoped styles; minimal `:global()`
+- Z-index: desktop(0), icons(1), windows(10+), taskbar(1000), start-menu(1001), overlay(2000)
 
 ## File Structure
 
 ```
 src/
-  lib/
-    components/
-      Window.svelte          # Standard draggable/resizable window
-      MinimalWindow.svelte    # Transparent overlay panel
-      desktop/                # Desktop-mode components (Desktop, DesktopIcon, Taskbar, StartMenu)
-      mobile/                 # Mobile-mode components (MobileShell, TabBar, AppMenu)
-    icons/                    # SVG icon components (Icon*.svelte)
-    registry/widgets.ts       # Widget definitions and route matching
-    stores/windows.svelte.ts  # WindowManager class (reactive state)
-    styles/                   # variables.css, reset.css
-    widgets/                  # Widget content components (About, Blog, Paint, etc.)
+  components/
+    OS/
+      Shell.svelte              # Unified desktop/mobile shell (CSS media queries)
+      window/
+        Window.svelte           # Draggable/resizable window
+        MinimalWindow.svelte    # Minimal overlay variant
+      desktop/
+        DesktopIcon.svelte      # Desktop icon (draggable)
+      mobile/
+        AppMenuDialog.svelte    # Mobile app menu (popover)
+    widgets/                    # ~6 widget components (About, Blog, Paint, etc.)
+      widgets.config.ts         # Widget definitions array (single source of truth)
+      widgets.ts                # Widget registry/query helpers
+  content/
+    blog/
+      index.ts                  # Blog collection + query helpers
+      rehype-excerpt.ts         # Excerpt extraction plugin
+      posts/*.md                # Blog Markdown entries
+    rss.ts                      # RSS XML generator helpers
+    site.ts                     # Site URL/name/description config
+    webmentions.ts              # Webmention endpoint + API helpers
+  components/
+    OS/
+      windowManager.svelte.ts   # WindowManager class
   routes/
-    +layout.svelte            # Shell orchestrator, routing, context setup
-    +layout.ts                # Prerender config
-    +page.svelte              # Home route with noscript fallback
-    blog/                     # Blog routes
+    +layout.svelte              # Layout, context, hydration overlay, routing
+    +layout.ts                  # Prerender config
+    +page.svelte                # Root page
+    [...]
+    [...path]/+page.svelte      # Catch-all
+    [...path]/+page.ts          # Catch-all prerender entries (blog slugs)
+    rss.xml/+server.ts          # Full blog RSS feed
+    rss/[category].xml/+server.ts # Category-specific RSS feeds
 ```
+
+## Maintenance Guide
+
+**Update this file when:**
+
+- Adding/removing significant components (Window types, widgets)
+- Changing media query breakpoint (768px)
+- Modifying routing or widget registry structure
+- Changing hydration behavior or startup delay (currently 2 seconds)
+- Adding/removing conventions or key architectural decisions
+- Any meaningful implementation change that affects architecture, behavior, or workflow
+
+**Key files to check after changes:**
+
+- `src/components/OS/Shell.svelte` — component structure, imports, CSS breakpoints
+- `src/components/widgets/widgets.config.ts` — widget definitions and defaults
+- `src/components/widgets/widgets.ts` — widget route matching and lookups
+- `src/routes/+layout.svelte` — routing, hydration overlay, context setup
+- `src/components/OS/windowManager.svelte.ts` — WindowManager API and persistence logic
+- `src/content/blog/index.ts` — blog collection parsing and query helpers
+- `src/routes/rss.xml/+server.ts` — general RSS feed generation
+- `src/routes/rss/[category].xml/+server.ts` — category feed generation

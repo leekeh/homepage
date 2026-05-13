@@ -1,42 +1,28 @@
-# sv
+# Personal homepage
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
 
-## Creating a project
+## To do:
 
-If you're seeing this, you've probably already done this step. Congrats!
+- finish up web mentions
+- proper blog posts
+- fix desktop organization (dragging icons should work again),
+- add nested folders to menu
+- add terminal with some common commands (ls, neofetch, help)
+- remove mobile
+- manage landmarks
+- validate html
+- add more keyboard navigation
+- add a way to change window size with keyboard
+- add proper metadata: OG, rss,
+- add lots of content!
+  - uses page
+  -
+- make the back buttton work
+- context menu
 
-```sh
-# create a new project
-npx sv create my-app
-```
+blog posts:
 
-To recreate this project with the same configuration:
-
-```sh
-# recreate this project
-pnpm dlx sv@0.12.7 create --template minimal --types ts --install pnpm homepage
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+- please don't give AI access to your personal images
+- implementing all the WAI-aria a11y patterns
+- tbd

@@ -339,11 +339,8 @@
 			--mobile-tabbar-height: 44px;
 
 			/* ── Z-index layers ── */
-			--z-desktop: 0;
 			--z-desktop-icons: 1;
-			--z-windows-base: 10;
 			--z-taskbar: 1000;
-			--z-start-menu: 1001;
 			--z-overlay: 2000;
 		}
 

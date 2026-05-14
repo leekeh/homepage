@@ -140,7 +140,6 @@
 	.desktop-icons {
 		position: absolute;
 		inset: 0;
-		z-index: var(--z-desktop-icons);
 		pointer-events: none;
 	}
 

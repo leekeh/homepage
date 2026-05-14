@@ -43,12 +43,18 @@
 			const clamped = wm.clampIconPos(event.clientX - offsetX, event.clientY - offsetY);
 			draggedPosition = clamped;
 		},
-		onEnd: ({ hasMoved }) => {
-			dragging = false;
+		onEnd: ({ event, hasMoved }) => {
 			if (hasMoved) {
 				suppressNextClick = true;
-				wm.moveIcon(id, x, y);
+				const droppedOverWindow = document
+					.elementsFromPoint(event.clientX, event.clientY)
+					.some((el) => el.closest('.window, .minimal-window'));
+
+				if (!droppedOverWindow) {
+					wm.moveIcon(id, x, y);
+				}
 			}
+			dragging = false;
 			draggedPosition = null;
 		}
 	});

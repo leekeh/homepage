@@ -110,9 +110,6 @@
 		</footer>
 
 		<div class="start-popover" id={START_MENU_ID} popover>
-			<div class="start-menu-sidebar">
-				<span class="sidebar-text">lieke.dev</span>
-			</div>
 			<nav class="start-menu-items" aria-label="Applications">
 				{#each widgetNavigationData as widget (widget.id)}
 					<a
@@ -290,26 +287,6 @@
 
 	.start-popover::backdrop {
 		background: transparent;
-	}
-
-	.start-menu-sidebar {
-		width: 28px;
-		background-image: var(--bg-gradient);
-		display: flex;
-		align-items: flex-end;
-		justify-content: center;
-		padding-bottom: var(--space-4);
-	}
-
-	.sidebar-text {
-		writing-mode: vertical-rl;
-		text-orientation: mixed;
-		transform: rotate(180deg);
-		color: var(--win-titlebar-text);
-		font-family: var(--font-mono);
-		font-size: var(--font-size-md);
-		font-weight: 600;
-		letter-spacing: 0.1em;
 	}
 
 	.start-menu-items {

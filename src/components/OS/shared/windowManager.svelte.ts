@@ -59,6 +59,10 @@ export class WindowManager {
 	/** Called whenever a window is brought to the front. Set by the layout. */
 	onFocusChange?: (win: WindowState) => void;
 
+	// Navigation methods attached by WindowManagerSetup
+	suppressUrlSync?: boolean;
+	openWidgetAndNavigate?: (widgetId: string, data?: Record<string, unknown>) => void;
+
 	private getViewportBounds() {
 		return {
 			maxWidth: Math.max(1, this.desktopWidth),
@@ -307,12 +311,12 @@ export class WindowManager {
 		const posKey = (x: number, y: number) => `${x},${y}`;
 
 		// First pass: register icons that have a unique saved position
-		const claimed = new Map<string, string>(); // "x,y" → widgetId
+		const claimed: Record<string, string> = {}; // "x,y" -> widgetId
 		for (const { id } of shortcuts) {
 			const pos = this.iconPositions[id];
 			if (pos) {
 				const key = posKey(pos.x, pos.y);
-				if (!claimed.has(key)) claimed.set(key, id);
+				if (!claimed[key]) claimed[key] = id;
 			}
 		}
 
@@ -323,7 +327,7 @@ export class WindowManager {
 					const x = 24 + col * W;
 					const y = 24 + row * H;
 					if (y > maxY) break;
-					if (!claimed.has(posKey(x, y))) return { x, y };
+					if (!claimed[posKey(x, y)]) return { x, y };
 				}
 			}
 		};
@@ -331,11 +335,11 @@ export class WindowManager {
 		// Second pass: assign free slots to icons with no position or a colliding position
 		for (const { id } of shortcuts) {
 			const pos = this.iconPositions[id];
-			const needsSlot = !pos || claimed.get(posKey(pos.x, pos.y)) !== id;
+			const needsSlot = !pos || claimed[posKey(pos.x, pos.y)] !== id;
 			if (needsSlot) {
 				const slot = findFreeSlot();
 				this.iconPositions[id] = slot;
-				claimed.set(posKey(slot.x, slot.y), id);
+				claimed[posKey(slot.x, slot.y)] = id;
 			}
 		}
 	}
@@ -501,7 +505,7 @@ export class WindowManager {
 }
 
 export const WM_CONTEXT_KEY = Symbol('window-manager');
-export const NAVIGATE_KEY = Symbol('navigate');
+export const WINDOW_NAVIGATE_CONTEXT_KEY = Symbol('window-navigate');
 export const JS_SUPPORT_STATE_KEY = Symbol('js-support-state');
 
 export function useWindowManager() {
@@ -510,4 +514,14 @@ export function useWindowManager() {
 		throw new Error('WindowManager context not found');
 	}
 	return wm;
+}
+
+export type WindowNavigateFn = (widgetId: string, data?: Record<string, unknown>) => void;
+
+export function useWindowNavigate() {
+	const navigate = getContext<WindowNavigateFn>(WINDOW_NAVIGATE_CONTEXT_KEY);
+	if (!navigate) {
+		throw new Error('Window navigation context not found');
+	}
+	return navigate;
 }

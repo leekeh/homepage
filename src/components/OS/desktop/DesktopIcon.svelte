@@ -17,7 +17,7 @@
 
 	// Context
 	const hasJsSupport = $derived(useJsSupport());
-	const wm = useWindowManager();
+	const wm = $derived(useWindowManager());
 	const iconPosition = $derived(wm.getIconPosition(id, index));
 
 	// State

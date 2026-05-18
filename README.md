@@ -25,6 +25,7 @@ SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
 - remove old vercel integration and move to cloudflare pages
 - draggable taskbar items
 - implement wai-aria patterns for accessibility
+- allow dragging open tabs on desktop and mobile. Allow closing tabs on mobile
 
 blog posts:
 

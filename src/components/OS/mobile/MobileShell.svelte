@@ -1,19 +1,19 @@
 <script lang="ts">
-	import { getContext, type Snippet } from 'svelte';
+	import { type Snippet } from 'svelte';
 	import { page } from '$app/state';
-	import { WindowManager, WM_CONTEXT_KEY } from '../shared/windowManager.svelte';
+	import { useWindowManager } from '../shared/windowManager.svelte';
 	import { getWidgetByRoute, getRouteForWindow, widgetNavigationData } from '../../widgets/widgets';
 	import { resolve } from '$app/paths';
 	import AppDrawer from './AppDrawer.svelte';
 	import MobileNav from './MobileNav.svelte';
 	import { useJsSupport } from '../shared/useJsSupport.svelte';
+	import SkipLink from '../shared/SkipLink.svelte';
 
 	type Props = { children: Snippet };
 
 	let { children }: Props = $props();
 
-	// Context
-	const wm = getContext<WindowManager>(WM_CONTEXT_KEY);
+	const wm = $derived(useWindowManager());
 	const hasJsSupport = $derived(useJsSupport());
 
 	// Find active tab - FIXME this seems too heavy here
@@ -34,6 +34,7 @@
 </script>
 
 {#if !hasJsSupport || wm.isMobile}
+	<SkipLink id="mobile-content" />
 	<div class="mobile-shell">
 		<header class="mobile-header" aria-label="Mobile navigation">
 			<AppDrawer />
@@ -53,9 +54,9 @@
 			<MobileNav />
 		</header>
 
-		<div class="mobile-content">
+		<main class="mobile-content" id="mobile-content">
 			{@render children?.()}
-		</div>
+		</main>
 	</div>
 {/if}
 

@@ -1,34 +1,14 @@
 <script lang="ts">
-	import { setContext, onMount } from 'svelte';
 	import { page } from '$app/stores';
-	import { beforeNavigate } from '$app/navigation';
-	import { browser } from '$app/environment';
-	import {
-		WindowManager,
-		WM_CONTEXT_KEY,
-		NAVIGATE_KEY
-	} from '../components/OS/shared/windowManager.svelte.js';
-	import {
-		getWidgetByRoute,
-		getRouteForWindow,
-		widgetNavigationData
-	} from '../components/widgets/widgets';
+	import { getWidgetByRoute } from '../components/widgets/widgets';
 	import { absoluteUrl, SITE_DESCRIPTION } from '../content/site';
 	import { WEBMENTION_ENDPOINT, WEBMENTION_PINGBACK } from '../content/webmentions';
 	import Shell from '../components/OS/Shell.svelte';
-	import { pushState } from '$app/navigation';
-	import { applyPolyfills } from '../util/polyfills';
-	import { enableJsSupport } from '../components/OS/shared/useJsSupport.svelte';
-	import { initializeTime } from '@components/OS/shared/useTime.svelte.js';
-	import { resolve } from '$app/paths';
+	import WindowProvider from '../components/OS/shared/WindowProvider.svelte';
 
 	let { data } = $props();
 
-	// ── Window Manager ──
-	const wm = new WindowManager();
-	setContext(WM_CONTEXT_KEY, wm);
-
-	let initialSeedDone = false;
+	// SEO metadata
 	const currentPath = $derived($page.url.pathname);
 	const currentMatch = $derived(getWidgetByRoute(currentPath));
 	const pageTitle = $derived.by(() => {
@@ -68,129 +48,6 @@
 			image: undefined
 		};
 	});
-
-	// Seed one route-matched window during SSR so initial HTML has proper window content.
-	$effect(() => {
-		if (initialSeedDone) return;
-		const match = getWidgetByRoute(currentPath);
-		if (match) {
-			wm.open(match.widget.id, match.params ? { data: match.params } : undefined);
-		} else {
-			wm.open('about');
-		}
-		initialSeedDone = true;
-	});
-
-	// Guard: don't push state during popstate handling or initial load
-	let suppressUrlSync = false;
-
-	/** Sync URL whenever any window is brought to the front */
-	wm.onFocusChange = (win) => {
-		if (suppressUrlSync || typeof window === 'undefined') return;
-		const route = getRouteForWindow(win.widgetId, win.data);
-		if (window.location.pathname !== route) {
-			pushState(resolve(route), {});
-		}
-	};
-
-	/** Open a widget and update the URL */
-	function openWidgetAndNavigate(widgetId: string, data?: Record<string, unknown>) {
-		const overrides: Record<string, unknown> = {};
-		if (data) {
-			overrides.data = data;
-			if (data.slug) {
-				overrides.title = String(data.slug)
-					.replace(/-/g, ' ')
-					.replace(/\b\w/g, (l) => l.toUpperCase());
-			}
-		}
-		// focus() inside open() will trigger onFocusChange → URL sync
-		wm.open(widgetId, overrides);
-	}
-
-	// Expose openWidgetAndNavigate via context so Desktop/Mobile can use it
-	setContext(NAVIGATE_KEY, openWidgetAndNavigate);
-
-	onMount(() => {
-		applyPolyfills();
-		enableJsSupport();
-		const stopClock = initializeTime();
-		const mq = window.matchMedia('(max-width: 768px)');
-		wm.isMobile = mq.matches;
-		wm.desktopWidth = window.innerWidth;
-		wm.desktopHeight = window.innerHeight;
-		wm.constrainWindowsToViewport();
-		wm.seedIconDefaults(widgetNavigationData);
-
-		function onMediaChange(e: MediaQueryListEvent) {
-			wm.isMobile = e.matches;
-		}
-		mq.addEventListener('change', onMediaChange);
-
-		function onResize() {
-			wm.desktopWidth = window.innerWidth;
-			wm.desktopHeight = window.innerHeight;
-			wm.constrainWindowsToViewport();
-		}
-		window.addEventListener('resize', onResize);
-
-		// ── Restore saved layout or open widget for current route ──
-		suppressUrlSync = true;
-		const restored = wm.restoreLayout();
-
-		const path = window.location.pathname;
-		const match = getWidgetByRoute(path);
-
-		if (restored) {
-			// Layout restored — if current URL points to a specific widget, focus it
-			if (match) {
-				wm.open(match.widget.id, match.params ? { data: match.params } : undefined);
-			} else {
-				// Focus the topmost window if any
-				const active = wm.activeWindow;
-				if (active) wm.focus(active.id);
-			}
-		} else {
-			// No saved layout — open the widget matching the current route
-			if (match) {
-				wm.open(match.widget.id, match.params ? { data: match.params } : undefined);
-			} else {
-				wm.open('about');
-			}
-		}
-		suppressUrlSync = false;
-		// ── Handle popstate (back/forward) ──
-		function onPopState() {
-			console.log('popstate', window.location.pathname);
-			suppressUrlSync = true;
-			const path = window.location.pathname;
-			const m = getWidgetByRoute(path);
-			if (m) {
-				wm.open(m.widget.id, m.params ? { data: m.params } : undefined);
-			}
-			suppressUrlSync = false;
-		}
-		window.addEventListener('popstate', onPopState);
-
-		return () => {
-			stopClock();
-			mq.removeEventListener('change', onMediaChange);
-			window.removeEventListener('popstate', onPopState);
-			window.removeEventListener('resize', onResize);
-		};
-	});
-
-	// ── Intercept SvelteKit navigation: open widgets instead ──
-	beforeNavigate((navigation) => {
-		if (!browser) return;
-		const to = navigation.to?.url?.pathname;
-		if (!to || to.endsWith('.xml')) return;
-		const match = getWidgetByRoute(to);
-		if (match) {
-			navigation.cancel();
-			openWidgetAndNavigate(match.widget.id, match.params);
-		}
-	});
 </script>
 
 <svelte:head>
@@ -220,7 +77,9 @@
 	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 </svelte:head>
 
-<Shell />
+<WindowProvider>
+	<Shell />
+</WindowProvider>
 
 <style>
 	:global {
@@ -385,6 +244,19 @@
 
 		a:hover {
 			color: var(--color-link-hover);
+		}
+
+		.sr-only,
+		.visually-hidden {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			white-space: nowrap;
+			border: 0;
 		}
 	}
 </style>

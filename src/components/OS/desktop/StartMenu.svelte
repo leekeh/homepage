@@ -1,7 +1,7 @@
 <script lang="ts">
-	import IconMenu from '@icons/IconMenu.svelte';
-	import { widgetNavigationData } from '../../widgets/widgets';
+	import { widgetNavigationData } from '@components/widgets/widgets';
 	import { resolve } from '$app/paths';
+	import IconStart from '@icons/IconStart.svelte';
 
 	let popover: HTMLDivElement;
 	const id = $props.id();
@@ -11,17 +11,12 @@
 	}
 </script>
 
-<button
-	class="menu-btn"
-	popovertarget={id}
-	popovertargetaction="toggle"
-	title="Apps"
-	aria-label="Open navigation menu"
->
-	<IconMenu />
+<button class="start-button" popovertarget={id} popovertargetaction="toggle">
+	<IconStart />
+	<span>Start</span>
 </button>
 
-<div class="mobile-nav-popover" {id} bind:this={popover} popover>
+<div class="start-popover" {id} popover bind:this={popover}>
 	<nav class="start-menu-items" aria-label="Applications">
 		{#each widgetNavigationData as widget (widget.id)}
 			<a class="start-menu-item" href={resolve(widget.route)} onclick={closePopover}>
@@ -35,8 +30,33 @@
 </div>
 
 <style>
-	.mobile-nav-popover {
-		inset: calc(100% - 1px) var(--space-2) auto auto;
+	.start-button {
+		display: flex;
+		align-items: center;
+		gap: var(--space-2);
+		padding: var(--space-2) var(--space-4);
+		background: var(--win-btn-bg);
+		border: 1px solid var(--win-btn-border);
+		border-radius: var(--radius-md);
+		color: var(--color-text);
+		font-family: var(--font-mono);
+		font-size: var(--font-size-base);
+		font-weight: 600;
+		height: 28px;
+		flex-shrink: 0;
+	}
+
+	.start-button :global(svg) {
+		width: 16px;
+		height: 16px;
+	}
+
+	.start-button:hover {
+		background: var(--win-btn-hover);
+	}
+
+	.start-popover {
+		inset: auto auto calc(var(--taskbar-height) + 2px) var(--space-2);
 		margin: 0;
 		border: 1px solid var(--win-border);
 		border-radius: var(--radius-lg);
@@ -47,11 +67,11 @@
 		padding: 0;
 	}
 
-	.mobile-nav-popover:popover-open {
-		display: block;
+	.start-popover:popover-open {
+		display: flex;
 	}
 
-	.mobile-nav-popover::backdrop {
+	.start-popover::backdrop {
 		background: transparent;
 	}
 
@@ -89,32 +109,5 @@
 	.start-menu-icon :global(svg) {
 		width: 16px;
 		height: 16px;
-	}
-
-	.menu-btn {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 44px;
-		background: none;
-		border: none;
-		border-left: 1px solid rgba(212, 245, 214, 0.2);
-		color: var(--color-text-light);
-		flex-shrink: 0;
-	}
-
-	.menu-btn :global(svg) {
-		width: 20px;
-		height: 20px;
-	}
-
-	.menu-btn:hover {
-		background: rgba(212, 245, 214, 0.1);
-	}
-
-	@media (max-width: 768px) {
-		.mobile-nav-popover {
-			inset: 44px var(--space-2) auto auto;
-		}
 	}
 </style>

@@ -11,7 +11,7 @@
 	import Content from '@components/content.svelte';
 	import Button from '@components/OS/Button.svelte';
 
-	const wm = useWindowManager();
+	const wm = $derived(useWindowManager());
 	function resetComputer() {
 		wm.resetLayout();
 		location.reload();

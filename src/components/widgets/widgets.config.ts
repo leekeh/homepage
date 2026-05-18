@@ -19,7 +19,6 @@ export interface WidgetConfig {
 	defaultY?: number;
 	resizable: boolean;
 	minimal: boolean;
-	hasMenuBar: boolean;
 }
 
 export const widgetConfigs: WidgetConfig[] = [
@@ -34,8 +33,7 @@ export const widgetConfigs: WidgetConfig[] = [
 		defaultX: 80,
 		defaultY: 60,
 		resizable: true,
-		minimal: false,
-		hasMenuBar: false
+		minimal: false
 	},
 	{
 		id: 'blog',
@@ -48,8 +46,7 @@ export const widgetConfigs: WidgetConfig[] = [
 		defaultX: 120,
 		defaultY: 40,
 		resizable: true,
-		minimal: false,
-		hasMenuBar: true
+		minimal: false
 	},
 	{
 		id: 'paint',
@@ -62,8 +59,7 @@ export const widgetConfigs: WidgetConfig[] = [
 		defaultX: 60,
 		defaultY: 30,
 		resizable: true,
-		minimal: false,
-		hasMenuBar: true
+		minimal: false
 	},
 	{
 		id: 'contact',
@@ -76,8 +72,7 @@ export const widgetConfigs: WidgetConfig[] = [
 		defaultX: 240,
 		defaultY: 100,
 		resizable: true,
-		minimal: false,
-		hasMenuBar: false
+		minimal: false
 	},
 	{
 		id: 'blogpost',
@@ -91,7 +86,6 @@ export const widgetConfigs: WidgetConfig[] = [
 		defaultX: 140,
 		defaultY: 50,
 		resizable: true,
-		minimal: false,
-		hasMenuBar: false
+		minimal: false
 	}
 ];

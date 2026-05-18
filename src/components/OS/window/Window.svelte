@@ -42,7 +42,7 @@
 	}: Props = $props();
 
 	// Context
-	const wm = useWindowManager();
+	const wm = $derived(useWindowManager());
 	const isActive = $derived(wm.activeWindow?.id === id);
 
 	// ── Resize state ──
@@ -206,13 +206,12 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
  -->
 
 <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
-<div
+<section
 	class="window"
 	class:maximized
 	class:minimized
 	class:resizing
 	class:inactive={!isActive}
-	tabindex={isActive ? 0 : -1}
 	style="
 		left: {maximized ? 0 : x}px;
 		top: {maximized ? 0 : y}px;
@@ -223,17 +222,18 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 	"
 	onpointerdown={onFocus}
 	aria-hidden={!isActive}
+	aria-labelledby={`window-title-${id}`}
 >
 	<!-- Title Bar -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<div class="titlebar" {@attach drag} ondblclick={onToggleMaximize} draggable="true">
+	<header class="titlebar" {@attach drag} ondblclick={onToggleMaximize} draggable="true">
 		<div class="titlebar-left">
 			{#if icon}
 				<span class="title-icon">{icon}</span>
 			{/if}
-			<span class="title-text">{title}</span>
+			<h2 class="title-text" id={`window-title-${id}`}>{title}</h2>
 		</div>
-		<div class="titlebar-buttons">
+		<div class="titlebar-buttons" inert={!isActive}>
 			<button class="wbtn" onclick={onMinimize} title="Minimize">
 				<IconMinimize />
 			</button>
@@ -248,19 +248,19 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 				<IconClose />
 			</button>
 		</div>
-	</div>
+	</header>
 
 	<!-- Menu Bar (optional snippet) -->
 	{#if menubar}
-		<div class="menubar">
+		<aside class="menubar">
 			{@render menubar()}
-		</div>
+		</aside>
 	{/if}
 
 	<!-- Content area -->
-	<div class="window-content">
+	<main class="window-content" inert={!isActive}>
 		{@render children()}
-	</div>
+	</main>
 
 	<!-- Resize handles -->
 	{#if resizable && !maximized}
@@ -268,7 +268,7 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 			<div class={`resize-handle ${dir}`} {@attach resizeAttachments[dir]}></div>
 		{/each}
 	{/if}
-</div>
+</section>
 
 {#if showBottomSnapPreview}
 	<div class="snap-preview" aria-hidden="true"></div>

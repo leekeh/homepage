@@ -1,7 +1,6 @@
 <script lang="ts">
-	import { getContext } from 'svelte';
 	import { page } from '$app/stores';
-	import { WindowManager, WM_CONTEXT_KEY } from './shared/windowManager.svelte';
+	import { useWindowManager } from './shared/windowManager.svelte';
 	import { getWidgetByRoute, loadWidgetComponent } from '../widgets/widgets';
 
 	import Startup from './Startup.svelte';
@@ -9,8 +8,7 @@
 	import MobileShell from './mobile/MobileShell.svelte';
 	import DesktopShell from './desktop/DesktopShell.svelte';
 
-	// Context
-	const wm = getContext<WindowManager>(WM_CONTEXT_KEY);
+	const wm = $derived(useWindowManager());
 	const hasJsSupport = $derived(useJsSupport());
 	const activeWindow = $derived(wm.activeWindow);
 
@@ -27,39 +25,17 @@
 			<ActiveComponent {...activeWindow.data ?? {}}></ActiveComponent>
 		{/if}
 	{:else if !hasJsSupport}
-		{@const MobileFallbackComponent = await loadWidgetComponent(fallbackWidgetId)}
-		{#if MobileFallbackComponent}
-			<MobileFallbackComponent />
-		{:else}
-			<div class="empty-state">
-				<p>Open an app from the menu</p>
-			</div>
+		{@const DefaultWidgetForRoute = await loadWidgetComponent(fallbackWidgetId)}
+		{#if DefaultWidgetForRoute}
+			<DefaultWidgetForRoute />
 		{/if}
-	{:else}
-		<div class="empty-state">
-			<p>Open an app from the menu</p>
-		</div>
 	{/if}
 {/snippet}
 
 <div class="shell">
+	<h1 class="sr-only">leekeh</h1>
 	<DesktopShell>
-		<!-- todo save main window data somewhere -->
-		<!-- <Window
-			id={win.id}
-			title={win.title}
-			bind:x={win.x}
-			bind:y={win.y}
-			bind:width={win.width}
-			bind:height={win.height}
-			zIndex={win.zIndex}
-			minimized={win.minimized}
-			maximized={win.maximized}
-			defaultMaximized={def?.defaultMaximized}
-			resizable={def?.resizable ?? true}
-		>
-			{@render mainWindow?.()}
-		</Window> -->
+		{@render mainWindow?.()}
 	</DesktopShell>
 
 	<MobileShell>{@render mainWindow?.()}</MobileShell>
@@ -72,14 +48,5 @@
 		background: url('/bg.png');
 		background-size: cover;
 		overflow: hidden;
-	}
-
-	.empty-state {
-		display: grid;
-		place-items: center;
-		height: 100%;
-		color: var(--color-text-muted);
-		font-family: var(--font-mono);
-		font-size: var(--font-size-md);
 	}
 </style>

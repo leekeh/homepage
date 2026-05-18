@@ -11,13 +11,23 @@
 		width: number;
 		height: number;
 		zIndex: number;
+		title: string;
 		children: Snippet;
 	};
 
-	let { id, x = $bindable(), y = $bindable(), width, height, zIndex, children }: Props = $props();
+	let {
+		id,
+		x = $bindable(),
+		y = $bindable(),
+		width,
+		height,
+		zIndex,
+		title,
+		children
+	}: Props = $props();
 
 	// Context
-	const wm = useWindowManager();
+	const wm = $derived(useWindowManager());
 
 	// State
 	let dragOffX = $state(0);
@@ -45,7 +55,7 @@
 	Window without built-in title bar. Minimal, stylistic widgets that should not be resized and should not look like traditional windows.
  -->
 
-<div
+<section
 	class="minimal-window"
 	style="
 		left: {x}px;
@@ -56,6 +66,7 @@
 	"
 	draggable="true"
 	{@attach drag}
+	aria-label={title}
 >
 	<button class="minimal-close" onclick={onClose} title="Close">
 		<IconClose />
@@ -64,7 +75,7 @@
 	<div class="minimal-content">
 		{@render children()}
 	</div>
-</div>
+</section>
 
 <style>
 	.minimal-window {

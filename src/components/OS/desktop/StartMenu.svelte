@@ -2,31 +2,109 @@
 	import { widgetNavigationData } from '@components/widgets/widgets';
 	import { resolve } from '$app/paths';
 	import IconStart from '@icons/IconStart.svelte';
+	import { useRovingTabindex } from '../shared/useRovingTabindex.svelte';
+	import { useJsSupport } from '../shared/useJsSupport.svelte';
 
-	let popover: HTMLDivElement;
 	const id = $props.id();
+	const buttonId = `${id}-button`;
 
-	function closePopover() {
+	// context
+	const hasJsSupport = $derived(useJsSupport());
+
+	// bindings
+	let startButton: HTMLButtonElement;
+	let popover: HTMLDivElement;
+
+	// State
+	let isOpen = $state(false);
+	let activeIndex = $state(0);
+
+	const menuNav = useRovingTabindex({
+		selector: '[role="menuitem"]',
+		orientation: 'vertical',
+		activeIndex: () => activeIndex,
+		setActiveIndex: (i) => {
+			activeIndex = i;
+		},
+		onKeydown: (event) => {
+			if (event.key === 'Escape') {
+				event.preventDefault();
+				closePopover(true);
+			}
+			if (event.key === 'Tab') closePopover(false);
+		}
+	});
+
+	function openPopoverAt(index = 0) {
+		activeIndex = index;
+		if (!popover?.matches(':popover-open')) {
+			popover?.showPopover?.();
+			return;
+		}
+		menuNav.focusAt(index);
+	}
+
+	function closePopover(restoreFocus = false) {
 		popover?.hidePopover?.();
+		if (restoreFocus) {
+			startButton?.focus();
+		}
+	}
+
+	function onPopoverToggle(event: ToggleEvent) {
+		isOpen = event.newState === 'open';
+		if (isOpen) {
+			menuNav.focusAt(activeIndex);
+		}
+	}
+
+	function onStartButtonKeydown(event: KeyboardEvent) {
+		if (event.key === 'ArrowDown') {
+			event.preventDefault();
+			openPopoverAt(0);
+			return;
+		}
+		if (event.key === 'ArrowUp') {
+			event.preventDefault();
+			openPopoverAt(widgetNavigationData.length - 1);
+		}
 	}
 </script>
 
-<button class="start-button" popovertarget={id} popovertargetaction="toggle">
+<button
+	class="start-button"
+	id={buttonId}
+	bind:this={startButton}
+	popovertarget={id}
+	popovertargetaction="toggle"
+	onkeydown={onStartButtonKeydown}
+	aria-haspopup="menu"
+	aria-controls={id}
+	aria-expanded={isOpen}
+>
 	<IconStart />
 	<span>Start</span>
 </button>
 
-<div class="start-popover" {id} popover bind:this={popover}>
-	<nav class="start-menu-items" aria-label="Applications">
-		{#each widgetNavigationData as widget (widget.id)}
-			<a class="start-menu-item" href={resolve(widget.route)} onclick={closePopover}>
-				<span class="start-menu-icon" aria-hidden="true">
-					<widget.icon />
-				</span>
-				<span class="start-menu-label">{widget.title}</span>
-			</a>
+<div class="start-popover" {id} popover bind:this={popover} ontoggle={onPopoverToggle}>
+	<ul class="start-menu-items" role="menu" {@attach menuNav.attachment} aria-labelledby={buttonId}>
+		{#each widgetNavigationData as widget, index (widget.id)}
+			<li role="none">
+				<a
+					class="start-menu-item"
+					href={resolve(widget.route)}
+					role="menuitem"
+					tabindex={hasJsSupport && isOpen ? (index === activeIndex ? 0 : -1) : undefined}
+					onclick={() => closePopover(false)}
+				>
+					<span class="start-menu-icon" aria-hidden="true">
+						<widget.icon />
+					</span>
+					<span class="start-menu-label">{widget.title}</span>
+				</a>
+			</li>
 		{/each}
-	</nav>
+	</ul>
 </div>
 
 <style>
@@ -78,6 +156,7 @@
 	.start-menu-items {
 		display: flex;
 		flex-direction: column;
+		list-style: none;
 		min-width: 220px;
 		padding: var(--space-2) 0;
 	}

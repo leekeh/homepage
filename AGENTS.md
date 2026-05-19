@@ -64,6 +64,12 @@ A progressively-enhanced personal website styled as a retro (Win95-esque) deskto
 - `setPointerCapture` / `releasePointerCapture` for drag tracking
 - Drag threshold: 5px to distinguish click from drag
 
+**Composite menus and toolbars**
+
+- Use `useRovingTabindex.svelte.ts` for roving tabindex patterns in Start menus, taskbars, and toolbar-like widgets.
+- Keep the active item index in the Svelte component (`$state`) and render `tabindex` declaratively from that state.
+- The attachment should own keyboard delegation and focus movement; avoid separate sync helpers like `syncTabindices` or MutationObserver-based tab stop repair.
+
 **Styling**
 
 - CSS custom properties in `variables.css` (botanical green theme)

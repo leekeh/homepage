@@ -1,25 +1,32 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-	import { useWindowManager } from '../shared/windowManager.svelte';
-	import { getWidgetById, loadWidgetComponent, widgetNavigationData } from '../../widgets/widgets';
-	import Window from '../window/Window.svelte';
-	import MinimalWindow from '../window/MinimalWindow.svelte';
-	import DesktopIcon from '../desktop/DesktopIcon.svelte';
-	import IconStart from '@icons/IconStart.svelte';
-	import { useJsSupport } from '../shared/useJsSupport.svelte';
-	import { useTime } from '../shared/useTime.svelte';
 	import { resolve } from '$app/paths';
+	import { getRouteForWindow } from '@components/widgets/widgets';
+	import { useWindowManager } from '../shared/windowManager.svelte';
+	import { useTime } from '../shared/useTime.svelte';
+	import { useRovingTabindex } from '../shared/useRovingTabindex.svelte';
 	import StartMenu from './StartMenu.svelte';
+	import { useJsSupport } from '../shared/useJsSupport.svelte';
 
-	type Props = {
-		children?: Snippet;
-	};
-
-	let { children }: Props = $props();
-
+	// Context
 	const wm = $derived(useWindowManager());
-	const hasJsSupport = $derived(useJsSupport());
 	const time = $derived(useTime());
+	const hasJsSupport = $derived(useJsSupport());
+
+	// State
+	let menuActiveIndex = $state(0);
+	// Clamp to valid range so there's always a tabindex=0 item when windows exist
+	const clampedMenuIndex = $derived(
+		wm.windows.length > 0 ? Math.min(menuActiveIndex, wm.windows.length - 1) : 0
+	);
+
+	const menubarNav = useRovingTabindex({
+		selector: '[role="menuitem"]',
+		orientation: 'horizontal',
+		activeIndex: () => clampedMenuIndex,
+		setActiveIndex: (i) => {
+			menuActiveIndex = i;
+		}
+	});
 
 	// Interactions
 	function focusWindow(id: string) {
@@ -33,19 +40,27 @@
 	<StartMenu />
 	<hr class="divider" />
 
-	<ul class="window-buttons">
-		{#each wm.windows as win (win.id)}
+	<ul
+		class="window-buttons"
+		role="menubar"
+		{@attach menubarNav.attachment}
+		aria-label="Open windows"
+	>
+		{#each wm.windows as win, index (win.id)}
 			{@const isActive = wm.activeWindow?.id === win.id && !win.minimized}
-			<li>
-				<button
+			<li role="none">
+				<a
 					class="window-button"
 					class:active={isActive}
 					class:minimized={win.minimized}
+					href={resolve(getRouteForWindow(win.widgetId, win.data))}
+					role="menuitem"
+					tabindex={hasJsSupport ? (index === clampedMenuIndex ? 0 : -1) : undefined}
 					onclick={() => focusWindow(win.id)}
 					title={win.title}
 				>
 					<span class="window-button-text">{win.title}</span>
-				</button>
+				</a>
 			</li>
 		{/each}
 	</ul>
@@ -105,6 +120,11 @@
 
 	.window-button:hover {
 		background: rgba(212, 245, 214, 0.2);
+	}
+
+	.window-button:focus-visible {
+		outline: 2px solid var(--color-primary-light);
+		outline-offset: -2px;
 	}
 
 	.window-button.active {

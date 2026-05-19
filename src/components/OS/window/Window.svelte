@@ -205,7 +205,6 @@
 OS-style window with title bar, optional menubar, and content area. Supports dragging, resizing, maximizing, minimizing, and closing.
  -->
 
-<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 <section
 	class="window"
 	class:maximized

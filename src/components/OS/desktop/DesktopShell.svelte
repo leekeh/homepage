@@ -1,7 +1,12 @@
 <script lang="ts">
-	import type { Snippet } from 'svelte';
-	import { useWindowManager } from '../shared/windowManager.svelte';
-	import { getWidgetById, loadWidgetComponent, widgetNavigationData } from '../../widgets/widgets';
+	import { page } from '$app/state';
+	import { useWindowManager, type WindowState } from '../shared/windowManager.svelte';
+	import {
+		getWidgetById,
+		getWidgetByRoute,
+		loadWidgetComponent,
+		widgetNavigationData
+	} from '../../widgets/widgets';
 	import Window from '../window/Window.svelte';
 	import MinimalWindow from '../window/MinimalWindow.svelte';
 	import DesktopIcon from '../desktop/DesktopIcon.svelte';
@@ -9,14 +14,11 @@
 	import Taskbar from './Taskbar.svelte';
 	import SkipLink from '../shared/SkipLink.svelte';
 
-	type Props = {
-		children?: Snippet;
-	};
-
-	let { children }: Props = $props();
-
 	const wm = $derived(useWindowManager());
 	const hasJsSupport = $derived(useJsSupport());
+
+	const routeMatch = $derived(getWidgetByRoute(page.url.pathname));
+	const fallbackWidgetId = $derived(routeMatch?.widget.id ?? 'about');
 </script>
 
 {#if !hasJsSupport || !wm.isMobile}
@@ -39,32 +41,55 @@
 			</ul>
 		</nav>
 
-		<main id="desktop-content">
-			<!-- {@render children?.()} -->
-			{#each wm.windows as win (win.id)}
-				{#if !win.minimized}
-					{@const WindowComponent = win.minimal ? MinimalWindow : Window}
-					{@const def = getWidgetById(win.widgetId)}
-					<WindowComponent
-						id={win.id}
-						title={win.title}
-						bind:x={win.x}
-						bind:y={win.y}
-						bind:width={win.width}
-						bind:height={win.height}
-						zIndex={win.zIndex}
-						minimized={win.minimized}
-						maximized={win.maximized}
-						defaultMaximized={def?.defaultMaximized}
-						resizable={def?.resizable ?? true}
-					>
-						{@const WidgetComponent = await loadWidgetComponent(win.widgetId)}
-						{#if WidgetComponent}
-							<WidgetComponent {...win.data ?? {}} />
-						{/if}
-					</WindowComponent>
+		{#snippet renderWindow(win: WindowState)}
+			{@const WindowComponent = win.minimal ? MinimalWindow : Window}
+			{@const def = getWidgetById(win.widgetId)}
+			<WindowComponent
+				id={win.id}
+				title={win.title}
+				bind:x={win.x}
+				bind:y={win.y}
+				bind:width={win.width}
+				bind:height={win.height}
+				zIndex={win.zIndex}
+				minimized={win.minimized}
+				maximized={win.maximized}
+				defaultMaximized={def?.defaultMaximized}
+				resizable={def?.resizable ?? true}
+			>
+				{@const WidgetComponent = await loadWidgetComponent(win.widgetId)}
+				{#if WidgetComponent}
+					<WidgetComponent {...win.data ?? {}} />
 				{/if}
-			{/each}
+			</WindowComponent>
+		{/snippet}
+
+		<main id="desktop-content">
+			{#if !hasJsSupport}
+				{@const def = getWidgetById(fallbackWidgetId)}
+				{#if def}
+					{@render renderWindow({
+						id: fallbackWidgetId,
+						widgetId: fallbackWidgetId,
+						title: def.title,
+						x: def.defaultX ?? 80,
+						y: def.defaultY ?? 60,
+						width: def.defaultWidth,
+						height: def.defaultHeight,
+						zIndex: 10,
+						minimized: false,
+						maximized: def.defaultMaximized ?? false,
+						minimal: def.minimal,
+						data: undefined
+					})}
+				{/if}
+			{:else}
+				{#each wm.windows as win (win.id)}
+					{#if !win.minimized}
+						{@render renderWindow(win)}
+					{/if}
+				{/each}
+			{/if}
 		</main>
 		<Taskbar />
 	</div>

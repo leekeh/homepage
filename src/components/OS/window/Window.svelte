@@ -2,6 +2,7 @@
 	import type { Snippet } from 'svelte';
 	import { useDrag } from '../shared/useDrag.svelte';
 	import { useWindowManager } from '../shared/windowManager.svelte';
+	import { useJsSupport } from '../shared/useJsSupport.svelte';
 	import IconMinimize from '@icons/IconMinimize.svelte';
 	import IconMaximize from '@icons/IconMaximize.svelte';
 	import IconRestore from '@icons/IconRestore.svelte';
@@ -43,7 +44,8 @@
 
 	// Context
 	const wm = $derived(useWindowManager());
-	const isActive = $derived(wm.activeWindow?.id === id);
+	const hasJsSupport = $derived(useJsSupport());
+	const isActive = $derived(!hasJsSupport || wm.activeWindow?.id === id);
 
 	// ── Resize state ──
 	let resizing = $state(false);
@@ -210,6 +212,7 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 	class:maximized
 	class:minimized
 	class:resizing
+	class:no-js={!hasJsSupport}
 	class:inactive={!isActive}
 	style="
 		left: {maximized ? 0 : x}px;
@@ -225,7 +228,7 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 >
 	<!-- Title Bar -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
-	<header class="titlebar" {@attach drag} ondblclick={onToggleMaximize} draggable="true">
+	<header class="titlebar" {@attach drag} ondblclick={onToggleMaximize} draggable={hasJsSupport}>
 		<div class="titlebar-left">
 			{#if icon}
 				<span class="title-icon">{icon}</span>
@@ -262,7 +265,7 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 	</main>
 
 	<!-- Resize handles -->
-	{#if resizable && !maximized}
+	{#if resizable && hasJsSupport && !maximized}
 		{#each resizeDirections as dir (dir)}
 			<div class={`resize-handle ${dir}`} {@attach resizeAttachments[dir]}></div>
 		{/each}
@@ -294,6 +297,10 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 	.window.maximized {
 		border-radius: 0;
 		border: none;
+	}
+
+	.window.no-js {
+		resize: both;
 	}
 
 	.window.resizing {
@@ -369,12 +376,16 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		backdrop-filter: blur(5px);
 		cursor: default;
 		min-height: var(--titlebar-height);
-		touch-action: none;
 		flex-shrink: 0;
-		cursor: grab;
-		user-select: none;
-		&:active {
-			cursor: grabbing;
+
+		/* if draggable */
+		&[draggable='true'] {
+			cursor: grab;
+			user-select: none;
+			touch-action: none;
+			&:active {
+				cursor: grabbing;
+			}
 		}
 	}
 

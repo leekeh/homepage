@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { type Snippet } from 'svelte';
 	import { page } from '$app/state';
 	import { useWindowManager } from '../shared/windowManager.svelte';
-	import { getWidgetByRoute, getRouteForWindow, widgetNavigationData } from '../../widgets/widgets';
+	import {
+		getWidgetByRoute,
+		getRouteForWindow,
+		loadWidgetComponent,
+		widgetNavigationData
+	} from '../../widgets/widgets';
 	import { resolve } from '$app/paths';
 	import AppDrawer from './AppDrawer.svelte';
 	import MobileNav from './MobileNav.svelte';
 	import { useJsSupport } from '../shared/useJsSupport.svelte';
 	import SkipLink from '../shared/SkipLink.svelte';
-
-	type Props = { children: Snippet };
-
-	let { children }: Props = $props();
 
 	const wm = $derived(useWindowManager());
 	const hasJsSupport = $derived(useJsSupport());
@@ -55,7 +55,17 @@
 		</header>
 
 		<main class="mobile-content" id="mobile-content">
-			{@render children?.()}
+			{#if activeWindow}
+				{@const ActiveComponent = await loadWidgetComponent(activeWindow.widgetId)}
+				{#if ActiveComponent}
+					<ActiveComponent {...activeWindow.data ?? {}} />
+				{/if}
+			{:else if !hasJsSupport}
+				{@const DefaultComponent = await loadWidgetComponent(routeMatch?.widget.id ?? 'about')}
+				{#if DefaultComponent}
+					<DefaultComponent />
+				{/if}
+			{/if}
 		</main>
 	</div>
 {/if}

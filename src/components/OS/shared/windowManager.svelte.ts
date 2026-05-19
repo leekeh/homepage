@@ -155,7 +155,7 @@ export class WindowManager {
 			height: overrides?.height ?? def.defaultHeight,
 			zIndex: this.topZ,
 			minimized: overrides?.minimized ?? false,
-			maximized: overrides?.maximized ?? false,
+			maximized: overrides?.maximized ?? def.defaultMaximized ?? false,
 			minimal: overrides?.minimal ?? def.minimal,
 			data: overrides?.data
 		};

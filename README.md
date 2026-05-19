@@ -9,23 +9,19 @@ SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
 - fix desktop organization (dragging icons should work again),
 - add nested folders to menu
 - add terminal with some common commands (ls, neofetch, help)
-- remove mobile
-- manage landmarks
 - validate html
-- add more keyboard navigation (windows, start menu)
 - add a way to change window size with keyboard
 - add proper metadata: OG, rss,
-- on closing window, update the url to the currently focused window
 - add lots of content!
   - uses page
-- make the back buttton work
 - keyboard shortcuts for window managements, opening shortcuts
 - spotlight
-- context menu
+- context menu (right click)
 - remove old vercel integration and move to cloudflare pages
-- draggable taskbar items
+- draggable taskbar items (desktop and mobile)
 - implement wai-aria patterns for accessibility
 - allow dragging open tabs on desktop and mobile. Allow closing tabs on mobile
+- fix bug: dragging window to the top does not maximize it, dragging away from the top minimizes it instead of just restoring it
 
 blog posts:
 

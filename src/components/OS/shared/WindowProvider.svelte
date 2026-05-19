@@ -60,6 +60,8 @@
 
 	beforeNavigate((navigation) => {
 		if (!browser) return;
+		// Don't intercept back/forward — onpopstate handles those
+		if (navigation.type === 'popstate') return;
 		const to = navigation.to?.url?.pathname;
 		if (!to || to.endsWith('.xml')) return;
 		const match = getWidgetByRoute(to);

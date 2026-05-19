@@ -172,6 +172,11 @@ export class WindowManager {
 		if (idx !== -1) {
 			this.windows.splice(idx, 1);
 			this.saveLayout();
+			// Sync URL to the new active window after closing
+			const newActive = this.activeWindow;
+			if (newActive) {
+				this.onFocusChange?.(newActive);
+			}
 		}
 	}
 

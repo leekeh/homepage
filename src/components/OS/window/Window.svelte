@@ -50,76 +50,64 @@
 	// ── Resize state ──
 	let resizing = $state(false);
 	let isAnimating = $state(false);
-	let showBottomSnapPreview = $state(false);
-	let draggingMaximized = $state(false);
-	let maximizeDragStartY = 0;
-	let showMinimizePreview = $state(false);
+	let showTopSnapPreview = $state(false);
 
 	// ── Drag state ──
 	let dragging = $state(false);
 	let dragOffX = 0;
 	let dragOffY = 0;
+	let draggingFromMaximized = false;
 
-	const MAXIMIZED_MINIMIZE_THRESHOLD = 72;
+	/** Pixels from top edge that trigger snap-to-maximize preview */
+	const SNAP_TOP_THRESHOLD = 8;
+	/** Approximate cursor y-offset within the titlebar when restoring from maximized */
+	const TITLEBAR_OFFSET = 16;
 
 	const drag = useDrag({
 		shouldStart: (event) => !(event.target as HTMLElement).closest('.titlebar-buttons'),
 		onStart: ({ event }) => {
 			dragging = true;
-			showBottomSnapPreview = false;
-			showMinimizePreview = false;
+			showTopSnapPreview = false;
+			draggingFromMaximized = maximized;
+			if (!maximized) {
+				dragOffX = event.clientX - x;
+				dragOffY = event.clientY - y;
+			}
+		},
+		onMove: ({ event, dx, dy }) => {
+			if (!dragging) return;
 
-			if (maximized) {
-				draggingMaximized = true;
-				maximizeDragStartY = event.clientY;
+			if (draggingFromMaximized) {
+				// Restore window once pointer has moved enough, keeping cursor proportional in titlebar
+				if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+					const ratio = event.clientX / wm.desktopWidth;
+					const restoredX = Math.round(event.clientX - ratio * width);
+					const restoredY = event.clientY - TITLEBAR_OFFSET;
+					wm.move(id, restoredX, restoredY);
+					wm.toggleMaximize(id);
+					dragOffX = event.clientX - restoredX;
+					dragOffY = event.clientY - restoredY;
+					draggingFromMaximized = false;
+				}
 				return;
 			}
 
-			draggingMaximized = false;
-			dragOffX = event.clientX - x;
-			dragOffY = event.clientY - y;
+			const nextX = event.clientX - dragOffX;
+			const nextY = event.clientY - dragOffY;
+			wm.move(id, nextX, nextY);
+			showTopSnapPreview = nextY <= SNAP_TOP_THRESHOLD;
 		},
-		onMove: ({ event, dy }) => {
-			if (!dragging) return;
-
-			if (draggingMaximized) {
-				showMinimizePreview = dy >= MAXIMIZED_MINIMIZE_THRESHOLD;
-				showBottomSnapPreview = false;
-			} else {
-				const nextX = event.clientX - dragOffX;
-				const nextY = event.clientY - dragOffY;
-				wm.move(id, nextX, nextY);
-				showBottomSnapPreview = !maximized && shouldShowBottomSnapPreview();
-			}
-		},
-		onEnd: ({ event }) => {
-			const shouldMaximize = dragging && !draggingMaximized && showBottomSnapPreview && !maximized;
-			const maximizeDragDeltaY = event.clientY - maximizeDragStartY;
-			const shouldMinimizeFromMaximized =
-				dragging &&
-				draggingMaximized &&
-				maximizeDragDeltaY >= MAXIMIZED_MINIMIZE_THRESHOLD &&
-				maximized;
-
+		onEnd: () => {
+			const wasShowingTopSnap = showTopSnapPreview;
 			dragging = false;
-			draggingMaximized = false;
-			showBottomSnapPreview = false;
-			showMinimizePreview = false;
+			draggingFromMaximized = false;
+			showTopSnapPreview = false;
 
-			if (shouldMaximize) {
+			if (wasShowingTopSnap && !maximized) {
 				onToggleMaximize();
-			} else if (shouldMinimizeFromMaximized) {
-				onMinimize();
 			}
 		}
 	});
-
-	function shouldShowBottomSnapPreview() {
-		// todo move this to window manager logic.
-		// const maxWindowY = wm.desktopHeight - WindowManager.TASKBAR_H - height;
-		// return nextY >= maxWindowY - 28;
-		return false;
-	}
 
 	function createResizeAttachment(dir: string) {
 		let startW = 0;
@@ -136,8 +124,6 @@
 			},
 			onStart: () => {
 				resizing = true;
-				showBottomSnapPreview = false;
-				showMinimizePreview = false;
 				startW = width;
 				startH = height;
 				startX = x;
@@ -167,8 +153,6 @@
 			},
 			onEnd: () => {
 				resizing = false;
-				showBottomSnapPreview = false;
-				showMinimizePreview = false;
 			}
 		});
 	}
@@ -272,12 +256,8 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 	{/if}
 </section>
 
-{#if showBottomSnapPreview}
+{#if showTopSnapPreview}
 	<div class="snap-preview" aria-hidden="true"></div>
-{/if}
-
-{#if showMinimizePreview}
-	<div class="minimize-preview" aria-hidden="true"></div>
 {/if}
 
 <style>
@@ -316,22 +296,6 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		border-radius: var(--radius-lg);
 		background: linear-gradient(135deg, #d4f5d61a 0%, #5ccc631a 100%);
 		box-shadow: 0 0 0 1px #003d04aa inset;
-		animation: snap-preview-in 140ms ease-out;
-	}
-
-	.minimize-preview {
-		position: fixed;
-		left: 50%;
-		bottom: calc(var(--taskbar-height) + 8px);
-		transform: translateX(-50%);
-		width: min(320px, 80vw);
-		height: 18px;
-		border-radius: var(--radius-round);
-		border: 1px solid #d4f5d688;
-		background: linear-gradient(90deg, #5ccc6333 0%, #d4f5d666 100%);
-		box-shadow: 0 0 0 1px #003d04aa inset;
-		z-index: var(--z-overlay);
-		pointer-events: none;
 		animation: snap-preview-in 140ms ease-out;
 	}
 

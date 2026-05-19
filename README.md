@@ -21,7 +21,6 @@ SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
 - draggable taskbar items (desktop and mobile)
 - implement wai-aria patterns for accessibility
 - allow dragging open tabs on desktop and mobile. Allow closing tabs on mobile
-- fix bug: dragging window to the top does not maximize it, dragging away from the top minimizes it instead of just restoring it
 
 blog posts:
 

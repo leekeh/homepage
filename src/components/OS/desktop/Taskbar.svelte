@@ -84,6 +84,7 @@
 		padding: 0 var(--space-2);
 		gap: var(--space-1);
 		z-index: var(--z-taskbar);
+		user-select: none;
 	}
 
 	.divider {

@@ -7,6 +7,8 @@
 	import IconMaximize from '@icons/IconMaximize.svelte';
 	import IconRestore from '@icons/IconRestore.svelte';
 	import IconClose from '@icons/IconClose.svelte';
+	import { resolve } from 'path';
+	import { page } from '$app/state';
 
 	type Props = {
 		id: string;
@@ -22,7 +24,6 @@
 		defaultMaximized?: boolean;
 		resizable?: boolean;
 		children: Snippet;
-		menubar?: Snippet;
 	};
 
 	let {
@@ -38,14 +39,14 @@
 		minimized = false,
 		maximized = defaultMaximized,
 		resizable = true,
-		children,
-		menubar
+		children
 	}: Props = $props();
 
 	// Context
 	const wm = $derived(useWindowManager());
 	const hasJsSupport = $derived(useJsSupport());
 	const isActive = $derived(!hasJsSupport || wm.activeWindow?.id === id);
+	const currentPath = $derived(page.url.pathname);
 
 	// ── Resize state ──
 	let resizing = $state(false);
@@ -192,7 +193,7 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
  -->
 
 <section
-	class="window"
+	class="window squiggle-border"
 	class:maximized
 	class:minimized
 	class:resizing
@@ -220,33 +221,39 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 			<h2 class="title-text" id={`window-title-${id}`}>{title}</h2>
 		</div>
 		<div class="titlebar-buttons" inert={!isActive}>
-			<button class="wbtn" onclick={onMinimize} title="Minimize">
-				<IconMinimize />
-			</button>
-			<button class="wbtn" onclick={onToggleMaximize} title={maximized ? 'Restore' : 'Maximize'}>
-				{#if maximized}
-					<IconRestore />
-				{:else}
-					<IconMaximize />
-				{/if}
-			</button>
-			<button class="wbtn close-btn" onclick={onClose} title="Close">
-				<IconClose />
-			</button>
+			{#if hasJsSupport}
+				<button class="wbtn" class:no-js={!hasJsSupport} onclick={onMinimize} title="Minimize">
+					<IconMinimize />
+				</button>
+				<button
+					class="wbtn"
+					class:no-js={!hasJsSupport}
+					onclick={onToggleMaximize}
+					title={maximized ? 'Restore' : 'Maximize'}
+				>
+					{#if maximized}
+						<IconRestore />
+					{:else}
+						<IconMaximize />
+					{/if}
+				</button>
+			{/if}
+			{#if hasJsSupport}
+				<button class="wbtn close-btn" onclick={onClose} title="Close">
+					<IconClose />
+				</button>
+			{:else if currentPath !== '/'}
+				<a class="wbtn close-btn" href={resolve('/')} title="Close">
+					<IconClose />
+				</a>
+			{/if}
 		</div>
 	</header>
 
-	<!-- Menu Bar (optional snippet) -->
-	{#if menubar}
-		<aside class="menubar">
-			{@render menubar()}
-		</aside>
-	{/if}
-
 	<!-- Content area -->
-	<main class="window-content" inert={!isActive}>
+	<div class="window-content" inert={!isActive}>
 		{@render children()}
-	</main>
+	</div>
 
 	<!-- Resize handles -->
 	{#if resizable && hasJsSupport && !maximized}
@@ -267,36 +274,38 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		flex-direction: column;
 		min-width: 200px;
 		min-height: 120px;
-		box-shadow: var(--shadow-window);
-		border: 1px solid var(--win-border);
+		background-color: var(--color-bg-primary);
 		border-radius: var(--radius-lg);
-		overflow: hidden;
 		container-type: inline-size;
-	}
 
-	.window.maximized {
-		border-radius: 0;
-		border: none;
-	}
+		&.maximized {
+			border-radius: 0;
+			border: none;
+		}
 
-	.window.no-js {
-		resize: both;
-	}
+		&.no-js {
+			overflow: hidden;
+			resize: both;
+		}
 
-	.window.resizing {
-		user-select: none;
+		&.inactive {
+			&::before {
+				backdrop-filter: blur(3px) brightness(90%);
+				z-index: var(--z-overlay);
+			}
+		}
 	}
 
 	.snap-preview {
 		position: fixed;
-		inset: 0 0 var(--taskbar-height) 0;
-		z-index: var(--z-overlay);
+		inset: var(--border-width) var(--border-width) var(--taskbar-height) var(--border-width);
 		pointer-events: none;
-		border: 2px solid #d4f5d688;
+		border: var(--border-width) solid var(--color-fg-highlight);
 		border-radius: var(--radius-lg);
-		background: linear-gradient(135deg, #d4f5d61a 0%, #5ccc631a 100%);
-		box-shadow: 0 0 0 1px #003d04aa inset;
+		background: var(--color-bg-highlight);
+		outline-offset: (-1 * var(--border-width));
 		animation: snap-preview-in 140ms ease-out;
+		animation-fill-mode: forwards;
 	}
 
 	@keyframes snap-preview-in {
@@ -305,44 +314,32 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 			transform: scale(0.985);
 		}
 		to {
-			opacity: 1;
+			opacity: 0.3;
 			transform: scale(1);
 		}
 	}
 
-	.window.inactive {
-		opacity: 0.8;
-		box-shadow:
-			0 0 0 1px var(--color-border-dark),
-			0 2px 16px #00000044;
-		.window-content {
-			pointer-events: none;
-		}
-	}
-
-	.inactive {
-		/* add blurry overlay for inactive windows */
-		&::before {
-			content: '';
-			position: absolute;
-			inset: 0;
-			backdrop-filter: blur(3px);
-			pointer-events: none;
-		}
-	}
-
-	/* ── Title Bar ── */
 	.titlebar {
 		display: flex;
+		position: relative;
+		border-radius: inherit;
 		align-items: center;
 		justify-content: space-between;
-		background-image: var(--bg-gradient);
-		backdrop-filter: blur(5px);
-		cursor: default;
 		min-height: var(--titlebar-height);
 		flex-shrink: 0;
+		padding: 4px;
 
-		/* if draggable */
+		&::before {
+			--inset: 8px;
+			--calculated-radius: calc(var(--radius-lg) - var(--inset));
+			content: '';
+			position: absolute;
+			inset: var(--inset);
+			border-radius: var(--calculated-radius) var(--calculated-radius) 1px 1px;
+			background: var(--color-bg-highlight);
+			z-index: -1;
+		}
+
 		&[draggable='true'] {
 			cursor: grab;
 			user-select: none;
@@ -351,10 +348,6 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 				cursor: grabbing;
 			}
 		}
-	}
-
-	.inactive .titlebar {
-		background-image: var(--bg-gradient);
 	}
 
 	.titlebar-left {
@@ -372,15 +365,12 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 
 	.title-text {
 		color: var(--win-titlebar-text);
-		font-family: var(--font-sans);
-		font-size: var(--font-size-base);
+		font-family: var(--font-mono);
+		font-weight: 600;
+		font-size: var(--font-size-lg);
 		white-space: nowrap;
 		overflow: hidden;
 		text-overflow: ellipsis;
-	}
-
-	.inactive .title-text {
-		color: var(--win-titlebar-text-inactive);
 	}
 
 	.titlebar-buttons {
@@ -394,21 +384,26 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		border: none;
 		background-color: transparent;
 		background-image: radial-gradient(circle at center, transparent 0%, transparent 80%);
-		color: white;
+		color: var(--color-fg-primary);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		padding: 10px;
 		border-radius: var(--radius-round);
 		transition: all ease 0.3s;
-	}
+		animation: var(--animation-squiggle);
 
-	.wbtn:hover {
-		background-image: radial-gradient(circle at center, #ffffff88 0%, transparent 80%);
-	}
+		&.no-js {
+			cursor: not-allowed;
+		}
 
-	.close-btn:hover {
-		background-image: radial-gradient(circle at center, #ff898988 0%, transparent 80%);
+		&:hover {
+			background-image: radial-gradient(circle at center, #ffffff88 0%, transparent 80%);
+		}
+
+		&.close-btn:hover {
+			background-image: radial-gradient(circle at center, #ff898988 0%, transparent 80%);
+		}
 	}
 
 	/* ── Menu Bar ── */
@@ -434,62 +429,68 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 	/* ── Resize Handles ── */
 	.resize-handle {
 		position: absolute;
+		--handler-size: 16px;
+		--handler-offset: calc(-1 * var(--handler-size) / 2);
 	}
 
 	.resize-handle.n {
-		top: -3px;
-		left: 6px;
-		right: 6px;
-		height: 6px;
+		top: var(--handler-offset);
+		left: var(--handler-offset);
+		right: var(--handler-offset);
+		height: var(--handler-size);
 		cursor: n-resize;
 	}
 	.resize-handle.s {
-		bottom: -3px;
-		left: 6px;
-		right: 6px;
-		height: 6px;
+		bottom: var(--handler-offset);
+		left: var(--handler-offset);
+		right: var(--handler-offset);
+		height: var(--handler-size);
 		cursor: s-resize;
 	}
 	.resize-handle.e {
-		right: -3px;
-		top: 6px;
-		bottom: 6px;
-		width: 6px;
+		right: var(--handler-offset);
+		top: var(--handler-offset);
+		bottom: var(--handler-offset);
+		width: var(--handler-size);
 		cursor: e-resize;
 	}
 	.resize-handle.w {
-		left: -3px;
-		top: 6px;
-		bottom: 6px;
-		width: 6px;
+		left: var(--handler-offset);
+		top: var(--handler-offset);
+		bottom: var(--handler-offset);
+		width: var(--handler-size);
 		cursor: w-resize;
 	}
 	.resize-handle.ne {
-		top: -3px;
-		right: -3px;
-		width: 12px;
-		height: 12px;
+		z-index: 1;
+		top: var(--handler-offset);
+		right: var(--handler-offset);
+		width: var(--handler-size);
+		height: var(--handler-size);
 		cursor: ne-resize;
 	}
 	.resize-handle.nw {
-		top: -3px;
-		left: -3px;
-		width: 12px;
-		height: 12px;
+		z-index: 1;
+		top: var(--handler-offset);
+		left: var(--handler-offset);
+		width: var(--handler-size);
+		height: var(--handler-size);
 		cursor: nw-resize;
 	}
 	.resize-handle.se {
-		bottom: -3px;
-		right: -3px;
-		width: 12px;
-		height: 12px;
+		z-index: 1;
+		bottom: var(--handler-offset);
+		right: var(--handler-offset);
+		width: var(--handler-size);
+		height: var(--handler-size);
 		cursor: se-resize;
 	}
 	.resize-handle.sw {
-		bottom: -3px;
-		left: -3px;
-		width: 12px;
-		height: 12px;
+		z-index: 1;
+		bottom: var(--handler-offset);
+		left: var(--handler-offset);
+		width: var(--handler-size);
+		height: var(--handler-size);
 		cursor: sw-resize;
 	}
 </style>

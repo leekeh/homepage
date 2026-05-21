@@ -21,6 +21,8 @@ SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
 - draggable taskbar items (desktop and mobile)
 - allow dragging open tabs on desktop and mobile. Allow closing tabs on mobile
 - associate multiple widgets on one url
+- add button to stop all animations
+- custom scrollbar
 
 widgets:
 

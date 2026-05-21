@@ -8,7 +8,11 @@
 			<feTurbulence id="turbulence" type="fractalNoise" baseFrequency=".05" numOctaves="100" />
 			<feDisplacementMap id="displacement" in="SourceGraphic" scale="1.15" />
 		</filter>
-		<filter id="displaced">
+		<filter id="squiggler">
+			<feTurbulence id="turbulence" type="fractalNoise" baseFrequency=".05" numOctaves="100" />
+			<feDisplacementMap id="displacement" in="SourceGraphic" scale="1.5" />
+		</filter>
+		<filter id="squigglest">
 			<feTurbulence id="turbulence" type="fractalNoise" baseFrequency=".05" numOctaves="100" />
 			<feDisplacementMap id="displacement" in="SourceGraphic" scale="2" />
 		</filter>

@@ -19,11 +19,18 @@ SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
 - context menu (right click)
 - remove old vercel integration and move to cloudflare pages
 - draggable taskbar items (desktop and mobile)
-- implement wai-aria patterns for accessibility
 - allow dragging open tabs on desktop and mobile. Allow closing tabs on mobile
+- associate multiple widgets on one url
+
+widgets:
+
+- music player
+- pictochat
+- feed of liked posts
 
 blog posts:
 
 - please don't give AI access to your personal images
 - implementing all the WAI-aria a11y patterns
-- tbd
+- indie web spelunking
+- web design styles

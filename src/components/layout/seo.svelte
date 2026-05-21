@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { LayoutData } from '../routes/$types';
+	import type { LayoutData } from '../../routes/$types';
 
 	import { page } from '$app/state';
-	import { getWidgetByRoute } from '../components/widgets/widgets';
-	import { absoluteUrl, SITE_DESCRIPTION } from '../content/site';
-	import { WEBMENTION_ENDPOINT, WEBMENTION_PINGBACK } from '../content/webmentions';
+	import { getWidgetByRoute } from '../../components/widgets/widgets';
+	import { absoluteUrl, SITE_DESCRIPTION } from '../../content/site';
+	import { WEBMENTION_ENDPOINT, WEBMENTION_PINGBACK } from '../../content/webmentions';
 
 	// get generated type from route
 	type Props = {

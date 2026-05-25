@@ -68,6 +68,10 @@
 	}
 }
 
+.squiggled {
+	animation: var(--animation-squiggle);
+}
+
 @keyframes squiggle {
 	0% {
 		filter: url(#squiggle);

@@ -36,13 +36,13 @@
 {#if !hasJsSupport || wm.isMobile}
 	<SkipLink id="mobile-content" />
 	<div class="mobile-shell">
-		<header class="mobile-header" aria-label="Mobile navigation">
+		<header class="mobile-header squiggle-border" aria-label="Mobile navigation">
 			<AppDrawer />
 
 			<nav class="mobile-tabs" aria-label="Applications">
 				{#each widgetNavigationData as widget (widget.id)}
 					<a
-						class="mobile-tab"
+						class="mobile-tab squiggle-border"
 						class:active={activeTabRoute === widget.route}
 						href={resolve(widget.route)}
 					>
@@ -81,9 +81,9 @@
 	.mobile-header {
 		display: flex;
 		align-items: stretch;
-		background: linear-gradient(180deg, #1a4d1a 0%, #0d2e0d 100%);
-		border-bottom: 1px solid var(--color-primary-light);
+		background: var(--color-bg-highlight);
 		z-index: var(--z-taskbar);
+		height: var(--taskbar-height);
 		flex-shrink: 0;
 	}
 
@@ -102,28 +102,28 @@
 	}
 
 	.mobile-tab {
-		color: var(--color-text-light);
 		text-decoration: none;
 		padding: var(--space-2) var(--space-4);
 		border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-		border: 1px solid rgba(212, 245, 214, 0.12);
+		border: var(--border-width) solid var(--color-fg-primary);
 		border-bottom: none;
-		background: rgba(212, 245, 214, 0.08);
 		white-space: nowrap;
 		font-size: var(--font-size-sm);
 		font-family: var(--font-mono);
-	}
 
-	.mobile-tab.active {
-		background: var(--win-bg);
-		color: var(--color-text);
-		border-color: var(--win-border);
+		&.active {
+			background: var(--color-bg-primary);
+		}
+
+		&:hover {
+			box-shadow: inset 0 0 0 4px var(--color-bg-primary);
+		}
 	}
 
 	.mobile-content {
 		flex: 1;
 		overflow: auto;
-		background: var(--win-bg);
+		background: var(--color-bg-primary);
 		min-height: 0;
 	}
 

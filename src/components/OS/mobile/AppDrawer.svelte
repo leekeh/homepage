@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { widgetNavigationData } from '../../widgets/widgets';
 	import { resolve } from '$app/paths';
-	import IconHome from '@icons/IconHome.svelte';
+	import IconApps from '@icons/IconApps.svelte';
 	import { useTime } from '../shared/useTime.svelte';
+	import AppIcon from '../shared/AppIcon.svelte';
+	import Button from '../Button.svelte';
 
 	let dialog: HTMLDialogElement;
 	const id = $props.id();
@@ -13,37 +15,46 @@
 	}
 </script>
 
-<button command="show-modal" title="Home" commandfor={id} aria-label="Home">
-	<IconHome />
+<button class="squiggled" command="show-modal" title="Home" commandfor={id} aria-label="Home">
+	<IconApps />
 </button>
 
 <dialog class="app-menu-dialog" {id} bind:this={dialog}>
-	<div class="app-drawer-surface">
-		<header class="app-menu-header">
-			<time datetime={time}>{time}</time>
-			<button class="app-menu-close" commandfor={id} command="close" aria-label="Close menu">
-				Close
-			</button>
-		</header>
+	<header class="app-menu-header">
+		<time datetime={time}>{time}</time>
+		<Button commandfor={id} command="close" aria-label="Close menu">Close</Button>
+	</header>
 
-		<nav aria-label="Applications">
-			<ul class="app-grid">
-				{#each widgetNavigationData as widget (widget.id)}
-					<li>
-						<a class="app-grid-item" href={resolve(widget.route)} onclick={closeMenu}>
-							<span class="app-grid-icon" aria-hidden="true">
-								<widget.icon />
-							</span>
-							<span class="app-grid-label">{widget.title}</span>
-						</a>
-					</li>
-				{/each}
-			</ul>
-		</nav>
-	</div>
+	<nav aria-label="Applications">
+		<ul class="app-grid">
+			{#each widgetNavigationData as widget (widget.id)}
+				<li>
+					<a class="app-grid-item" href={resolve(widget.route)} onclick={closeMenu}>
+						<AppIcon icon={widget.icon} label={widget.title} />
+					</a>
+				</li>
+			{/each}
+		</ul>
+	</nav>
 </dialog>
 
 <style>
+	button {
+		background-color: transparent;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border: none;
+		min-width: 48px;
+		border-radius: 999px;
+		:global(svg) {
+			width: 24px;
+			height: 24px;
+		}
+		&:hover {
+			box-shadow: inset 0 0 0 4px var(--color-bg-primary);
+		}
+	}
 	.app-menu-dialog {
 		position: fixed;
 		inset: 0;
@@ -65,36 +76,16 @@
 		background: transparent;
 	}
 
-	.app-drawer-surface {
-		min-height: 100%;
-		backdrop-filter: blur(6px);
-		background:
-			radial-gradient(circle at top right, rgba(255, 255, 255, 0.2), transparent 35%),
-			linear-gradient(180deg, rgba(15, 28, 38, 0.42), rgba(9, 22, 32, 0.58));
-		padding: var(--space-4) var(--space-4) var(--space-6);
-	}
-
 	.app-menu-header {
 		display: flex;
 		justify-content: space-between;
+		background-color: black;
+		color: white;
+		min-height: var(--taskbar-height);
 		align-items: center;
 		gap: var(--space-3);
+		padding: var(--space-2) var(--space-4);
 		margin-bottom: var(--space-6);
-	}
-
-	.app-menu-close {
-		border: 1px solid rgba(255, 255, 255, 0.35);
-		background: rgba(229, 236, 239, 0.2);
-		color: rgba(255, 255, 255, 0.95);
-		border-radius: 999px;
-		padding: 0 var(--space-5);
-		height: 48px;
-		display: inline-flex;
-		align-items: center;
-		text-decoration: none;
-		font-family: var(--font-mono);
-		font-size: var(--font-size-base);
-		font-weight: 600;
 	}
 
 	.app-grid {
@@ -108,13 +99,11 @@
 	}
 
 	.app-grid-item {
-		color: var(--color-text-light);
 		text-decoration: none;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		gap: var(--space-2);
-		font-family: var(--font-mono);
 		min-width: 0;
 	}
 
@@ -123,40 +112,15 @@
 		opacity: 0.92;
 	}
 
-	.app-grid-icon {
-		width: 56px;
-		height: 56px;
-		border-radius: 16px;
-		background: rgba(12, 20, 28, 0.4);
-		border: 1px solid rgba(255, 255, 255, 0.2);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		backdrop-filter: blur(4px);
-	}
-
-	.app-grid-icon :global(svg) {
-		width: 30px;
-		height: 30px;
-	}
-
-	.app-grid-label {
-		text-align: center;
-		font-size: var(--font-size-md);
-		line-height: 1.2;
-		text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
-		max-width: 100%;
-		word-break: break-word;
+	time {
+		font-family: var(--font-mono);
+		font-size: var(--font-size-sm);
+		letter-spacing: 0.05em;
 	}
 
 	@media (max-width: 420px) {
 		.app-grid {
 			grid-template-columns: repeat(3, minmax(0, 1fr));
-		}
-
-		.app-grid-icon {
-			width: 52px;
-			height: 52px;
 		}
 	}
 </style>

@@ -419,7 +419,6 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 	}
 
 	.title-text {
-		color: var(--win-titlebar-text);
 		font-family: var(--font-mono);
 		font-weight: 600;
 		font-size: var(--font-size-lg);
@@ -465,8 +464,6 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 	/* ── Menu Bar ── */
 	.menubar {
 		display: flex;
-		background: var(--win-menubar);
-		border-bottom: 1px solid var(--win-menubar-border);
 		padding: var(--space-1) var(--space-2);
 		min-height: var(--menubar-height);
 		flex-shrink: 0;
@@ -477,9 +474,6 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		flex: 1;
 		overflow: auto;
 		overscroll-behavior: none;
-		scrollbar-color: var(--win-btn-bg) transparent;
-		scrollbar-width: 10px;
-		background: var(--win-bg);
 	}
 
 	/* ── Resize Handles ── */

@@ -26,6 +26,8 @@ SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
 - ship fonts locally and prioritize loading them
 - wait for fonts / assets to load before closing startup animation
 - regression testing/screenshot testing on prs
+- tweak mobile tabs: prefill based on related widgets , use tabs pattern
+- swipe to switch between open widgets on mobile
 
 widgets:
 

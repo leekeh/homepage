@@ -1,72 +1,24 @@
 <script lang="ts">
-	import { widgetNavigationData } from '@components/widgets/widgets';
-	import { resolve } from '$app/paths';
 	import IconStart from '@icons/IconStart.svelte';
-	import { useRovingTabindex } from '../shared/useRovingTabindex.svelte';
-	import { useJsSupport } from '../shared/useJsSupport.svelte';
+	import { widgetNavigationData } from '@components/widgets/widgets';
+	import AppMenuPopover from '../shared/AppMenuPopover.svelte';
 
 	const id = $props.id();
 	const buttonId = `${id}-button`;
 
-	// context
-	const hasJsSupport = $derived(useJsSupport());
-
-	// bindings
 	let startButton: HTMLButtonElement;
-	let popover: HTMLDivElement;
-
-	// State
+	let menuPopover: AppMenuPopover;
 	let isOpen = $state(false);
-	let activeIndex = $state(0);
-
-	const menuNav = useRovingTabindex({
-		selector: '[role="menuitem"]',
-		orientation: 'vertical',
-		activeIndex: () => activeIndex,
-		setActiveIndex: (i) => {
-			activeIndex = i;
-		},
-		onKeydown: (event) => {
-			if (event.key === 'Escape') {
-				event.preventDefault();
-				closePopover(true);
-			}
-			if (event.key === 'Tab') closePopover(false);
-		}
-	});
-
-	function openPopoverAt(index = 0) {
-		activeIndex = index;
-		if (!popover?.matches(':popover-open')) {
-			popover?.showPopover?.();
-			return;
-		}
-		menuNav.focusAt(index);
-	}
-
-	function closePopover(restoreFocus = false) {
-		popover?.hidePopover?.();
-		if (restoreFocus) {
-			startButton?.focus();
-		}
-	}
-
-	function onPopoverToggle(event: ToggleEvent) {
-		isOpen = event.newState === 'open';
-		if (isOpen) {
-			menuNav.focusAt(activeIndex);
-		}
-	}
 
 	function onStartButtonKeydown(event: KeyboardEvent) {
 		if (event.key === 'ArrowDown') {
 			event.preventDefault();
-			openPopoverAt(0);
+			menuPopover?.openAt(0);
 			return;
 		}
 		if (event.key === 'ArrowUp') {
 			event.preventDefault();
-			openPopoverAt(widgetNavigationData.length - 1);
+			menuPopover?.openAt(widgetNavigationData.length - 1);
 		}
 	}
 </script>
@@ -86,32 +38,14 @@
 	<span>Start</span>
 </button>
 
-<div
-	class="start-popover squiggle-border"
+<AppMenuPopover
 	{id}
-	popover
-	bind:this={popover}
-	ontoggle={onPopoverToggle}
->
-	<ul class="start-menu-items" role="menu" {@attach menuNav.attachment} aria-labelledby={buttonId}>
-		{#each widgetNavigationData as widget, index (widget.id)}
-			<li role="none">
-				<a
-					class="start-menu-item"
-					href={resolve(widget.route)}
-					role="menuitem"
-					tabindex={hasJsSupport && isOpen ? (index === activeIndex ? 0 : -1) : undefined}
-					onclick={() => closePopover(false)}
-				>
-					<span class="start-menu-icon" aria-hidden="true">
-						<widget.icon />
-					</span>
-					<span class="start-menu-label">{widget.title}</span>
-				</a>
-			</li>
-		{/each}
-	</ul>
-</div>
+	{buttonId}
+	direction="up"
+	onClose={() => startButton?.focus()}
+	bind:open={isOpen}
+	bind:this={menuPopover}
+/>
 
 <style>
 	.start-button {
@@ -120,8 +54,8 @@
 		align-items: center;
 		gap: var(--space-3);
 		padding: var(--space-2) var(--space-4);
-		background: var(--win-btn-bg);
-		border: 1px solid var(--win-btn-border);
+		background-color: transparent;
+		border: none;
 		border-radius: var(--radius-md);
 		color: var(--color-text);
 		font-family: var(--font-mono);
@@ -136,61 +70,6 @@
 	}
 
 	.start-button :global(svg) {
-		width: 16px;
-		height: 16px;
-	}
-
-	.start-popover {
-		inset: auto auto calc(var(--taskbar-height) + 1px) 0;
-		margin: 0;
-		border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-		background: var(--color-bg-primary);
-		border: none;
-		display: none;
-		overflow: visible;
-		padding: 0;
-	}
-
-	.start-popover:popover-open {
-		display: flex;
-	}
-
-	.start-popover::backdrop {
-		background: transparent;
-	}
-
-	.start-menu-items {
-		display: flex;
-		flex-direction: column;
-		list-style: none;
-		min-width: 220px;
-		padding: var(--space-2) 0;
-	}
-
-	.start-menu-item {
-		display: flex;
-		align-items: center;
-		gap: var(--space-4);
-		padding: var(--space-3) var(--space-5);
-		color: var(--color-text);
-		text-decoration: none;
-		font-family: var(--font-mono);
-		font-size: var(--font-size-base);
-	}
-
-	.start-menu-item:hover,
-	.start-menu-item:active {
-		background: var(--color-bg-highlight);
-	}
-
-	.start-menu-icon {
-		width: 20px;
-		height: 20px;
-		display: grid;
-		place-items: center;
-	}
-
-	.start-menu-icon :global(svg) {
 		width: 16px;
 		height: 16px;
 	}

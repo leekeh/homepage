@@ -36,7 +36,7 @@
 	}
 </script>
 
-<footer class="taskbar">
+<footer class="taskbar squiggle-border">
 	<StartMenu />
 	<hr class="divider" />
 
@@ -50,20 +50,21 @@
 			{@const isActive = wm.activeWindow?.id === win.id && !win.minimized}
 			<li role="none">
 				<a
-					class="window-button"
+					class="window-button squiggle-border"
 					class:active={isActive}
-					class:minimized={win.minimized}
 					href={resolve(getRouteForWindow(win.widgetId, win.data))}
 					role="menuitem"
 					tabindex={hasJsSupport ? (index === clampedMenuIndex ? 0 : -1) : undefined}
 					onclick={() => focusWindow(win.id)}
 					title={win.title}
+					aria-current={isActive ? 'page' : undefined}
 				>
 					<span class="window-button-text">{win.title}</span>
 				</a>
 			</li>
 		{/each}
 	</ul>
+	<hr class="divider" />
 
 	<div class="clock-area">
 		<time class="clock" datetime={time}>{time}</time>
@@ -77,8 +78,7 @@
 		left: 0;
 		right: 0;
 		height: var(--taskbar-height);
-		background: linear-gradient(180deg, #1a4d1a 0%, #0d2e0d 100%);
-		border-top: 1px solid var(--color-primary-light);
+		background-color: var(--color-bg-highlight);
 		display: flex;
 		align-items: center;
 		padding: 0 var(--space-2);
@@ -88,54 +88,45 @@
 	}
 
 	.divider {
-		width: 1px;
-		height: 24px;
-		background: var(--color-primary-light);
-		opacity: 0.4;
+		width: var(--border-width);
+		height: 100%;
+		background-color: var(--color-fg-primary);
 		flex-shrink: 0;
+		animation: var(--animation-squiggle);
+		border: none;
 	}
 
 	.window-buttons {
 		display: flex;
 		list-style: none;
 		flex: 1;
-		gap: var(--space-1);
-		overflow: hidden;
+		gap: var(--space-3);
+		padding-inline: var(--space-2);
 	}
 
 	.window-button {
 		display: flex;
 		align-items: center;
 		padding: var(--space-2) var(--space-4);
-		background: rgba(212, 245, 214, 0.1);
-		border: 1px solid rgba(212, 245, 214, 0.15);
+		border: none;
 		border-radius: var(--radius-md);
 		color: var(--color-text-light);
 		font-family: var(--font-mono);
 		font-size: var(--font-size-sm);
-		height: 26px;
 		max-width: 160px;
 		flex-shrink: 0;
-		overflow: hidden;
-	}
+		background-color: var(--color-bg-primary);
+		--inset-bg: 4px;
 
-	.window-button:hover {
-		background: rgba(212, 245, 214, 0.2);
-	}
+		&:hover {
+			box-shadow: inset 0 0 0 var(--inset-bg) var(--color-accent);
+		}
 
-	.window-button:focus-visible {
-		outline: 2px solid var(--color-primary-light);
-		outline-offset: -2px;
-	}
-
-	.window-button.active {
-		background: rgba(0, 84, 9, 0.6);
-		border-color: var(--color-primary-light);
-		box-shadow: var(--shadow-sunken);
-	}
-
-	.window-button.minimized {
-		opacity: 0.6;
+		&.active {
+			background-color: inherit;
+			/* use box shadow instead of outline */
+			box-shadow: inset 0 0 0 var(--inset-bg) var(--color-bg-primary);
+		}
 	}
 
 	.window-button-text {
@@ -148,7 +139,6 @@
 		display: flex;
 		align-items: center;
 		padding: var(--space-2) var(--space-4);
-		border-left: 1px solid rgba(212, 245, 214, 0.2);
 		flex-shrink: 0;
 	}
 

@@ -21,36 +21,28 @@
 
 <!-- 
 @component
-Basic polymorphic button component that can be used inside widgets.
+Basic polymorphic link component that can be used inside widgets.
  -->
 
 {#if href}
-	<a class="button squiggle-border" href={resolve(href)} {...rest as HTMLAnchorAttributes}>
+	<a class="link" href={resolve(href)} {...rest as HTMLAnchorAttributes}>
 		{@render children?.()}
 	</a>
 {:else}
-	<button class="button squiggle-border" {...rest as HTMLButtonAttributes}>
+	<button class="link" {...rest as HTMLButtonAttributes}>
 		{@render children?.()}
 	</button>
 {/if}
 
 <style>
-	.button {
-		display: inline-flex;
-		align-items: center;
-		gap: var(--space-2);
-		border: none;
-		background-color: transparent;
-		font-family: var(--font-mono);
-		border-radius: var(--radius-lg);
-		padding: var(--space-2) var(--space-3);
+	.link {
 	}
 
-	.button:hover {
-		background-color: var(--color-bg-preview);
-	}
-
-	.button:active {
+	.link:hover {
 		background-color: var(--color-bg-highlight);
+	}
+
+	.link:active {
+		background-color: var(--color-button-bg-active);
 	}
 </style>

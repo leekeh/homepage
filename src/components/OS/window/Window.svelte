@@ -1,13 +1,13 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { useDrag } from '../shared/useDrag.svelte';
-	import { useWindowManager } from '../shared/windowManager.svelte';
+	import { useWindowManager, WindowManager } from '../shared/windowManager.svelte';
 	import { useJsSupport } from '../shared/useJsSupport.svelte';
 	import IconMinimize from '@icons/IconMinimize.svelte';
 	import IconMaximize from '@icons/IconMaximize.svelte';
 	import IconRestore from '@icons/IconRestore.svelte';
 	import IconClose from '@icons/IconClose.svelte';
-	import { resolve } from 'path';
+	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 
 	type Props = {
@@ -51,16 +51,19 @@
 	// ── Resize state ──
 	let resizing = $state(false);
 	let isAnimating = $state(false);
-	let showTopSnapPreview = $state(false);
+	let snapPreview: 'top' | 'left' | 'right' | null = $state(null);
 
 	// ── Drag state ──
 	let dragging = $state(false);
 	let dragOffX = 0;
 	let dragOffY = 0;
 	let draggingFromMaximized = false;
+	let draggingFromSnapped = false;
+	let snapRestoreSize: { width: number; height: number } | null = null;
 
-	/** Pixels from top edge that trigger snap-to-maximize preview */
+	/** Pixels from edge that trigger snap preview */
 	const SNAP_TOP_THRESHOLD = 8;
+	const SNAP_SIDE_THRESHOLD = 8;
 	/** Approximate cursor y-offset within the titlebar when restoring from maximized */
 	const TITLEBAR_OFFSET = 16;
 
@@ -68,8 +71,9 @@
 		shouldStart: (event) => !(event.target as HTMLElement).closest('.titlebar-buttons'),
 		onStart: ({ event }) => {
 			dragging = true;
-			showTopSnapPreview = false;
+			snapPreview = null;
 			draggingFromMaximized = maximized;
+			draggingFromSnapped = !maximized && snapRestoreSize !== null;
 			if (!maximized) {
 				dragOffX = event.clientX - x;
 				dragOffY = event.clientY - y;
@@ -93,19 +97,49 @@
 				return;
 			}
 
+			if (draggingFromSnapped && snapRestoreSize) {
+				// Restore pre-snap size once pointer has moved enough
+				if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+					const { width: restW, height: restH } = snapRestoreSize;
+					const ratio = event.clientX / wm.desktopWidth;
+					const restoredX = Math.round(event.clientX - ratio * restW);
+					const restoredY = event.clientY - TITLEBAR_OFFSET;
+					wm.resize(id, restW, restH);
+					wm.move(id, restoredX, restoredY);
+					dragOffX = event.clientX - restoredX;
+					dragOffY = event.clientY - restoredY;
+					draggingFromSnapped = false;
+					snapRestoreSize = null;
+				}
+				return;
+			}
+
 			const nextX = event.clientX - dragOffX;
 			const nextY = event.clientY - dragOffY;
 			wm.move(id, nextX, nextY);
-			showTopSnapPreview = nextY <= SNAP_TOP_THRESHOLD;
+			if (nextY <= SNAP_TOP_THRESHOLD) {
+				snapPreview = 'top';
+			} else if (event.clientX <= SNAP_SIDE_THRESHOLD) {
+				snapPreview = 'left';
+			} else if (event.clientX >= wm.desktopWidth - SNAP_SIDE_THRESHOLD) {
+				snapPreview = 'right';
+			} else {
+				snapPreview = null;
+			}
 		},
 		onEnd: () => {
-			const wasShowingTopSnap = showTopSnapPreview;
+			const prevSnap = snapPreview;
 			dragging = false;
 			draggingFromMaximized = false;
-			showTopSnapPreview = false;
+			draggingFromSnapped = false;
+			snapPreview = null;
 
-			if (wasShowingTopSnap && !maximized) {
+			if (prevSnap === 'top' && !maximized) {
 				onToggleMaximize();
+			} else if (prevSnap === 'left') {
+				snapToHalf('left');
+			} else if (prevSnap === 'right') {
+				snapToHalf('right');
 			}
 		}
 	});
@@ -125,6 +159,7 @@
 			},
 			onStart: () => {
 				resizing = true;
+				snapRestoreSize = null;
 				startW = width;
 				startH = height;
 				startX = x;
@@ -182,6 +217,16 @@
 		setTimeout(() => (isAnimating = false), 300);
 	}
 
+	function snapToHalf(side: 'left' | 'right') {
+		snapRestoreSize = { width, height };
+		isAnimating = true;
+		const halfWidth = Math.floor(wm.desktopWidth / 2);
+		const snapHeight = wm.desktopHeight - WindowManager.TASKBAR_H;
+		wm.resize(id, halfWidth, snapHeight);
+		wm.move(id, side === 'right' ? halfWidth : 0, 0);
+		setTimeout(() => (isAnimating = false), 300);
+	}
+
 	function onClose() {
 		wm.close(id);
 	}
@@ -193,12 +238,14 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
  -->
 
 <section
-	class="window squiggle-border"
-	class:maximized
-	class:minimized
-	class:resizing
-	class:no-js={!hasJsSupport}
-	class:inactive={!isActive}
+	class={[
+		'window squiggle-border',
+		maximized,
+		minimized,
+		resizing,
+		!hasJsSupport && 'no-js',
+		!isActive && 'inactive'
+	]}
 	style="
 		left: {maximized ? 0 : x}px;
 		top: {maximized ? 0 : y}px;
@@ -263,8 +310,8 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 	{/if}
 </section>
 
-{#if showTopSnapPreview}
-	<div class="snap-preview" aria-hidden="true"></div>
+{#if snapPreview}
+	<div class="snap-preview {snapPreview}" aria-hidden="true"></div>
 {/if}
 
 <style>
@@ -302,19 +349,27 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		pointer-events: none;
 		border: var(--border-width) solid var(--color-fg-highlight);
 		border-radius: var(--radius-lg);
-		background: var(--color-bg-highlight);
+		background: var(--color-bg-preview);
 		outline-offset: (-1 * var(--border-width));
 		animation: snap-preview-in 140ms ease-out;
 		animation-fill-mode: forwards;
+
+		&.left {
+			inset: var(--border-width) 50% var(--taskbar-height) var(--border-width);
+		}
+
+		&.right {
+			inset: var(--border-width) var(--border-width) var(--taskbar-height) 50%;
+		}
 	}
 
 	@keyframes snap-preview-in {
 		from {
 			opacity: 0;
-			transform: scale(0.985);
+			transform: scale(0.8);
 		}
 		to {
-			opacity: 0.3;
+			opacity: 1;
 			transform: scale(1);
 		}
 	}
@@ -390,19 +445,20 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		justify-content: center;
 		padding: 10px;
 		border-radius: var(--radius-round);
-		transition: all ease 0.3s;
 		animation: var(--animation-squiggle);
+		--box-shadow-color: transparent;
+		box-shadow: inset 0 0 0 4px var(--box-shadow-color);
 
 		&.no-js {
 			cursor: not-allowed;
 		}
 
 		&:hover {
-			background-image: radial-gradient(circle at center, #ffffff88 0%, transparent 80%);
+			--box-shadow-color: var(--color-bg-primary);
 		}
 
 		&.close-btn:hover {
-			background-image: radial-gradient(circle at center, #ff898988 0%, transparent 80%);
+			--box-shadow-color: #ff8989;
 		}
 	}
 

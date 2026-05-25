@@ -86,7 +86,13 @@
 	<span>Start</span>
 </button>
 
-<div class="start-popover" {id} popover bind:this={popover} ontoggle={onPopoverToggle}>
+<div
+	class="start-popover squiggle-border"
+	{id}
+	popover
+	bind:this={popover}
+	ontoggle={onPopoverToggle}
+>
 	<ul class="start-menu-items" role="menu" {@attach menuNav.attachment} aria-labelledby={buttonId}>
 		{#each widgetNavigationData as widget, index (widget.id)}
 			<li role="none">
@@ -109,9 +115,10 @@
 
 <style>
 	.start-button {
+		position: relative;
 		display: flex;
 		align-items: center;
-		gap: var(--space-2);
+		gap: var(--space-3);
 		padding: var(--space-2) var(--space-4);
 		background: var(--win-btn-bg);
 		border: 1px solid var(--win-btn-border);
@@ -122,6 +129,10 @@
 		font-weight: 600;
 		height: 28px;
 		flex-shrink: 0;
+
+		&:hover {
+			box-shadow: inset 0 0 0 4px var(--color-bg-primary);
+		}
 	}
 
 	.start-button :global(svg) {
@@ -129,19 +140,14 @@
 		height: 16px;
 	}
 
-	.start-button:hover {
-		background: var(--win-btn-hover);
-	}
-
 	.start-popover {
-		inset: auto auto calc(var(--taskbar-height) + 2px) var(--space-2);
+		inset: auto auto calc(var(--taskbar-height) + 1px) 0;
 		margin: 0;
-		border: 1px solid var(--win-border);
-		border-radius: var(--radius-lg);
-		box-shadow: var(--shadow-window);
-		background: var(--win-bg);
+		border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+		background: var(--color-bg-primary);
+		border: none;
 		display: none;
-		overflow: hidden;
+		overflow: visible;
 		padding: 0;
 	}
 
@@ -174,8 +180,7 @@
 
 	.start-menu-item:hover,
 	.start-menu-item:active {
-		background: var(--color-primary);
-		color: var(--color-text-light);
+		background: var(--color-bg-highlight);
 	}
 
 	.start-menu-icon {

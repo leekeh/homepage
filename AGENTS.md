@@ -72,9 +72,15 @@ A progressively-enhanced personal website styled as a retro (Win95-esque) deskto
 
 **Styling**
 
-- CSS custom properties in `variables.css` (botanical green theme)
+- CSS custom properties in `global-styles.css`
 - Scoped styles; minimal `:global()`
 - Z-index: desktop(0), icons(1), windows(10+), taskbar(1000), start-menu(1001), overlay(2000)
+- App icons are sourced from https://openmoji.org/library/
+- Other icons may be sourced from https://tabler-icons.io/
+
+**Typescript**
+
+- Do not add return types for functions that can be inferred.
 
 ## File Structure
 

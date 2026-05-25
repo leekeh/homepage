@@ -35,8 +35,25 @@
 	}
 
 	.content :global(a) {
-		color: var(--color-link);
-		text-decoration: underline;
-		font-family: var(--font-sans);
+		position: relative;
+		color: inherit;
+		text-decoration: none;
+		font-family: var(--font-mono);
+		padding-bottom: var(--space-1);
+		&::before {
+			content: '';
+			position: absolute;
+			bottom: var(--border-width);
+			width: 100%;
+			height: var(--border-width);
+			background-color: currentColor;
+			transform-origin: right;
+			animation: var(--animation-squiggle);
+		}
+
+		/* on hover animate in a background */
+		&:hover {
+			animation: var(--animation-squiggle) reverse;
+		}
 	}
 </style>

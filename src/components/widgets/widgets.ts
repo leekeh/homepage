@@ -16,15 +16,7 @@ export const widgetNavigationData = [...registry.values()]
 		route
 	}));
 
-/**
- *
- * @deprecated REMOVE ME
- */
-export function getAllWidgets(): WidgetDef[] {
-	return [...registry.values()];
-}
-
-export function getWidgetById(id: string): WidgetDef | undefined {
+export function getWidgetById(id: string) {
 	return registry.get(id);
 }
 

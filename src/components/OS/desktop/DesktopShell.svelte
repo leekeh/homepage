@@ -45,15 +45,7 @@
 			{@const WindowComponent = win.minimal ? MinimalWindow : Window}
 			{@const def = getWidgetById(win.widgetId)}
 			<WindowComponent
-				id={win.id}
-				title={win.title}
-				bind:x={win.x}
-				bind:y={win.y}
-				bind:width={win.width}
-				bind:height={win.height}
-				zIndex={win.zIndex}
-				minimized={win.minimized}
-				maximized={win.maximized}
+				{...win}
 				defaultMaximized={def?.defaultMaximized}
 				resizable={def?.resizable ?? true}
 			>

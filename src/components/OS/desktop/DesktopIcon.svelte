@@ -91,7 +91,7 @@
 		align-items: center;
 		gap: var(--space-2);
 		background: none;
-		border: 1px solid transparent;
+		border: var(--border-width) solid transparent;
 		border-radius: var(--radius-md);
 		padding: var(--space-3);
 		cursor: pointer;
@@ -108,35 +108,36 @@
 		}
 
 		&:hover {
-			background: rgba(212, 245, 214, 0.1);
-			border-color: rgba(212, 245, 214, 0.2);
+			border: var(--border-width) solid var(--color-fg-highlight);
+			background: var(--color-bg-preview);
 		}
 		&:active {
-			background: rgba(212, 245, 214, 0.2);
+			background: var(--color-bg-highlight);
 		}
 	}
 
 	.icon-image {
-		width: 32px;
-		height: 32px;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		color: var(--color-text-light);
+		animation: var(--animation-squiggle);
 
 		& :global(svg) {
-			width: 100%;
-			height: 100%;
+			width: 56px;
+			height: 48px;
 		}
 	}
 
 	.icon-label {
 		color: var(--color-text-light);
+		background-color: var(--color-bg-primary);
+		padding: 2px 4px;
 		font-size: var(--font-size-sm);
+		font-weight: 500;
 		font-family: var(--font-mono);
 		text-align: center;
 		word-break: break-word;
-		text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 		line-height: 1.2;
 	}
 </style>

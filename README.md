@@ -23,6 +23,9 @@ SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
 - associate multiple widgets on one url
 - add button to stop all animations
 - custom scrollbar
+- ship fonts locally and prioritize loading them
+- wait for fonts / assets to load before closing startup animation
+- regression testing/screenshot testing on prs
 
 widgets:
 

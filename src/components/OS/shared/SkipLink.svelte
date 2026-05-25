@@ -13,8 +13,9 @@
 		position: absolute;
 		top: -40px;
 		left: 0;
-		background: var(--win-bg);
+		background: var(--color-bg-primary);
 		color: var(--color-text);
+		font-family: var(--font-mono);
 		padding: 8px 16px;
 		z-index: 1000;
 	}

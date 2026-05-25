@@ -59,8 +59,8 @@ Startup animation overlay that automatically unrenders after set time.
 		<p>Starting up computer{'.'.repeat(dots)}</p>
 		<div
 			class="progress-bar"
-			style="animation-duration: {startupDuration -
-				animationTimeout * 2}ms; animation-delay: {animationTimeout}ms"
+			style="--animation-duration: {startupDuration -
+				animationTimeout * 2}ms; --animation-delay: {animationTimeout}ms"
 			aria-hidden="true"
 		></div>
 	</div>
@@ -81,44 +81,49 @@ Startup animation overlay that automatically unrenders after set time.
 		justify-content: center;
 		gap: var(--space-6);
 		font-size: var(--font-size-xl);
-		background-color: var(--win-bg);
-		color: var(--color-text);
+		background-color: var(--color-bg-primary);
+		color: var(--color-fg-primary);
 	}
 
 	.progress-bar {
 		width: 80%;
-		height: 20px;
+		height: 1.5rem;
 		margin-top: 20px;
+		position: relative;
 		border-radius: var(--radius-lg);
-		border: 1px solid currentColor;
-		outline: 4px solid var(--win-bg);
-		outline-offset: -5px;
-		animation-name: load;
-		animation-timing-function: cubic-bezier(0.5, 0, 0.5, 1);
-		background-image: var(--bg-gradient);
-		background-repeat: no-repeat;
-		background-size: 0% 100%;
-		animation-fill-mode: forwards;
+		border: var(--border-width) solid currentColor;
+		animation: var(--animation-squiggle);
+
+		&::before {
+			--inset: var(--space-2);
+			inset: var(--inset);
+			right: 100%;
+			background: var(--color-accent);
+			content: '';
+			position: absolute;
+			border-radius: calc(var(--radius-lg) - var(--inset));
+			animation: load var(--animation-duration) cubic-bezier(0.5, 0, 0.5, 1) var(--animation-delay)
+				forwards;
+		}
 	}
 
 	p {
-		font-family: var(--font-sans);
-		font-size: var(--font-size-lg);
+		font-family: sans-serif;
+		font-size: var(--font-size-xl);
 	}
 
 	@media (prefers-reduced-motion: reduce) {
-		.progress-bar {
+		.progress-bar::before {
 			animation: none;
-			background-size: 100% 100%;
 		}
 	}
 
 	@keyframes load {
 		from {
-			background-size: 0% 100%;
+			right: 100%;
 		}
 		to {
-			background-size: 100% 100%;
+			right: var(--inset);
 		}
 	}
 </style>

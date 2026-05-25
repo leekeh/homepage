@@ -10,6 +10,7 @@
 	import rssImg from '@assets/web-badges/rss.png';
 	import Content from '@components/content.svelte';
 	import Button from '@components/OS/Button.svelte';
+	import Link from '@components/OS/Link.svelte';
 
 	const wm = $derived(useWindowManager());
 	function resetComputer() {
@@ -71,7 +72,9 @@
 		<a href="https://tabler.io/icons" target="_blank" rel="noopener">Tabler</a>.
 	</p>
 	<p>This site is still under active development. Let me know if you run into anny issues!</p>
-	<a href="https://github.com/leekeh/homepage" target="_blank" rel="noopener">View source code</a>
+	<Link href="https://github.com/leekeh/homepage" target="_blank" rel="noopener"
+		>View source code</Link
+	>
 	<Button onclick={resetComputer}>Reset computer</Button>
 </Content>
 

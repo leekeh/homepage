@@ -9,6 +9,7 @@
 	--color-fg-highlight: hsl(var(--theme-color-hue) 80% 75% / 0.8);
 	--color-bg-highlight: hsl(var(--theme-color-hue) 80% 88% / 1);
 	--color-accent: hsl(var(--theme-color-hue) 50% 75% / 0.8);
+	--color-bg-preview: hsl(var(--theme-color-hue) 80% 88% / 0.5);
 
 	/* ── Typography ── */
 	--font-mono: 'Chakra Petch', Courier New, monospace;
@@ -55,6 +56,7 @@
 
 /* squiggle animation */
 .squiggle-border {
+	position: relative;
 	&::before {
 		border-radius: inherit;
 		content: '';

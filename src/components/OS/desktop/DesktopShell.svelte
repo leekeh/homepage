@@ -26,7 +26,7 @@
 
 	<div class="desktop-shell">
 		<nav class="desktop-icons" class:no-js={!hasJsSupport} aria-label="Desktop links">
-			<ul style="list-style: none; padding: 0; margin: 0;">
+			<ul style="display: contents;">
 				{#each widgetNavigationData as widget, i (widget.id)}
 					<li>
 						<DesktopIcon
@@ -100,9 +100,8 @@
 	}
 
 	.desktop-icons.no-js {
-		display: grid;
-		grid-template-rows: repeat(auto-fill, 80px);
-		grid-auto-rows: 100px;
+		display: flex;
+		flex-direction: column;
 		gap: var(--space-4);
 		padding: var(--space-4);
 		align-content: start;

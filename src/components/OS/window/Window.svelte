@@ -238,14 +238,7 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
  -->
 
 <section
-	class={[
-		'window squiggle-border',
-		maximized,
-		minimized,
-		resizing,
-		!hasJsSupport && 'no-js',
-		!isActive && 'inactive'
-	]}
+	class={['window squiggle-border', maximized, minimized, resizing, !hasJsSupport && 'no-js']}
 	style="
 		left: {maximized ? 0 : x}px;
 		top: {maximized ? 0 : y}px;
@@ -269,15 +262,10 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		</div>
 		<div class="titlebar-buttons" inert={!isActive}>
 			{#if hasJsSupport}
-				<button class="wbtn" class:no-js={!hasJsSupport} onclick={onMinimize} title="Minimize">
+				<button class="wbtn" onclick={onMinimize} title="Minimize">
 					<IconMinimize />
 				</button>
-				<button
-					class="wbtn"
-					class:no-js={!hasJsSupport}
-					onclick={onToggleMaximize}
-					title={maximized ? 'Restore' : 'Maximize'}
-				>
+				<button class="wbtn" onclick={onToggleMaximize} title={maximized ? 'Restore' : 'Maximize'}>
 					{#if maximized}
 						<IconRestore />
 					{:else}
@@ -324,7 +312,10 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		background-color: var(--color-bg-primary);
 		border-radius: var(--radius-lg);
 		container-type: inline-size;
-
+		box-shadow:
+			rgba(17, 17, 26, 0.1) 0px 4px 16px,
+			rgba(17, 17, 26, 0.1) 0px 8px 24px,
+			rgba(17, 17, 26, 0.1) 0px 16px 56px;
 		&.maximized {
 			border-radius: 0;
 			border: none;
@@ -333,13 +324,6 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		&.no-js {
 			overflow: hidden;
 			resize: both;
-		}
-
-		&.inactive {
-			&::before {
-				backdrop-filter: blur(3px) brightness(90%);
-				z-index: var(--z-overlay);
-			}
 		}
 	}
 
@@ -448,10 +432,6 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		--box-shadow-color: transparent;
 		box-shadow: inset 0 0 0 4px var(--box-shadow-color);
 
-		&.no-js {
-			cursor: not-allowed;
-		}
-
 		&:hover {
 			--box-shadow-color: var(--color-bg-primary);
 		}
@@ -474,6 +454,8 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		flex: 1;
 		overflow: auto;
 		overscroll-behavior: none;
+		position: relative;
+		border-radius: inherit;
 	}
 
 	/* ── Resize Handles ── */

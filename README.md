@@ -28,6 +28,7 @@ SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
 - regression testing/screenshot testing on prs
 - tweak mobile tabs: prefill based on related widgets , use tabs pattern
 - swipe to switch between open widgets on mobile
+- remove tabindex of desktop icons when fullscreen widget is open
 
 widgets:
 

@@ -30,7 +30,8 @@
 
 	.icon-label {
 		color: var(--color-text-light);
-		background-color: var(--color-bg-primary);
+		-webkit-text-stroke: 4px var(--color-bg-primary);
+		paint-order: stroke;
 		padding: 2px 4px;
 		font-size: var(--font-size-sm);
 		font-weight: 500;

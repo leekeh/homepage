@@ -105,24 +105,6 @@
 		display: none;
 	}
 
-	.body :global(p) {
-		line-height: 1.7;
-		margin-bottom: var(--space-6);
-		color: var(--color-text);
-		font-size: var(--font-size-base);
-	}
-
-	.body :global(h2),
-	.body :global(h3) {
-		margin: var(--space-6) 0 var(--space-3);
-		color: var(--color-primary);
-		font-family: var(--font-serif);
-	}
-
-	.body :global(a) {
-		color: var(--color-link);
-	}
-
 	.webmentions {
 		margin-top: var(--space-7);
 		padding-top: var(--space-6);

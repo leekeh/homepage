@@ -3,6 +3,9 @@
 	import { useDrag } from '../shared/useDrag.svelte';
 	import { useWindowManager } from '../shared/windowManager.svelte';
 	import IconClose from '@icons/IconClose.svelte';
+	import { useJsSupport } from '../shared/useJsSupport.svelte';
+	import { page } from '$app/state';
+	import { resolve } from '$app/paths';
 
 	type Props = {
 		id: string;
@@ -28,6 +31,8 @@
 
 	// Context
 	const wm = $derived(useWindowManager());
+	const hasJsSupport = $derived(useJsSupport());
+	const currentPath = $derived(page.url.pathname);
 
 	// State
 	let dragOffX = $state(0);
@@ -35,6 +40,11 @@
 
 	// Interactions
 	const drag = useDrag({
+		shouldStart: (event) =>
+			!(
+				(event.target as HTMLElement).closest('button') ||
+				(event.target as HTMLElement).closest('a')
+			),
 		onStart: ({ event }) => {
 			wm.focus(id);
 			dragOffX = event.clientX - x;
@@ -68,9 +78,15 @@
 	{@attach drag}
 	aria-label={title}
 >
-	<button class="minimal-close" onclick={onClose} title="Close">
-		<IconClose />
-	</button>
+	{#if hasJsSupport}
+		<button class="minimal-close" onclick={onClose} title="Close">
+			<IconClose />
+		</button>
+	{:else if currentPath !== '/'}
+		<a class="minimal-close" href={resolve('/')} title="Close">
+			<IconClose />
+		</a>
+	{/if}
 
 	<div class="minimal-content">
 		{@render children()}
@@ -80,14 +96,14 @@
 <style>
 	.minimal-window {
 		position: absolute;
-		background: rgba(0, 20, 2, 0.65);
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
-		border: 1px solid rgba(212, 245, 214, 0.2);
 		border-radius: var(--radius-lg);
 		overflow: hidden;
 		touch-action: none;
 		cursor: grab;
+		:global(a),
+		:global(button) {
+			cursor: pointer;
+		}
 	}
 
 	.minimal-window:active {

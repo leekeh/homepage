@@ -16,6 +16,17 @@
 
 	const wm = $derived(useWindowManager());
 	const hasJsSupport = $derived(useJsSupport());
+	const desktopWidgets = $derived.by(() => {
+		const withPositions = widgetNavigationData.map((widget, index) => ({
+			widget,
+			index,
+			position: wm.getIconPosition(widget.id, index)
+		}));
+		// Sort by position to ensure tab order is consistent with visual order.
+		return withPositions.toSorted(
+			(a, b) => a.position.y - b.position.y || a.position.x - b.position.x || a.index - b.index
+		);
+	});
 
 	const routeMatch = $derived(getWidgetByRoute(page.url.pathname));
 	const fallbackWidgetId = $derived(routeMatch?.widget.id ?? 'about');
@@ -27,14 +38,14 @@
 	<div class="desktop-shell">
 		<nav class="desktop-icons" class:no-js={!hasJsSupport} aria-label="Desktop links">
 			<ul style="display: contents;">
-				{#each widgetNavigationData as widget, i (widget.id)}
+				{#each desktopWidgets as item (item.widget.id)}
 					<li>
 						<DesktopIcon
-							id={widget.id}
-							label={widget.title}
-							icon={widget.icon}
-							href={widget.route}
-							index={i}
+							id={item.widget.id}
+							label={item.widget.title}
+							icon={item.widget.icon}
+							href={item.widget.route}
+							index={item.index}
 						/>
 					</li>
 				{/each}

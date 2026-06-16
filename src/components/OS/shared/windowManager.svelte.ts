@@ -280,7 +280,7 @@ export class WindowManager {
 
 	moveIcon(widgetId: string, x: number, y: number) {
 		const clamped = this.clampIconPos(x, y);
-		this.iconPositions[widgetId] = this.resolveIconCollision(widgetId, clamped.x, clamped.y);
+		this.iconPositions[widgetId] = clamped;
 		this.saveLayout();
 	}
 
@@ -349,7 +349,8 @@ export class WindowManager {
 		}
 	}
 
-	private resolveIconCollision(movingId: string, x: number, y: number): IconPosition {
+	/** Check if a position would collide with any other icon */
+	iconPositionCollides(movingId: string, x: number, y: number): boolean {
 		const W = WindowManager.ICON_W;
 		const H = WindowManager.ICON_H;
 
@@ -362,39 +363,7 @@ export class WindowManager {
 			if (id !== movingId) others.push(pos);
 		}
 
-		// If no collision, return as-is
-		if (!others.some((o) => rectsCollide(x, y, o.x, o.y))) {
-			return { x, y };
-		}
-
-		// Find nearest non-colliding position by scanning outward in a spiral
-		let bestX = x;
-		let bestY = y;
-		let bestDist = Infinity;
-
-		for (let ring = 1; ring <= 8; ring++) {
-			for (let dy = -ring; dy <= ring; dy++) {
-				for (let dx = -ring; dx <= ring; dx++) {
-					if (Math.abs(dx) !== ring && Math.abs(dy) !== ring) continue;
-					const cx = x + dx * W;
-					const cy = y + dy * H;
-					if (cx < 0 || cy < 0) continue;
-					if (cx > this.desktopWidth - W || cy > this.desktopHeight - H - WindowManager.TASKBAR_H)
-						continue;
-					if (!others.some((o) => rectsCollide(cx, cy, o.x, o.y))) {
-						const dist = dx * dx + dy * dy;
-						if (dist < bestDist) {
-							bestDist = dist;
-							bestX = cx;
-							bestY = cy;
-						}
-					}
-				}
-			}
-			if (bestDist < Infinity) break;
-		}
-
-		return { x: bestX, y: bestY };
+		return others.some((o) => rectsCollide(x, y, o.x, o.y));
 	}
 
 	// ── Persistence ──

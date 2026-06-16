@@ -52,7 +52,9 @@
 					.some((el) => el.closest('.window, .minimal-window'));
 
 				if (!droppedOverWindow) {
-					wm.moveIcon(id, x, y);
+					if (!wm.iconPositionCollides(id, x, y)) {
+						wm.moveIcon(id, x, y);
+					}
 				}
 			}
 			dragging = false;

@@ -48,12 +48,12 @@
 			height: var(--border-width);
 			background-color: currentColor;
 			transform-origin: right;
-			animation: var(--animation-squiggle);
+			filter: var(--filter-squiggle);
 		}
 
 		/* on hover animate in a background */
 		&:hover {
-			animation: var(--animation-squiggle) reverse;
+			filter: var(--filter-squiggle);
 		}
 	}
 </style>

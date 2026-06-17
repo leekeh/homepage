@@ -5,7 +5,7 @@
 	import type { PathnameWithSearchOrHash } from '$app/types';
 
 	type AnchorProps = HTMLAnchorAttributes & {
-		href: PathnameWithSearchOrHash;
+		href: string;
 		children?: Snippet;
 	};
 
@@ -25,7 +25,11 @@ Basic polymorphic link component that can be used inside widgets.
  -->
 
 {#if href}
-	<a class="link" href={resolve(href)} {...rest as HTMLAnchorAttributes}>
+	<a
+		class="link"
+		href={href.startsWith('/') ? resolve(href as PathnameWithSearchOrHash) : href}
+		{...rest as HTMLAnchorAttributes}
+	>
 		{@render children?.()}
 	</a>
 {:else}

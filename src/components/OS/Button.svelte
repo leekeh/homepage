@@ -16,7 +16,8 @@
 
 	type Props = AnchorProps | ButtonProps;
 
-	let { children, href, ...rest }: Props = $props();
+	let { children, href, class: className = '', ...rest }: Props = $props();
+	const classes = $derived(`button squiggle-border ${className}`.trim());
 </script>
 
 <!-- 
@@ -25,11 +26,11 @@ Basic polymorphic button component that can be used inside widgets.
  -->
 
 {#if href}
-	<a class="button squiggle-border" href={resolve(href)} {...rest as HTMLAnchorAttributes}>
+	<a class={classes} href={resolve(href)} {...rest as HTMLAnchorAttributes}>
 		{@render children?.()}
 	</a>
 {:else}
-	<button class="button squiggle-border" {...rest as HTMLButtonAttributes}>
+	<button class={classes} {...rest as HTMLButtonAttributes}>
 		{@render children?.()}
 	</button>
 {/if}

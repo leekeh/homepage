@@ -92,7 +92,7 @@
 		height: 100%;
 		background-color: var(--color-fg-primary);
 		flex-shrink: 0;
-		animation: var(--animation-squiggle);
+		filter: var(--filter-squiggle);
 		border: none;
 	}
 

@@ -20,7 +20,7 @@
 		align-items: center;
 		justify-content: center;
 		color: var(--color-text-light);
-		animation: var(--animation-squiggle);
+		filter: var(--filter-squiggle);
 
 		& :global(svg) {
 			width: 56px;

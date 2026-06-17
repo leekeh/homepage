@@ -57,6 +57,7 @@ A progressively-enhanced personal website styled as a retro (Win95-esque) deskto
 - `$state`, `$derived`, `$effect`; no legacy `let` or `$:`
 - `$props`, `$bindable` for two-way props
 - Snippets (`{#snippet}` / `{@render}`), not slots
+- App-wide UI preferences should live in `src/components/OS/shared/use*.svelte.ts` hooks and be initialized from `WindowProvider.svelte`.
 
 **Events**
 
@@ -74,6 +75,7 @@ A progressively-enhanced personal website styled as a retro (Win95-esque) deskto
 
 - CSS custom properties in `global-styles.css`
 - Scoped styles; minimal `:global()`
+- Reusable wrapper components should accept a `class` prop and concatenate it with local base classes so callers can style via composition.
 - Z-index: desktop(0), icons(1), windows(10+), taskbar(1000), start-menu(1001), overlay(2000)
 - App icons are sourced from https://openmoji.org/library/
 - Other icons may be sourced from https://tabler-icons.io/

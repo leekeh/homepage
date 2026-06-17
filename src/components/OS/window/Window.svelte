@@ -309,7 +309,6 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		flex-direction: column;
 		min-width: 200px;
 		min-height: 120px;
-		background-color: var(--color-bg-primary);
 		border-radius: var(--radius-lg);
 		container-type: inline-size;
 		box-shadow:
@@ -319,6 +318,10 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		&.maximized {
 			border-radius: 0;
 			border: none;
+		}
+
+		&::before {
+			background-color: var(--color-bg-primary);
 		}
 
 		&.no-js {
@@ -428,7 +431,7 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		justify-content: center;
 		padding: 10px;
 		border-radius: var(--radius-round);
-		animation: var(--animation-squiggle);
+		filter: var(--filter-squiggle);
 		--box-shadow-color: transparent;
 		box-shadow: inset 0 0 0 4px var(--box-shadow-color);
 

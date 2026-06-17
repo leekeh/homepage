@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { useWindowManager } from '../OS/shared/windowManager.svelte';
+	import { toggleSquiggles, useSquiggles } from '../OS/shared/useSquiggles.svelte.js';
 	import bskyImg from '@assets/web-badges/bsky.gif';
 	import cssImg from '@assets/web-badges/css.gif';
 	import enhancedImg from '@assets/web-badges/enhanced.gif';
@@ -13,6 +14,8 @@
 	import Link from '@components/OS/Link.svelte';
 
 	const wm = $derived(useWindowManager());
+	const squigglesEnabled = $derived(useSquiggles());
+
 	function resetComputer() {
 		wm.resetLayout();
 		location.reload();
@@ -60,8 +63,8 @@
 	</p>
 	<p>
 		In a past life, I sold books, and I have a degree in literature. This background gives me a
-		unique ability to write documentation and improves my communication skills. I'm one of the few
-		developers that loves to write documentation.
+		unique ability to write documentation and strengthens my communication skills. I'm one of the
+		few developers that loves to write documentation.
 	</p>
 	<hr />
 	<h2>This site</h2>
@@ -69,12 +72,16 @@
 		This site is an homage to the indie web, past and present. It is built with Svelte and uses
 		progressive enhancement, things should work for the most part without JavaScript. Icons are
 		sourced from
-		<a href="https://tabler.io/icons" target="_blank" rel="noopener">Tabler</a>.
+		<a href="https://tabler.io/icons" target="_blank" rel="noopener">Tabler</a>. A more detailed
+		blog post will follow.
 	</p>
-	<p>This site is still under active development. Let me know if you run into anny issues!</p>
+	<p>This site is still under active development. Let me know if you run into any issues!</p>
 	<Link href="https://github.com/leekeh/homepage" target="_blank" rel="noopener"
 		>View source code</Link
 	>
+	<Button class="squiggle-toggle" onclick={toggleSquiggles}>
+		Turn squiggles {squigglesEnabled ? 'off' : 'on'}
+	</Button>
 	<Button onclick={resetComputer}>Reset computer</Button>
 </Content>
 
@@ -95,6 +102,12 @@
 		.buttons {
 			display: flex;
 			flex-wrap: wrap;
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		:global(.squiggle-toggle) {
+			display: none;
 		}
 	}
 </style>

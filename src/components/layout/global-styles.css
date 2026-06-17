@@ -51,7 +51,7 @@
 	--mobile-tabbar-height: 44px;
 
 	/* Other */
-	--animation-squiggle: squiggle 1000ms linear infinite;
+	--filter-squiggle: url('#squiggle');
 }
 
 /* squiggle animation */
@@ -64,32 +64,22 @@
 		inset: -1px;
 		pointer-events: none;
 		border: 1px solid var(--color-fg-primary);
-		animation: var(--animation-squiggle);
+		z-index: -1;
+		filter: var(--filter-squiggle);
 	}
 }
 
 .squiggled {
-	animation: var(--animation-squiggle);
+	filter: var(--filter-squiggle);
 }
 
-@keyframes squiggle {
-	0% {
-		filter: url(#squiggle);
-	}
-	33% {
-		filter: url(#squiggler);
-	}
-	66% {
-		filter: url(#squigglest);
-	}
-	100% {
-		filter: url(#squiggle);
-	}
+:root[data-squiggles='off'] {
+	--filter-squiggle: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
 	:root {
-		--animation-squiggle: none !important;
+		--filter-squiggle: none !important;
 	}
 }
 

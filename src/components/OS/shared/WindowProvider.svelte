@@ -16,6 +16,7 @@
 	} from '../../widgets/widgets.js';
 	import { applyPolyfills } from '../../../util/polyfills.js';
 	import { enableJsSupport } from './useJsSupport.svelte.js';
+	import { initializeSquiggles } from './useSquiggles.svelte.js';
 	import { initializeTime } from './useTime.svelte.js';
 	import { resolve } from '$app/paths';
 
@@ -99,6 +100,7 @@
 	onMount(() => {
 		applyPolyfills();
 		enableJsSupport();
+		initializeSquiggles();
 		stopClock = initializeTime();
 
 		mq = window.matchMedia('(max-width: 768px)');

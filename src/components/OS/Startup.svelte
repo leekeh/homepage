@@ -92,7 +92,7 @@ Startup animation overlay that automatically unrenders after set time.
 		position: relative;
 		border-radius: var(--radius-lg);
 		border: var(--border-width) solid currentColor;
-		animation: var(--animation-squiggle);
+		filter: var(--filter-squiggle);
 
 		&::before {
 			--inset: var(--space-2);

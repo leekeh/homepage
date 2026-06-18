@@ -23,11 +23,14 @@
 	}
 
 	.content :global(p) {
-		margin-block: var(--space-4);
 		font-family: var(--font-sans);
 		font-size: inherit;
 		line-height: inherit;
 		max-width: 65ch;
+	}
+
+	.content :global(p:not(:first-child)) {
+		margin-block: var(--space-4);
 	}
 
 	.content :global(hr) {
@@ -48,12 +51,13 @@
 			height: var(--border-width);
 			background-color: currentColor;
 			transform-origin: right;
-			filter: var(--filter-squiggle);
 		}
 
 		/* on hover animate in a background */
 		&:hover {
-			filter: var(--filter-squiggle);
+			&::before {
+				filter: var(--filter-squiggle);
+			}
 		}
 	}
 </style>

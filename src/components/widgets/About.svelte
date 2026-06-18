@@ -45,7 +45,9 @@
 		<li><img src={html5Img} alt="Hypertext Markup Language 5" /></li>
 		<li><img src={fascistsImg} alt="This machine kills fascists" /></li>
 		<li><img src={passionImg} alt="Graphic design is my passion" /></li>
-		<li><img src={rssImg} alt="Implement RSS now!" /></li>
+		<li>
+			<a href={resolve('/rss.xml')} rel="noopener"><img src={rssImg} alt="Implement RSS now!" /></a>
+		</li>
 	</ul>
 	<hr />
 	<h3>My background</h3>
@@ -84,7 +86,7 @@
 			>Quicksand</a
 		>
 		for the rest. To read about the development process, check out my
-		<a href={resolve('/blog/hello-world')} target="_blank" rel="noopener">blog post</a>
+		<a href={resolve('/blog/hello-world')} rel="noopener">blog post</a>
 		or go directly to the
 		<a href="https://github.com/leekeh/homepage" target="_blank" rel="noopener">GitHub repository</a
 		>.

@@ -4,6 +4,7 @@ SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
 
 ## To do:
 
+- chat box
 - finish up web mentions
 - proper blog posts
 - fix desktop organization (dragging icons should work again),
@@ -29,6 +30,7 @@ SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
 - tweak mobile tabs: prefill based on related widgets , use tabs pattern
 - swipe to switch between open widgets on mobile
 - remove tabindex of desktop icons when fullscreen widget is open
+- universal comment section: use github, bluesky, web mentions, etc. to allow commenting on posts and pages
 
 widgets:
 
@@ -42,3 +44,4 @@ blog posts:
 - implementing all the WAI-aria a11y patterns
 - indie web spelunking
 - web design styles
+- developer learning design saga

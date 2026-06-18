@@ -50,13 +50,13 @@
 			width: 100%;
 			height: var(--border-width);
 			background-color: currentColor;
-			transform-origin: right;
+			filter: var(--filter-squiggle);
 		}
 
 		/* on hover animate in a background */
 		&:hover {
 			&::before {
-				filter: var(--filter-squiggle);
+				background-color: var(--color-fg-highlight);
 			}
 		}
 	}

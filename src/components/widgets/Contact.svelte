@@ -48,7 +48,6 @@
 	.links {
 		display: flex;
 		flex-direction: column;
-		gap: var(--space-2);
 		margin-bottom: var(--space-7);
 	}
 
@@ -56,19 +55,17 @@
 		display: flex;
 		align-items: center;
 		gap: var(--space-5);
-		padding: var(--space-4) var(--space-5);
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
 		text-decoration: none;
 		color: var(--color-text);
-		transition:
-			background 0.1s,
-			border-color 0.1s;
+		padding: var(--space-2) var(--space-3);
 	}
 
 	.contact-link:hover {
-		background: var(--color-surface-alt);
-		border-color: var(--color-primary);
+		background-color: var(--color-bg-preview);
+	}
+
+	.contact-link:active {
+		background-color: var(--color-bg-highlight);
 	}
 
 	.label {

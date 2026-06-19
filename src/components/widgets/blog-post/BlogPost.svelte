@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import type { BlogPost } from '../../content/blog';
+	import type { BlogPost } from '../../../content/blog';
 
 	import { resolve } from '$app/paths';
-	import { useWindowManager } from '../OS/shared/windowManager.svelte';
+	import { useWindowManager } from '../../OS/shared/windowManager.svelte';
 
 	const wm = $derived(useWindowManager());
 	const windowId = $derived(wm.activeWindow?.id);

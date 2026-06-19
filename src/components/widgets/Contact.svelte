@@ -60,6 +60,12 @@
 		padding: var(--space-2) var(--space-3);
 	}
 
+	.value {
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
 	.contact-link:hover {
 		background-color: var(--color-bg-preview);
 	}
@@ -69,6 +75,6 @@
 	}
 
 	.label {
-		min-width: 10ch;
+		min-width: 6ch;
 	}
 </style>

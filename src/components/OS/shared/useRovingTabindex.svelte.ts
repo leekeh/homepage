@@ -31,6 +31,25 @@ export function useRovingTabindex(options: RovingTabindexOptions): RovingTabinde
 		return Array.from(container.querySelectorAll<HTMLElement>(options.selector));
 	}
 
+	function isNativeTextEditingTarget(event: KeyboardEvent): boolean {
+		const target = event.target as HTMLElement | null;
+		if (!target) return false;
+		if (target instanceof HTMLInputElement) return true;
+		if (target instanceof HTMLTextAreaElement) return true;
+		if (target.isContentEditable) return true;
+		return false;
+	}
+
+	function isColorInputTarget(event: KeyboardEvent): boolean {
+		const target = event.target as HTMLElement | null;
+		return target instanceof HTMLInputElement && target.type === 'color';
+	}
+
+	function isSelectTarget(event: KeyboardEvent): boolean {
+		const target = event.target as HTMLElement | null;
+		return target instanceof HTMLSelectElement;
+	}
+
 	/** Move keyboard focus to the item at `index` (wraps around). Calls setActiveIndex. */
 	function moveFocus(index: number) {
 		const items = getItems();
@@ -54,9 +73,25 @@ export function useRovingTabindex(options: RovingTabindexOptions): RovingTabinde
 			const items = getItems();
 			if (!items.length) return;
 
-			const current = options.activeIndex();
 			const isVert = orientation === 'vertical' || orientation === 'both';
 			const isHoriz = orientation === 'horizontal' || orientation === 'both';
+
+			if (
+				isNativeTextEditingTarget(event) &&
+				!isSelectTarget(event) &&
+				!isColorInputTarget(event)
+			) {
+				options.onKeydown?.(event);
+				return;
+			}
+			const current = options.activeIndex();
+
+			// APG toolbar guidance: for controls that use a specific arrow-key pair,
+			// reserve those keys for the control and use the opposite pair for toolbar navigation.
+			if (isSelectTarget(event) && (event.key === 'ArrowUp' || event.key === 'ArrowDown')) {
+				options.onKeydown?.(event);
+				return;
+			}
 
 			if ((isVert && event.key === 'ArrowDown') || (isHoriz && event.key === 'ArrowRight')) {
 				event.preventDefault();

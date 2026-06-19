@@ -202,6 +202,7 @@
 
 	// Window management
 	function onFocus() {
+		if (isActive) return;
 		wm.focus(id);
 	}
 

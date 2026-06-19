@@ -142,7 +142,6 @@ export class WindowManager {
 
 		const def = getWidgetById(widgetId);
 		if (!def) return '';
-
 		this.topZ++;
 		const id = createId();
 		const win: WindowState = {
@@ -169,14 +168,19 @@ export class WindowManager {
 
 	close(id: string) {
 		const idx = this.windows.findIndex((w) => w.id === id);
-		if (idx !== -1) {
-			this.windows.splice(idx, 1);
-			this.saveLayout();
-			// Sync URL to the new active window after closing
-			const newActive = this.activeWindow;
-			if (newActive) {
-				this.onFocusChange?.(newActive);
-			}
+		if (idx === -1) {
+			console.log(
+				`[WindowManager] Attempted to close non-existent window with id: ${id}`,
+				this.windows
+			);
+			return;
+		}
+		this.windows.splice(idx, 1);
+		this.saveLayout();
+		// Sync URL to the new active window after closing
+		const newActive = this.activeWindow;
+		if (newActive) {
+			this.onFocusChange?.(newActive);
 		}
 	}
 

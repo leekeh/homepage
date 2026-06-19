@@ -59,12 +59,27 @@
 		wm.openWidgetAndNavigate = openWidgetAndNavigate;
 	});
 
+	function isNonHtmlPath(pathname: string) {
+		const segment = pathname.split('/').at(-1) ?? '';
+		const dot = segment.lastIndexOf('.');
+		if (dot <= 0) return false;
+		const ext = segment.slice(dot + 1).toLowerCase();
+		return ext !== 'html' && ext !== 'htm';
+	}
+
 	beforeNavigate((navigation) => {
 		if (!browser) return;
 		// Don't intercept back/forward — onpopstate handles those
 		if (navigation.type === 'popstate') return;
 		const to = navigation.to?.url?.pathname;
-		if (!to || to.endsWith('.xml')) return;
+		if (!to) return;
+
+		if (isNonHtmlPath(to)) {
+			navigation.cancel();
+			window.location.href = navigation.to!.url.href;
+			return;
+		}
+
 		const match = getWidgetByRoute(to);
 		if (!match) return;
 		navigation.cancel();

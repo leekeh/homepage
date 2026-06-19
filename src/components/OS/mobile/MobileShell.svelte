@@ -123,7 +123,6 @@
 	.mobile-content {
 		flex: 1;
 		overflow: auto;
-		background: var(--color-bg-primary);
 		min-height: 0;
 	}
 

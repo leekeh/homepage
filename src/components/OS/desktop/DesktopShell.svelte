@@ -102,6 +102,8 @@
 	.desktop-shell {
 		position: absolute;
 		inset: 0;
+		background: url('/bg.png');
+		background-size: cover;
 	}
 
 	.desktop-icons {

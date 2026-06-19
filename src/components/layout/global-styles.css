@@ -140,3 +140,8 @@ a {
 	white-space: nowrap;
 	border: 0;
 }
+
+*:focus-visible {
+	outline: 4px auto rgb(0, 172, 172) !important;
+	outline-offset: 2px;
+}

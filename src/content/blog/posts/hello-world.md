@@ -1,154 +1,38 @@
 ---
 title: Hello, World!
-date: 2025-12-01
+date: 2026-06-18
 categories:
   - meta
 tags:
   - sveltekit
-  - redesign
+  - meta
 description: First post on the new site. Talking about the redesign and what to expect.
 ---
 
-Welcome to my new site! I've been working on this redesign for a while,
-and I'm excited to finally share it. The idea was to create something that feels
-like a retro operating system - draggable windows, a start menu, the whole vibe -
-while still being a fully functional, accessible website under the hood.
+OS
 
-Everything is built with SvelteKit and plain CSS. No UI frameworks. The windows
-are real DOM elements with pointer event handlers for dragging and resizing.
-The routing uses SvelteKit's prerendering for SEO, then intercepts navigation
-client-side to open widgets without full page reloads.
+https://korenara.neocities.org/
+https://khang-nd.github.io/7.css/
 
-More posts coming soon. Stay tuned!
-Welcome to my new site! I've been working on this redesign for a while,
-and I'm excited to finally share it. The idea was to create something that feels
-like a retro operating system - draggable windows, a start menu, the whole vibe -
-while still being a fully functional, accessible website under the hood.
+Svelte
 
-Everything is built with SvelteKit and plain CSS. No UI frameworks. The windows
-are real DOM elements with pointer event handlers for dragging and resizing.
-The routing uses SvelteKit's prerendering for SEO, then intercepts navigation
-client-side to open widgets without full page reloads.
+State
 
-More posts coming soon. Stay tuned!
-Welcome to my new site! I've been working on this redesign for a while,
-and I'm excited to finally share it. The idea was to create something that feels
-like a retro operating system - draggable windows, a start menu, the whole vibe -
-while still being a fully functional, accessible website under the hood.
+Accessibility
 
-Everything is built with SvelteKit and plain CSS. No UI frameworks. The windows
-are real DOM elements with pointer event handlers for dragging and resizing.
-The routing uses SvelteKit's prerendering for SEO, then intercepts navigation
-client-side to open widgets without full page reloads.
+Progressive enhancement
+Things needed:
 
-More posts coming soon. Stay tuned!
-Welcome to my new site! I've been working on this redesign for a while,
-and I'm excited to finally share it. The idea was to create something that feels
-like a retro operating system - draggable windows, a start menu, the whole vibe -
-while still being a fully functional, accessible website under the hood.
+- state in URL.
 
-Everything is built with SvelteKit and plain CSS. No UI frameworks. The windows
-are real DOM elements with pointer event handlers for dragging and resizing.
-The routing uses SvelteKit's prerendering for SEO, then intercepts navigation
-client-side to open widgets without full page reloads.
+Mobile screen
+A lot of these sites either keep the same layout (which is tricky for touch target size), or they simply disable the mobile viewport. I wanted to make something that marries the OS metaphor with the needs of a mobile user. Instead of a desktop with windows, we implemented tabs. Still a relatively retro UI, at least in the way it is implemented. To replace the desktop icons, I made an app drawer with the same content. Alternatively, navigation can be done through the hamburger menu, which mirrors the start menu. This is a more intuitive way to navigate on mobile, and also allows for nested navigation.
 
-More posts coming soon. Stay tuned!
-Welcome to my new site! I've been working on this redesign for a while,
-and I'm excited to finally share it. The idea was to create something that feels
-like a retro operating system - draggable windows, a start menu, the whole vibe -
-while still being a fully functional, accessible website under the hood.
+squigglevision
 
-Everything is built with SvelteKit and plain CSS. No UI frameworks. The windows
-are real DOM elements with pointer event handlers for dragging and resizing.
-The routing uses SvelteKit's prerendering for SEO, then intercepts navigation
-client-side to open widgets without full page reloads.
+What to expect
 
-More posts coming soon. Stay tuned!
-Welcome to my new site! I've been working on this redesign for a while,
-and I'm excited to finally share it. The idea was to create something that feels
-like a retro operating system - draggable windows, a start menu, the whole vibe -
-while still being a fully functional, accessible website under the hood.
+Once I'm really happy with the OS, I will probably open-source a template, allowing others to use it for their own personal sites. For now, I'm publishing as-is, since there is always more to do and I want to start writing blog posts. I already have some series I'd like to work on in relation to web development and accessibility, so stay tuned for that! You can follow me on bluesky or use the rss feed directly to get notified of new posts.
 
-Everything is built with SvelteKit and plain CSS. No UI frameworks. The windows
-are real DOM elements with pointer event handlers for dragging and resizing.
-The routing uses SvelteKit's prerendering for SEO, then intercepts navigation
-client-side to open widgets without full page reloads.
-
-More posts coming soon. Stay tuned!
-Welcome to my new site! I've been working on this redesign for a while,
-and I'm excited to finally share it. The idea was to create something that feels
-like a retro operating system - draggable windows, a start menu, the whole vibe -
-while still being a fully functional, accessible website under the hood.
-
-Everything is built with SvelteKit and plain CSS. No UI frameworks. The windows
-are real DOM elements with pointer event handlers for dragging and resizing.
-The routing uses SvelteKit's prerendering for SEO, then intercepts navigation
-client-side to open widgets without full page reloads.
-
-More posts coming soon. Stay tuned!
-Welcome to my new site! I've been working on this redesign for a while,
-and I'm excited to finally share it. The idea was to create something that feels
-like a retro operating system - draggable windows, a start menu, the whole vibe -
-while still being a fully functional, accessible website under the hood.
-
-Everything is built with SvelteKit and plain CSS. No UI frameworks. The windows
-are real DOM elements with pointer event handlers for dragging and resizing.
-The routing uses SvelteKit's prerendering for SEO, then intercepts navigation
-client-side to open widgets without full page reloads.
-
-More posts coming soon. Stay tuned!
-Welcome to my new site! I've been working on this redesign for a while,
-and I'm excited to finally share it. The idea was to create something that feels
-like a retro operating system - draggable windows, a start menu, the whole vibe -
-while still being a fully functional, accessible website under the hood.
-
-Everything is built with SvelteKit and plain CSS. No UI frameworks. The windows
-are real DOM elements with pointer event handlers for dragging and resizing.
-The routing uses SvelteKit's prerendering for SEO, then intercepts navigation
-client-side to open widgets without full page reloads.
-
-More posts coming soon. Stay tuned!
-Welcome to my new site! I've been working on this redesign for a while,
-and I'm excited to finally share it. The idea was to create something that feels
-like a retro operating system - draggable windows, a start menu, the whole vibe -
-while still being a fully functional, accessible website under the hood.
-
-Everything is built with SvelteKit and plain CSS. No UI frameworks. The windows
-are real DOM elements with pointer event handlers for dragging and resizing.
-The routing uses SvelteKit's prerendering for SEO, then intercepts navigation
-client-side to open widgets without full page reloads.
-
-More posts coming soon. Stay tuned!
-Welcome to my new site! I've been working on this redesign for a while,
-and I'm excited to finally share it. The idea was to create something that feels
-like a retro operating system - draggable windows, a start menu, the whole vibe -
-while still being a fully functional, accessible website under the hood.
-
-Everything is built with SvelteKit and plain CSS. No UI frameworks. The windows
-are real DOM elements with pointer event handlers for dragging and resizing.
-The routing uses SvelteKit's prerendering for SEO, then intercepts navigation
-client-side to open widgets without full page reloads.
-
-More posts coming soon. Stay tuned!
-Welcome to my new site! I've been working on this redesign for a while,
-and I'm excited to finally share it. The idea was to create something that feels
-like a retro operating system - draggable windows, a start menu, the whole vibe -
-while still being a fully functional, accessible website under the hood.
-
-Everything is built with SvelteKit and plain CSS. No UI frameworks. The windows
-are real DOM elements with pointer event handlers for dragging and resizing.
-The routing uses SvelteKit's prerendering for SEO, then intercepts navigation
-client-side to open widgets without full page reloads.
-
-More posts coming soon. Stay tuned!
-Welcome to my new site! I've been working on this redesign for a while,
-and I'm excited to finally share it. The idea was to create something that feels
-like a retro operating system - draggable windows, a start menu, the whole vibe -
-while still being a fully functional, accessible website under the hood.
-
-Everything is built with SvelteKit and plain CSS. No UI frameworks. The windows
-are real DOM elements with pointer event handlers for dragging and resizing.
-The routing uses SvelteKit's prerendering for SEO, then intercepts navigation
-client-side to open widgets without full page reloads.
-
-More posts coming soon. Stay tuned!
+https://olliveen.neocities.org/
+nostalgic stuff

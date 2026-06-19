@@ -44,14 +44,15 @@ Basic polymorphic button component that can be used inside widgets.
 		background-color: transparent;
 		font-family: var(--font-mono);
 		border-radius: var(--radius-lg);
-		padding: var(--space-2) var(--space-3);
-	}
+		padding: var(--space-2) var(--space-4);
 
-	.button:hover {
-		background-color: var(--color-bg-preview);
-	}
+		&:hover {
+			background-color: var(--color-bg-preview);
+		}
 
-	.button:active {
-		background-color: var(--color-bg-highlight);
+		&:active,
+		&[aria-pressed='true'] {
+			background-color: var(--color-bg-highlight);
+		}
 	}
 </style>

@@ -34,9 +34,11 @@ SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
 
 widgets:
 
+- add undo/redo functionality on paint widget
 - music player
 - pictochat
 - feed of liked posts
+- aquarium
 
 blog posts:
 

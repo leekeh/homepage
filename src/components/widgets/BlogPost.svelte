@@ -1,10 +1,12 @@
 <script lang="ts">
-	import { page } from '$app/stores';
-	import { onMount } from 'svelte';
+	import { page } from '$app/state';
 	import type { BlogPost } from '../../content/blog';
-	import { absoluteUrl } from '../../content/site';
-	import { fetchWebmentions, type Webmention } from '../../content/webmentions';
+
 	import { resolve } from '$app/paths';
+	import { useWindowManager } from '../OS/shared/windowManager.svelte';
+
+	const wm = $derived(useWindowManager());
+	const windowId = $derived(wm.activeWindow?.id);
 
 	type Props = {
 		slug?: string;
@@ -12,33 +14,31 @@
 
 	let { slug = 'hello-world' }: Props = $props();
 
-	const posts = $derived(($page.data.blogPosts ?? []) as BlogPost[]);
+	const posts = $derived((page.data.blogPosts ?? []) as BlogPost[]);
 	const fallbackPost = $derived(posts[0]);
 	const post = $derived(posts.find((entry: BlogPost) => entry.slug === slug) ?? fallbackPost);
 
-	let webmentions = $state<Webmention[]>([]);
-	let webmentionsLoading = $state(false);
-
-	onMount(async () => {
-		webmentionsLoading = true;
-		webmentions = await fetchWebmentions(absoluteUrl(`/blog/${post.slug}`));
-		webmentionsLoading = false;
-	});
+	function closeSelf() {
+		if (windowId) {
+			wm.close(windowId);
+		}
+	}
 </script>
 
 <article class="blog-post h-entry">
 	<header>
-		<a class="back-link" href={resolve('/blog')}>&larr; Back to blog</a>
-		<h1 class="p-name">{post.title}</h1>
+		<!-- gtodo this link should clouse the current page -->
+		<a class="back-link" href={resolve('/blog')} onclick={closeSelf}>&larr; Back to blog</a>
+		<h2 class="p-name">{post.title}</h2>
 		<a class="u-url" href={resolve(post.canonicalUrl)}>{post.canonicalUrl}</a>
 		<time class="date dt-published" datetime={post.date}>{post.date} • {post.readingTimeText}</time>
 	</header>
 	<div class="body e-content">
-		// eslint-disable-next-line svelte/no-at-html-tags
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
 		{@html post.html}
 	</div>
 
-	<section class="webmentions">
+	<!-- <section class="webmentions">
 		<h2>Mentions</h2>
 		{#if webmentionsLoading}
 			<p class="webmentions-empty">Loading mentions...</p>
@@ -62,7 +62,7 @@
 				{/each}
 			</ul>
 		{/if}
-	</section>
+	</section> -->
 </article>
 
 <style>

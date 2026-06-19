@@ -52,7 +52,7 @@ export const widgetConfigs: WidgetConfig[] = [
 		id: 'paint',
 		title: 'Paint',
 		icon: IconPaint,
-		component: () => import('@widgets/Paint.svelte'),
+		component: () => import('@widgets/paint/Paint.svelte'),
 		route: '/paint',
 		defaultWidth: 720,
 		defaultHeight: 540,

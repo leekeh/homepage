@@ -46,7 +46,9 @@
 		<li><img src={fascistsImg} alt="This machine kills fascists" /></li>
 		<li><img src={passionImg} alt="Graphic design is my passion" /></li>
 		<li>
-			<a href={resolve('/rss.xml')} rel="noopener"><img src={rssImg} alt="Implement RSS now!" /></a>
+			<a href={resolve('/rss.xml')} rel="noopener" data-sveltekit-reload
+				><img src={rssImg} alt="Implement RSS now!" /></a
+			>
 		</li>
 	</ul>
 	<hr />

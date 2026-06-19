@@ -11,13 +11,3 @@
 	<DesktopShell />
 	<MobileShell />
 </div>
-
-<style>
-	.shell {
-		position: fixed;
-		inset: 0;
-		background: url('/bg.png');
-		background-size: cover;
-		overflow: hidden;
-	}
-</style>

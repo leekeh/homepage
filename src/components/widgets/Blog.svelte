@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 
-	const posts = $derived($page.data.blogPosts ?? []);
-	const categories = $derived($page.data.blogCategories ?? []);
+	const posts = $derived((page.data.blogPosts ?? []) as BlogPost[]);
+	const categories = $derived((page.data.blogCategories ?? []) as string[]);
 </script>
 
 <div class="blog">
 	<h1>Blog</h1>
 	<div class="feeds">
-		<a href={resolve('/rss.xml')}>RSS: all posts</a>
+		<a href={resolve('/rss.xml')} data-sveltekit-reload>RSS: all posts</a>
 		{#each categories as category (category)}
-			<a href={resolve(`/rss/${category}.xml`)}>RSS: {category}</a>
+			<a href={resolve(`/rss/${category}.xml`)} data-sveltekit-reload>RSS: {category}</a>
 		{/each}
 	</div>
 	<div class="post-list">

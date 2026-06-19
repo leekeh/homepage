@@ -37,7 +37,7 @@
 		margin: var(--space-6) 0;
 	}
 
-	.content :global(a) {
+	.content :global(a):not(:has(img)) {
 		position: relative;
 		color: inherit;
 		text-decoration: none;

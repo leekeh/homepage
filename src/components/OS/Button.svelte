@@ -54,5 +54,9 @@ Basic polymorphic button component that can be used inside widgets.
 		&[aria-pressed='true'] {
 			background-color: var(--color-bg-highlight);
 		}
+		:global(svg) {
+			stroke-width: 1px;
+			filter: var(--filter-squiggle);
+		}
 	}
 </style>

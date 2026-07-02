@@ -39,9 +39,6 @@ Basic polymorphic link component that can be used inside widgets.
 {/if}
 
 <style>
-	.link {
-	}
-
 	.link:hover {
 		background-color: var(--color-bg-highlight);
 	}

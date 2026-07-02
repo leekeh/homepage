@@ -166,6 +166,14 @@ export class WindowManager {
 		return id;
 	}
 
+	closeActiveWindow() {
+		const active = this.activeWindow;
+		// timeout to not clash with navigation
+		setTimeout(() => {
+			if (active) this.close(active.id);
+		}, 0);
+	}
+
 	close(id: string) {
 		const idx = this.windows.findIndex((w) => w.id === id);
 		if (idx === -1) {

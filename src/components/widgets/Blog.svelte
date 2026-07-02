@@ -3,7 +3,7 @@
 	import { resolve } from '$app/paths';
 	import type { BlogPost } from '../../content/blog';
 	import { IconRSS } from '@icons/index';
-
+	import { formatDate } from '@utils/date';
 	const posts = $derived((page.data.blogPosts ?? []) as BlogPost[]);
 	const categories = $derived((page.data.blogCategories ?? []) as string[]);
 </script>
@@ -31,9 +31,9 @@
 					aria-labelledby={titleId}
 					aria-describedby={excerptId}
 				>
-					<span class="post-date">{post.date}</span>
+					<time class="post-date" datetime={post.date}>{formatDate(post.date)}</time>
 					<span class="post-title" id={titleId}>{post.title}</span>
-					<span class="post-excerpt" id={excerptId}>{post.excerpt}</span>
+					<span class="post-excerpt" id={excerptId}>{post.description}</span>
 					<span class="post-meta">{post.readingTimeText}</span>
 				</a>
 			</li>

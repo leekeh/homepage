@@ -1,148 +1,134 @@
 <script lang="ts">
+	import type { Component } from 'svelte';
 	import { page } from '$app/state';
-	import type { BlogPost } from '../../../content/blog';
+	import Content from '@components/content.svelte';
+	import { formatDate } from '@utils/date';
+	import CommentForm from './CommentForm.svelte';
+	import Comments from './Comments.svelte';
+	import NotFound from './NotFound.svelte';
 
-	import { resolve } from '$app/paths';
-	import { useWindowManager } from '../../OS/shared/windowManager.svelte';
-
-	const wm = $derived(useWindowManager());
-	const windowId = $derived(wm.activeWindow?.id);
-
-	type Props = {
-		slug?: string;
+	type PostMetadata = {
+		title?: string;
+		date?: string;
+		description?: string;
+		categories?: string[];
+		tags?: string[];
+		lastModified?: string | null;
+		changelog?: string[];
+		readingTime?: { text: string; minutes: number };
 	};
 
+	type Props = { slug?: string };
 	let { slug = 'hello-world' }: Props = $props();
 
-	const posts = $derived((page.data.blogPosts ?? []) as BlogPost[]);
-	const fallbackPost = $derived(posts[0]);
-	const post = $derived(posts.find((entry: BlogPost) => entry.slug === slug) ?? fallbackPost);
+	// Use data from the server load function when slug matches (SSR / prerender path).
+	// Falls back to dynamic loading when the widget is opened via client-side navigation,
+	// which cancels the SvelteKit navigation before the load function can run.
+	const serverPost = $derived(
+		page.data?.slug === slug
+			? (page.data as { PostComponent: Component; metadata: PostMetadata })
+			: null
+	);
 
-	function closeSelf() {
-		if (windowId) {
-			wm.close(windowId);
-		}
-	}
+	const initialComments = $derived(
+		page.data?.slug === slug ? page.data.initialComments : undefined
+	);
+
+	const postModules = import.meta.glob<{ default: Component; metadata: PostMetadata }>(
+		'../../../content/blog/posts/**/*.mdx'
+	);
+	const loadPost = (s: string) =>
+		postModules[`../../../content/blog/posts/${s}/${s}.mdx`]?.() ??
+		Promise.reject(new Error('Post not found'));
 </script>
 
-<article class="blog-post h-entry">
-	<header>
-		<!-- gtodo this link should clouse the current page -->
-		<a class="back-link" href={resolve('/blog')} onclick={closeSelf}>&larr; Back to blog</a>
-		<h2 class="p-name">{post.title}</h2>
-		<a class="u-url" href={resolve(post.canonicalUrl)}>{post.canonicalUrl}</a>
-		<time class="date dt-published" datetime={post.date}>{post.date} • {post.readingTimeText}</time>
-	</header>
-	<div class="body e-content">
-		<!-- eslint-disable-next-line svelte/no-at-html-tags -->
-		{@html post.html}
-	</div>
-
-	<!-- <section class="webmentions">
-		<h2>Mentions</h2>
-		{#if webmentionsLoading}
-			<p class="webmentions-empty">Loading mentions...</p>
-		{:else if webmentions.length === 0}
-			<p class="webmentions-empty">No mentions yet.</p>
-		{:else}
-			<ul>
-				{#each webmentions as mention (mention.id)}
-					<li>
-						<a
-							href={mention.authorUrl || mention.url || '#'}
-							target="_blank"
-							rel="noreferrer noopener"
-						>
-							{mention.authorName}
-						</a>
-						{#if mention.content}
-							<p>{mention.content}</p>
+{#snippet renderPost(PostComponent: Component, metadata: PostMetadata)}
+	<article>
+		<Content removeStartPadding>
+			<div class="body e-content">
+				<header class="post-header">
+					<div class="post-meta">
+						{#if metadata?.date}
+							<span class="post-date"
+								>Posted
+								<time datetime={metadata.date}>{formatDate(metadata.date)}</time>
+							</span>
 						{/if}
-					</li>
-				{/each}
-			</ul>
-		{/if}
-	</section> -->
-</article>
+						{#if metadata?.readingTime}
+							<span class="post-reading-time">{metadata.readingTime.text}</span>
+						{/if}
+						{#if metadata?.lastModified && metadata.lastModified !== metadata.date}
+							<span class="post-updated"
+								>Updated <time datetime={metadata.lastModified}
+									>{formatDate(metadata.lastModified)}</time
+								></span
+							>
+						{/if}
+					</div>
+				</header>
+				<PostComponent />
+			</div>
+
+			<section class="comments">
+				<hr />
+				<h3>Feedback</h3>
+				<Comments {slug} {initialComments} />
+				<CommentForm {slug} />
+			</section>
+		</Content>
+	</article>
+{/snippet}
+
+{#if serverPost}
+	{@render renderPost(serverPost.PostComponent, serverPost.metadata)}
+{:else}
+	{#await loadPost(slug) then postModule}
+		{@render renderPost(postModule.default, postModule.metadata)}
+	{:catch}
+		<NotFound />
+	{/await}
+{/if}
 
 <style>
-	.blog-post {
-		padding: var(--space-6);
-		font-family: var(--font-mono);
-		height: 100%;
-		overflow-y: auto;
+	/* Post header */
+	.post-header {
+		padding-left: var(--space-1);
+		padding-bottom: var(--space-5);
 	}
 
-	header {
-		margin-bottom: var(--space-7);
-	}
-
-	.back-link {
-		font-size: var(--font-size-sm);
-		color: var(--color-text-muted);
-		text-decoration: none;
-		display: inline-block;
-		margin-bottom: var(--space-4);
-	}
-
-	.back-link:hover {
-		color: var(--color-primary);
-	}
-
-	h1 {
-		font-size: var(--font-size-xl);
-		color: var(--color-primary);
-		font-family: var(--font-serif);
-		margin-bottom: var(--space-3);
-	}
-
-	.date {
+	.post-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--space-3);
 		font-size: var(--font-size-xs);
 		color: var(--color-text-muted);
+		font-family: var(--font-mono);
+		font-weight: 500;
+		margin-bottom: var(--space-3);
+		font-style: italic;
+		color: var(--color-fg-muted);
 	}
 
-	.u-url {
-		display: none;
+	.post-meta > * + *::before {
+		content: '·';
+		margin-right: var(--space-3);
 	}
 
-	.webmentions {
+	/* Comments */
+	.comments {
 		margin-top: var(--space-7);
 		padding-top: var(--space-6);
-		border-top: 1px solid var(--color-border);
-	}
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-5);
 
-	.webmentions h2 {
-		font-size: var(--font-size-md);
-		margin-bottom: var(--space-4);
-	}
-
-	.webmentions ul {
-		list-style: none;
-		display: grid;
-		gap: var(--space-4);
-		padding: 0;
-	}
-
-	.webmentions li {
-		border: 1px solid var(--color-border);
-		border-radius: var(--radius-md);
-		padding: var(--space-4);
-		background: var(--color-surface-alt);
-	}
-
-	.webmentions li a {
-		color: var(--color-primary);
-		font-weight: 600;
-		text-decoration: none;
-	}
-
-	.webmentions li p {
-		margin-top: var(--space-3);
-		color: var(--color-text-muted);
-		line-height: 1.5;
-	}
-
-	.webmentions-empty {
-		color: var(--color-text-muted);
+		hr {
+			filter: var(--filter-squiggle);
+			color: inherit;
+			margin: 0 !important;
+			border-style: dashed;
+			border-width: var(--border-width);
+			border-bottom: none;
+		}
 	}
 </style>

@@ -1,6 +1,7 @@
 # build output
 .svelte-kit/
 build/
+.wrangler/
 
 # dependencies
 node_modules/

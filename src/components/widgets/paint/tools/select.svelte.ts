@@ -97,11 +97,22 @@ export function createSelectTool(options: {
 		}
 	};
 
+	function deleteSelection() {
+		if (!selectionRect) return;
+		const ctx = options.getCtx();
+		if (!ctx) return;
+		ctx.fillStyle = '#ffffff';
+		ctx.fillRect(selectionRect.x, selectionRect.y, selectionRect.width, selectionRect.height);
+		options.persist();
+		clear();
+	}
+
 	return {
 		behavior,
 		get selectionRect() {
 			return selectionRect;
 		},
-		clear
+		clear,
+		deleteSelection
 	};
 }

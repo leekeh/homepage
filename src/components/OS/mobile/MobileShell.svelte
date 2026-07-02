@@ -63,7 +63,7 @@
 			{:else if !hasJsSupport}
 				{@const DefaultComponent = await loadWidgetComponent(routeMatch?.widget.id ?? 'about')}
 				{#if DefaultComponent}
-					<DefaultComponent />
+					<DefaultComponent {...routeMatch?.params ?? {}} />
 				{/if}
 			{/if}
 		</main>

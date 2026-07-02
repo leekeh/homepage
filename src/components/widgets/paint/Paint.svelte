@@ -111,8 +111,19 @@
 				bind:this={canvas}
 				width={2000}
 				height={1600}
+				tabindex="-1"
 				use:drawing.action
 				oncontextmenu={(event) => event.preventDefault()}
+				onkeydown={(e) => {
+					if (
+						(e.key === 'Delete' || e.key === 'Backspace') &&
+						activeTool === 'select' &&
+						selectTool.selectionRect
+					) {
+						e.preventDefault();
+						selectTool.deleteSelection();
+					}
+				}}
 				aria-label="Drawing canvas"
 			></canvas>
 			<SelectionOverlay selectionRect={selectTool.selectionRect} />

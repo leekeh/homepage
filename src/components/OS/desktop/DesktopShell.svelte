@@ -83,7 +83,7 @@
 						minimized: false,
 						maximized: def.defaultMaximized ?? false,
 						minimal: def.minimal,
-						data: undefined
+						data: routeMatch?.params
 					})}
 				{/if}
 			{:else}

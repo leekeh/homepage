@@ -1,108 +1,92 @@
-import matter from "gray-matter";
-import rehypeStringify from "rehype-stringify";
-import remarkParse from "remark-parse";
-import remarkRehype from "remark-rehype";
-import { unified } from "unified";
+import type { BlogPost } from '.';
+import { SITE_URL } from '../site';
 
-import type { BlogPost } from ".";
-import { SITE_URL } from "../site";
-import { rehypeExcerpt } from "./rehype-excerpt";
-import { remarkReadingTime } from "./remark-reading-time";
-
-type BlogFrontmatter = {
-  title: string;
-  date: string | Date;
-  description?: string;
-  categories?: string[];
-  tags?: string[];
-  ogImage?: string;
+type BlogMetadata = {
+	title?: string;
+	date?: string;
+	description?: string;
+	categories?: string[];
+	tags?: string[];
+	ogImage?: string;
+	// Injected by remark-git-info
+	publishedAt?: string | null;
+	lastModified?: string | null;
+	changelog?: string[];
+	// Injected by remark-reading-time
+	readingTime?: { text: string; minutes: number; words: number };
 };
 
-type ReadingTimeData = {
-  text: string;
-  minutes: number;
-};
-
-const markdownModules = import.meta.glob("./posts/*.md", {
-  eager: true,
-  query: "?raw",
-  import: "default",
-}) as Record<string, string>;
-
-const markdownProcessor = unified()
-  .use(remarkParse)
-  .use(remarkReadingTime)
-  .use(remarkRehype)
-  .use(rehypeExcerpt, { maxLength: 220 })
-  .use(rehypeStringify);
-
-function getSlugFromPath(path: string): string {
-  return path.split("/").at(-1)?.replace(/\.md$/, "") ?? path;
-}
+// Import only the metadata export from each mdx file (not the full Svelte component)
+const metadataModules = import.meta.glob('./posts/**/*.mdx', {
+	eager: true,
+	import: 'metadata'
+}) as Record<string, BlogMetadata>;
 
 function normalizeCategory(category: string): string {
-  return category.toLowerCase().trim().replace(/\s+/g, "-");
+	return category.toLowerCase().trim().replace(/\s+/g, '-');
 }
 
-function sanitizeText(value: string | undefined): string {
-  return (value ?? "").replace(/\s+/g, " ").trim();
+function getSlugFromPath(path: string): string {
+	// e.g. "./posts/hello-world/hello-world.mdx" → "hello-world"
+	return (
+		path
+			.split('/')
+			.at(-1)
+			?.replace(/\.mdx$/, '') ?? path
+	);
 }
 
-function parsePost(path: string, markdown: string): BlogPost {
-  const slug = getSlugFromPath(path);
-  const { data, content } = matter(markdown);
-  const frontmatter = data as Partial<BlogFrontmatter>;
-  const dateValue =
-    frontmatter.date instanceof Date
-      ? frontmatter.date.toISOString().slice(0, 10)
-      : String(frontmatter.date ?? "");
+function parsePost(path: string, meta: BlogMetadata): BlogPost | null {
+	const slug = getSlugFromPath(path);
 
-  if (!frontmatter.title || !dateValue) {
-    throw new Error(`Missing required frontmatter in blog post: ${path}`);
-  }
+	if (!meta.title) {
+		console.warn(`Blog post ${path} is missing a title, skipping`);
+		return null;
+	}
 
-  const parsed = markdownProcessor.processSync(content);
-  const excerptFromPlugin =
-    typeof parsed.data.excerpt === "string" ? parsed.data.excerpt : "";
-  const excerpt =
-    sanitizeText(frontmatter.description) || sanitizeText(excerptFromPlugin);
-  const readingStats =
-    (parsed.data.readingTime as ReadingTimeData | undefined) ??
-    ({ text: "1 min read", minutes: 1 } as const);
+	// Prefer explicit frontmatter date; fall back to git's first commit date
+	const date = meta.date ?? meta.publishedAt ?? null;
 
-  return {
-    slug,
-    title: frontmatter.title,
-    date: dateValue,
-    description: excerpt,
-    excerpt,
-    html: String(parsed),
-    readingTimeText: readingStats.text,
-    readingTimeMinutes: Math.max(1, Math.ceil(readingStats.minutes)),
-    categories: (frontmatter.categories ?? []).map(normalizeCategory),
-    tags: (frontmatter.tags ?? []).map((tag) => tag.toLowerCase().trim()),
-    canonicalUrl: `${SITE_URL}/blog/${slug}`,
-    ogImage: frontmatter.ogImage,
-  };
+	if (!date) {
+		console.warn(`Blog post ${path} has no date, skipping`);
+		return null;
+	}
+
+	const readingTime = meta.readingTime ?? { text: '1 min read', minutes: 1 };
+
+	return {
+		slug,
+		title: meta.title,
+		date,
+		lastModified: meta.lastModified ?? null,
+		changelog: meta.changelog ?? [],
+		description: meta.description ?? '',
+		readingTimeText: readingTime.text,
+		readingTimeMinutes: Math.max(1, Math.ceil(readingTime.minutes)),
+		categories: (meta.categories ?? []).map(normalizeCategory),
+		tags: (meta.tags ?? []).map((tag) => tag.toLowerCase().trim()),
+		canonicalUrl: `${SITE_URL}/blog/${slug}`,
+		ogImage: meta.ogImage
+	};
 }
 
-export const blogPosts: BlogPost[] = Object.entries(markdownModules)
-  .map(([path, markdown]) => parsePost(path, markdown))
-  .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+export const blogPosts: BlogPost[] = Object.entries(metadataModules)
+	.map(([path, meta]) => parsePost(path, meta))
+	.filter((post): post is BlogPost => post !== null)
+	.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
 export function getAllBlogPosts(): BlogPost[] {
-  return blogPosts;
+	return blogPosts;
 }
 
 export function getBlogPostBySlug(slug: string): BlogPost | undefined {
-  return blogPosts.find((post) => post.slug === slug);
+	return blogPosts.find((post) => post.slug === slug);
 }
 
 export function getBlogCategories(): string[] {
-  return [...new Set(blogPosts.flatMap((post) => post.categories))].sort();
+	return [...new Set(blogPosts.flatMap((post) => post.categories))].sort();
 }
 
 export function getBlogPostsByCategory(category: string): BlogPost[] {
-  const normalized = normalizeCategory(category);
-  return blogPosts.filter((post) => post.categories.includes(normalized));
+	return blogPosts.filter((post) => post.categories.includes(category));
 }

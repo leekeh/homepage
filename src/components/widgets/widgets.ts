@@ -51,7 +51,7 @@ export function getRouteForWindow(
 		const paramName = def.route.match(/\[([^\]]+)\]/)?.[1] ?? 'param';
 		const paramValue = data[paramName];
 		if (paramValue) {
-			return def.route.split('[')[0] + String(paramValue);
+			return (def.route.split('[')[0] + String(paramValue)) as PathnameWithSearchOrHash;
 		}
 	}
 	return def.route;

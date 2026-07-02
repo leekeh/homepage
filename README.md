@@ -2,6 +2,11 @@
 
 SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
 
+## Local development
+
+For basic development, you can run `pnpm dev`.
+For integrated development, you need to first run `pnpm wrangler login`. Then you can run `pnpm build && pnpm wrangler dev`. This is local development connecting with the remote database.
+
 ## To do:
 
 - chat box
@@ -31,6 +36,8 @@ SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
 - swipe to switch between open widgets on mobile
 - remove tabindex of desktop icons when fullscreen widget is open
 - universal comment section: use github, bluesky, web mentions, etc. to allow commenting on posts and pages
+- 404 handling
+- auto-close windows after 10 are open to protecc
 
 widgets:
 

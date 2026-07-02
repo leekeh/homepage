@@ -1,6 +1,6 @@
 # Personal homepage
 
-SvelteKit 2 + Svelte 5 personal website, styled as a retro desktop environment.
+SvelteKit 2.? + Svelte 5 personal website, styled as a retro desktop environment.
 
 ## Local development
 

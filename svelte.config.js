@@ -1,7 +1,7 @@
 import adapter from '@sveltejs/adapter-cloudflare';
 import { mdsvex } from 'mdsvex';
-import { remarkReadingTime } from './src/content/blog/remark-reading-time.ts';
-import { remarkGitInfo } from './src/content/blog/remark-git-info.ts';
+import { remarkReadingTime } from './src/content/blog/remark-reading-time.js';
+import { remarkGitInfo } from './src/content/blog/remark-git-info.js';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {

@@ -1,12 +1,17 @@
-import { execSync } from 'child_process';
-import { dirname } from 'path';
+import { execSync } from 'node:child_process';
+import { dirname } from 'node:path';
 
-type GitEntry = {
-	date: string;
-	message: string;
-};
+/**
+ * @typedef {{ date: string; message: string }} GitEntry
+ */
 
-function getGitHistory(filePath: string): GitEntry[] {
+/**
+ * Returns the git commit history for a file, most recent first.
+ *
+ * @param {string} filePath
+ * @returns {GitEntry[]}
+ */
+function getGitHistory(filePath) {
 	try {
 		const cwd = dirname(filePath);
 		const output = execSync(`git log --follow --format="%ad|%s" --date=short -- "${filePath}"`, {
@@ -33,14 +38,19 @@ function getGitHistory(filePath: string): GitEntry[] {
 	}
 }
 
+/**
+ * Remark plugin that injects `publishedAt`, `lastModified`, and `changelog`
+ * into `file.data.fm` using the file's git history.
+ *
+ * @returns {(_tree: unknown, file: import('vfile').VFile) => void}
+ */
 export function remarkGitInfo() {
-	return (_tree: unknown, file: { history: string[]; data: Record<string, unknown> }) => {
+	return (_tree, file) => {
 		const filePath = file.history[0];
 		if (!filePath) return;
 
 		const history = getGitHistory(filePath);
 
-		// Most recent commit first; oldest commit is the initial publish
 		const lastModified = history.length > 0 ? history[0].date : null;
 		const publishedAt = history.length > 0 ? history[history.length - 1].date : null;
 		const changelog = history.map((e) => e.message);
@@ -49,7 +59,7 @@ export function remarkGitInfo() {
 			file.data.fm = {};
 		}
 
-		const fm = file.data.fm as Record<string, unknown>;
+		const fm = file.data.fm;
 		fm.publishedAt = publishedAt;
 		fm.lastModified = lastModified;
 		fm.changelog = changelog;

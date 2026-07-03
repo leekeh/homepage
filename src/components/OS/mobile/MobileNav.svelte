@@ -25,25 +25,8 @@
 <AppMenuPopover {id} {buttonId} direction="down" onClose={() => menuBtn?.focus()} />
 
 <style>
+	/* Sized and styled by MobileShell's :global(.menu-btn) rule */
 	.menu-btn {
-		background-color: transparent;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border: none;
-		min-width: 48px;
-		border-radius: 999px;
-		&:hover {
-			box-shadow: inset 0 0 0 4px var(--color-bg-primary);
-		}
-	}
-
-	.menu-btn :global(svg) {
-		width: 20px;
-		height: 20px;
-	}
-
-	.menu-btn:hover {
-		background: rgba(212, 245, 214, 0.1);
+		border-radius: 0;
 	}
 </style>

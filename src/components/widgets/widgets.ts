@@ -7,8 +7,8 @@ export type WidgetDef = WidgetConfig;
 const registry = new Map<string, WidgetDef>(widgetConfigs.map((def) => [def.id, def]));
 
 export const widgetNavigationData = [...registry.values()]
-	// filter dynamic routes, those can only be accessed from other widgets or direct URL
-	.filter(({ route }) => !route.includes('['))
+	// filter dynamic routes and non-navigable widgets (e.g. the apps drawer)
+	.filter(({ route, navigable }) => !route.includes('[') && navigable !== false)
 	.map(({ id, title, icon, route }) => ({
 		id,
 		title,

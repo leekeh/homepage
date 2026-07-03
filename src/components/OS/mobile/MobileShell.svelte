@@ -1,70 +1,85 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { useWindowManager } from '../shared/windowManager.svelte';
-	import {
-		getWidgetByRoute,
-		getRouteForWindow,
-		loadWidgetComponent,
-		widgetNavigationData
-	} from '../../widgets/widgets';
+	import { getWidgetByRoute, loadWidgetComponent } from '../../widgets/widgets';
 	import { resolve } from '$app/paths';
-	import AppDrawer from './AppDrawer.svelte';
-	import MobileNav from './MobileNav.svelte';
 	import { useJsSupport } from '../shared/useJsSupport.svelte';
+	import { useTime } from '../shared/useTime.svelte';
 	import SkipLink from '../shared/SkipLink.svelte';
+	import AppDrawer from './AppDrawer.svelte';
+	import MobileTabs from './MobileTabs.svelte';
+	import MobileNav from './MobileNav.svelte';
+	import IconApps from '@icons/IconApps.svelte';
 
 	const wm = $derived(useWindowManager());
 	const hasJsSupport = $derived(useJsSupport());
-
-	// Find active tab - FIXME this seems too heavy here
-	const activeWindow = $derived(wm.activeWindow);
+	const time = $derived(useTime());
 	const routeMatch = $derived(getWidgetByRoute(page.url.pathname));
+	const activeWindow = $derived(wm.activeWindow);
 
-	const activeTabRoute = $derived.by(() => {
-		if (activeWindow) {
-			const route = getRouteForWindow(activeWindow.widgetId, activeWindow.data);
-			return route.startsWith('/blog/') ? '/blog' : route;
-		}
-		const matched = routeMatch?.widget.route ?? '/';
-		if (matched.includes('[')) {
-			return matched.split('[')[0].replace(/\/$/, '') || '/';
-		}
-		return matched;
-	});
+	// 'apps' is a widget like any other. beforeNavigate opens it when navigating to /apps.
+	// We detect it here and show the AppDrawer instead of a tabpanel, without showing a tab.
+	const viewApps = $derived(activeWindow?.widgetId === 'apps' || !activeWindow);
 </script>
 
 {#if !hasJsSupport || wm.isMobile}
 	<SkipLink id="mobile-content" />
 	<div class="mobile-shell">
 		<header class="mobile-header squiggle-border" aria-label="Mobile navigation">
-			<AppDrawer />
+			<!--
+				Home / apps button — always an <a> to /apps.
+				In JS mode, beforeNavigate intercepts and opens the apps widget window.
+				In no-JS mode, the browser navigates normally to /apps.
+			-->
+			<a
+				class="home-btn squiggled"
+				href={resolve('/apps')}
+				aria-label="Apps"
+				title="Apps"
+				class:active={viewApps}
+				aria-current={viewApps ? 'page' : undefined}
+			>
+				<IconApps />
+			</a>
 
-			<nav class="mobile-tabs" aria-label="Applications">
-				{#each widgetNavigationData as widget (widget.id)}
-					<a
-						class="mobile-tab squiggle-border"
-						class:active={activeTabRoute === widget.route}
-						href={resolve(widget.route)}
-					>
-						{widget.title}
-					</a>
-				{/each}
-			</nav>
+			<MobileTabs />
 
+			<div class="clock-area">
+				<time class="clock" datetime={time}>{time}</time>
+			</div>
+
+			<!-- Hamburger: opens compact app list popover (mirrors desktop Start menu) -->
 			<MobileNav />
 		</header>
 
 		<main class="mobile-content" id="mobile-content">
-			{#if activeWindow}
-				{@const ActiveComponent = await loadWidgetComponent(activeWindow.widgetId)}
-				{#if ActiveComponent}
-					<ActiveComponent {...activeWindow.data ?? {}} />
+			{#if !hasJsSupport}
+				<!-- No-JS: check URL to decide what to render -->
+				{#if routeMatch?.widget.id === 'apps'}
+					<AppDrawer />
+				{:else}
+					{@const DefaultComponent = await loadWidgetComponent(routeMatch?.widget.id ?? 'about')}
+					{#if DefaultComponent}
+						<DefaultComponent {...routeMatch?.params ?? {}} />
+					{/if}
 				{/if}
-			{:else if !hasJsSupport}
-				{@const DefaultComponent = await loadWidgetComponent(routeMatch?.widget.id ?? 'about')}
-				{#if DefaultComponent}
-					<DefaultComponent {...routeMatch?.params ?? {}} />
-				{/if}
+			{:else if viewApps}
+				<AppDrawer />
+			{:else if activeWindow}
+				<div
+					role="tabpanel"
+					id="mobile-tabpanel"
+					tabindex="0"
+					aria-labelledby="tab-{activeWindow.id}"
+					class="tabpanel"
+				>
+					{#if activeWindow}
+						{@const ActiveComponent = await loadWidgetComponent(activeWindow.widgetId)}
+						{#if ActiveComponent}
+							<ActiveComponent {...activeWindow.data ?? {}} />
+						{/if}
+					{/if}
+				</div>
 			{/if}
 		</main>
 	</div>
@@ -87,32 +102,22 @@
 		flex-shrink: 0;
 	}
 
-	.mobile-tabs {
+	/* ── Home / apps button + hamburger shared style ── */
+	.home-btn,
+	:global(.menu-btn) {
+		background-color: transparent;
 		display: flex;
-		align-items: stretch;
-		gap: var(--space-2);
-		padding: var(--space-2) var(--space-2) 0;
-		overflow-x: auto;
-		scrollbar-width: none;
-		flex: 1;
-	}
-
-	.mobile-tabs::-webkit-scrollbar {
-		display: none;
-	}
-
-	.mobile-tab {
+		align-items: center;
+		justify-content: center;
+		border: none;
 		text-decoration: none;
-		padding: var(--space-2) var(--space-4);
-		border-radius: var(--radius-lg) var(--radius-lg) 0 0;
-		border: var(--border-width) solid var(--color-fg-primary);
-		border-bottom: none;
-		white-space: nowrap;
-		font-size: var(--font-size-sm);
-		font-family: var(--font-mono);
+		color: inherit;
+		min-width: 44px;
+		flex-shrink: 0;
 
-		&.active {
-			background: var(--color-bg-primary);
+		:global(svg) {
+			width: 20px;
+			height: 20px;
 		}
 
 		&:hover {
@@ -120,10 +125,38 @@
 		}
 	}
 
+	.home-btn.active {
+		background-color: var(--color-bg-primary);
+	}
+
+	/* ── Clock ── */
+	.clock-area {
+		display: flex;
+		align-items: center;
+		padding: 0 var(--space-3);
+		flex-shrink: 0;
+	}
+
+	.clock {
+		color: var(--color-text-light);
+		font-family: var(--font-mono);
+		font-size: var(--font-size-sm);
+		letter-spacing: 0.05em;
+	}
+
+	/* ── Content area ── */
 	.mobile-content {
 		flex: 1;
 		overflow: auto;
 		min-height: 0;
+	}
+
+	/* Tabpanel fills the content area and handles its own scrolling. */
+	.tabpanel {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		overflow: auto;
 	}
 
 	@media (max-width: 768px) {

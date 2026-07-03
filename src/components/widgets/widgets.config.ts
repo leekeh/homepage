@@ -4,6 +4,7 @@ import IconAbout from '@icons/IconAbout.svelte';
 import IconBlog from '@icons/IconBlog.svelte';
 import IconPaint from '@icons/IconPaint.svelte';
 import IconContact from '@icons/IconContact.svelte';
+import IconApps from '@icons/IconApps.svelte';
 import type { PathnameWithSearchOrHash } from '$app/types';
 
 export interface WidgetConfig {
@@ -19,6 +20,8 @@ export interface WidgetConfig {
 	defaultY?: number;
 	resizable: boolean;
 	minimal: boolean;
+	/** When false, excluded from nav lists (Start menu, AppDrawer, desktop icons). Default: true. */
+	navigable?: boolean;
 }
 
 export const widgetConfigs: WidgetConfig[] = [
@@ -86,5 +89,17 @@ export const widgetConfigs: WidgetConfig[] = [
 		defaultY: 0,
 		resizable: true,
 		minimal: false
+	},
+	{
+		id: 'apps',
+		title: 'Apps',
+		icon: IconApps,
+		component: () => import('../OS/mobile/AppDrawer.svelte'),
+		route: '/apps',
+		defaultWidth: 320,
+		defaultHeight: 480,
+		resizable: false,
+		minimal: false,
+		navigable: false
 	}
 ];

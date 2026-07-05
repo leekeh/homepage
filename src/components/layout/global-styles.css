@@ -78,7 +78,8 @@
 	filter: var(--filter-squiggle);
 }
 
-:root[data-squiggles='off'] {
+:root[data-squiggles='off'],
+:root[data-interacting] {
 	--filter-squiggle: none !important;
 }
 

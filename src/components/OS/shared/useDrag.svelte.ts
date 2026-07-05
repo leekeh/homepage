@@ -96,6 +96,7 @@ export function useDrag(options: UseDragOptions = {}) {
 		captureElement.setPointerCapture(event.pointerId);
 
 		options.onStart?.(payloadFor(event));
+		document.documentElement.dataset.interacting = 'true';
 	}
 
 	function onPointerMove(event: PointerEvent) {
@@ -123,6 +124,7 @@ export function useDrag(options: UseDragOptions = {}) {
 		releaseCapture();
 		options.onEnd?.({ ...endPayload, reason });
 		reset();
+		delete document.documentElement.dataset.interacting;
 	}
 
 	function onPointerUp(event: PointerEvent) {

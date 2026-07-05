@@ -3,31 +3,33 @@
 
 	import './global-styles.css';
 
+	// Each array ends with its first value repeated (SMIL loop convention).
+	// Unique values: first 4 entries for freq/seed arrays, first 5 for warp arrays.
 	const noiseAFreqBase = [
 		[0.018, 0.028],
 		[0.021, 0.031],
 		[0.017, 0.026],
-		[0.019, 0.033],
-		[0.018, 0.028]
+		[0.019, 0.033]
 	] as const;
 	const noiseBFreqBase = [
 		[0.03, 0.014],
 		[0.026, 0.018],
 		[0.034, 0.012],
-		[0.028, 0.016],
-		[0.03, 0.014]
+		[0.028, 0.016]
 	] as const;
-	const warpABase = [1.8, 2.2, 2.6, 2, 2.8, 1.8] as const;
-	const warpBBase = [1.2, 1.6, 1.35, 1.9, 1.25, 1.2] as const;
+	const noiseASeeds = [2, 3, 5, 7] as const;
+	const noiseBSeeds = [11, 13, 17, 19] as const;
+	const warpABase = [1.8, 2.2, 2.6, 2, 2.8] as const;
+	const warpBBase = [1.2, 1.6, 1.35, 1.9, 1.25] as const;
 
-	function scaleFrequencyPairs(pairs: readonly (readonly [number, number])[], factor: number) {
-		return pairs
-			.map(([x, y]) => `${Number((x * factor).toFixed(4))} ${Number((y * factor).toFixed(4))}`)
-			.join(';');
+	function scaleFrequencyPair([x, y]: readonly [number, number], factor: number) {
+		return `${Number((x * factor).toFixed(4))} ${Number((y * factor).toFixed(4))}`;
 	}
 
 	let devicePixelRatio = $state(1);
 	let referencePixelRatio = $state(1);
+	// LCM(4, 5) = 20 covers a full cycle of all animation sequences
+	let step = $state(0);
 
 	const normalizedPixelRatio = $derived(
 		Number.isFinite(devicePixelRatio) && devicePixelRatio > 0 ? devicePixelRatio : 1
@@ -41,26 +43,19 @@
 	);
 	const frequencyCompensation = $derived(1 / Math.sqrt(clampedDisplacementCompensation));
 
-	const noiseABaseFrequency = $derived(
-		scaleFrequencyPairs(noiseAFreqBase, Number(frequencyCompensation.toFixed(4))).split(';')[0]
+	const noiseAFrequency = $derived(
+		scaleFrequencyPair(noiseAFreqBase[step % 4], frequencyCompensation)
 	);
-	const noiseAFrequencyValues = $derived(
-		scaleFrequencyPairs(noiseAFreqBase, Number(frequencyCompensation.toFixed(4)))
+	const noiseASeed = $derived(noiseASeeds[step % 4]);
+	const noiseBFrequency = $derived(
+		scaleFrequencyPair(noiseBFreqBase[step % 4], frequencyCompensation)
 	);
-	const noiseBBaseFrequency = $derived(
-		scaleFrequencyPairs(noiseBFreqBase, Number(frequencyCompensation.toFixed(4))).split(';')[0]
+	const noiseBSeed = $derived(noiseBSeeds[step % 4]);
+	const warpAScale = $derived(
+		Number((warpABase[step % 5] * clampedDisplacementCompensation).toFixed(3))
 	);
-	const noiseBFrequencyValues = $derived(
-		scaleFrequencyPairs(noiseBFreqBase, Number(frequencyCompensation.toFixed(4)))
-	);
-
-	const warpAScale = $derived(Number((2 * clampedDisplacementCompensation).toFixed(3)));
-	const warpAValues = $derived(
-		warpABase.map((value) => Number((value * clampedDisplacementCompensation).toFixed(3))).join(';')
-	);
-	const warpBScale = $derived(Number((1.3 * clampedDisplacementCompensation).toFixed(3)));
-	const warpBValues = $derived(
-		warpBBase.map((value) => Number((value * clampedDisplacementCompensation).toFixed(3))).join(';')
+	const warpBScale = $derived(
+		Number((warpBBase[step % 5] * clampedDisplacementCompensation).toFixed(3))
 	);
 
 	onMount(() => {
@@ -68,6 +63,10 @@
 			Number.isFinite(window.devicePixelRatio) && window.devicePixelRatio > 0
 				? window.devicePixelRatio
 				: 1;
+		const interval = setInterval(() => {
+			step = (step + 1) % 20;
+		}, 333);
+		return () => clearInterval(interval);
 	});
 </script>
 
@@ -78,66 +77,20 @@
 		<filter id="squiggle">
 			<feTurbulence
 				type="fractalNoise"
-				baseFrequency={noiseABaseFrequency}
+				baseFrequency={noiseAFrequency}
 				numOctaves="2"
 				result="noiseA"
-				seed="2"
-			>
-				<animate
-					attributeName="baseFrequency"
-					values={noiseAFrequencyValues}
-					dur="2s"
-					calcMode="discrete"
-					repeatCount="indefinite"
-				/>
-				<animate
-					attributeName="seed"
-					values="2;3;5;7;2"
-					dur="2.6s"
-					calcMode="discrete"
-					repeatCount="indefinite"
-				/>
-			</feTurbulence>
+				seed={noiseASeed}
+			/>
 			<feTurbulence
 				type="fractalNoise"
-				baseFrequency={noiseBBaseFrequency}
+				baseFrequency={noiseBFrequency}
 				numOctaves="3"
 				result="noiseB"
-				seed="11"
-			>
-				<animate
-					attributeName="baseFrequency"
-					values={noiseBFrequencyValues}
-					dur="1.8s"
-					calcMode="discrete"
-					repeatCount="indefinite"
-				/>
-				<animate
-					attributeName="seed"
-					values="11;13;17;19;11"
-					dur="2.9s"
-					calcMode="discrete"
-					repeatCount="indefinite"
-				/>
-			</feTurbulence>
-			<feDisplacementMap in="SourceGraphic" in2="noiseA" scale={warpAScale} result="warpA">
-				<animate
-					attributeName="scale"
-					values={warpAValues}
-					dur="3s"
-					calcMode="discrete"
-					repeatCount="indefinite"
-				/>
-			</feDisplacementMap>
-			<feDisplacementMap in="warpA" in2="noiseB" scale={warpBScale}>
-				<animate
-					attributeName="scale"
-					values={warpBValues}
-					dur="4.5s"
-					calcMode="discrete"
-					repeatCount="indefinite"
-				/>
-			</feDisplacementMap>
+				seed={noiseBSeed}
+			/>
+			<feDisplacementMap in="SourceGraphic" in2="noiseA" scale={warpAScale} result="warpA" />
+			<feDisplacementMap in="warpA" in2="noiseB" scale={warpBScale} />
 		</filter>
 	</defs>
 </svg>

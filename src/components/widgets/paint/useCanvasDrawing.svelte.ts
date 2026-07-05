@@ -101,6 +101,7 @@ export function createCanvasDrawing(getParams: () => CanvasDrawingParams) {
 
 		isDrawing = false;
 		snapshot = null;
+		delete document.documentElement.dataset.interacting;
 	}
 
 	// Reference to the canvas element; set inside the action.
@@ -133,6 +134,7 @@ export function createCanvasDrawing(getParams: () => CanvasDrawingParams) {
 
 			canvas.setPointerCapture(event.pointerId);
 			isDrawing = true;
+			document.documentElement.dataset.interacting = 'true';
 			startPos = pos;
 
 			snapshot = behavior?.requiresSnapshot

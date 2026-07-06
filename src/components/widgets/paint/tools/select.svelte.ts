@@ -69,6 +69,12 @@ export function createSelectTool(options: {
 				drawSelectionOutline(ctx, nextRect);
 			}
 		},
+		onKeydown: (event: KeyboardEvent) => {
+			if (event.key === 'Delete' || event.key === 'Backspace') {
+				event.preventDefault();
+				deleteSelection();
+			}
+		},
 		onPointerUp: ({ ctx, snapshot }: DrawingContext) => {
 			if (!snapshot) return;
 			ctx.putImageData(snapshot, 0, 0);

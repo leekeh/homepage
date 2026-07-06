@@ -22,6 +22,10 @@ export interface WidgetConfig {
 	minimal: boolean;
 	/** When false, excluded from nav lists (Start menu, AppDrawer, desktop icons). Default: true. */
 	navigable?: boolean;
+	/** Per-page SEO description. Falls back to SITE_DESCRIPTION if omitted. */
+	description?: string;
+	/** Absolute or root-relative path to the OG image for this page. */
+	ogImage?: string;
 }
 
 export const widgetConfigs: WidgetConfig[] = [

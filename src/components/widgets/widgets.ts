@@ -4,7 +4,36 @@ import type { Component } from 'svelte';
 
 export type WidgetDef = WidgetConfig;
 
-const registry = new Map<string, WidgetDef>(widgetConfigs.map((def) => [def.id, def]));
+// Auto-discover og.png files in widget subdirectories (e.g. widgets/paint/og.png)
+const autoWidgetOgImages = import.meta.glob<string>('./*/og.png', {
+	eager: true,
+	query: '?url',
+	import: 'default'
+});
+
+// Normalize name for matching: lowercase, strip dashes (e.g. 'blog-post' → 'blogpost')
+function normalizeName(s: string): string {
+	return s.toLowerCase().replace(/-/g, '');
+}
+
+const autoOgImageByWidgetId = new Map<string, string>();
+for (const [path, url] of Object.entries(autoWidgetOgImages)) {
+	const folder = path.split('/').at(-2)!;
+	const normalizedFolder = normalizeName(folder);
+	for (const config of widgetConfigs) {
+		if (normalizeName(config.id) === normalizedFolder) {
+			autoOgImageByWidgetId.set(config.id, url);
+			break;
+		}
+	}
+}
+
+const registry = new Map<string, WidgetDef>(
+	widgetConfigs.map((def) => [
+		def.id,
+		{ ...def, ogImage: def.ogImage ?? autoOgImageByWidgetId.get(def.id) }
+	])
+);
 
 export const widgetNavigationData = [...registry.values()]
 	// filter dynamic routes and non-navigable widgets (e.g. the apps drawer)

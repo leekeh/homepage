@@ -22,6 +22,21 @@ const metadataModules = import.meta.glob('./posts/**/*.mdx', {
 	import: 'metadata'
 }) as Record<string, BlogMetadata>;
 
+// Auto-discover og.png files placed alongside each post (e.g. posts/hello-world/og.png)
+const ogImageModules = import.meta.glob<string>('./posts/**/og.png', {
+	eager: true,
+	query: '?url',
+	import: 'default'
+});
+
+// Map from post folder name (== slug) → Vite-processed asset URL
+const autoOgImageBySlug: Record<string, string> = Object.fromEntries(
+	Object.entries(ogImageModules).map(([path, url]) => {
+		const folder = path.split('/').at(-2)!;
+		return [folder, url];
+	})
+);
+
 function normalizeCategory(category: string): string {
 	return category.toLowerCase().trim().replace(/\s+/g, '-');
 }
@@ -66,7 +81,7 @@ function parsePost(path: string, meta: BlogMetadata): BlogPost | null {
 		categories: (meta.categories ?? []).map(normalizeCategory),
 		tags: (meta.tags ?? []).map((tag) => tag.toLowerCase().trim()),
 		canonicalUrl: `${SITE_URL}/blog/${slug}`,
-		ogImage: meta.ogImage
+		ogImage: meta.ogImage ?? autoOgImageBySlug[slug]
 	};
 }
 

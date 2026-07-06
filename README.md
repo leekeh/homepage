@@ -11,8 +11,7 @@ For integrated development, you need to first run `pnpm wrangler login`. Then yo
 
 - chat box
 - finish up web mentions
-- proper blog posts
-- fix desktop organization (dragging icons should work again),
+- open graph images / data / etc
 - add nested folders to menu
 - add terminal with some common commands (ls, neofetch, help)
 - validate html
@@ -27,17 +26,15 @@ For integrated development, you need to first run `pnpm wrangler login`. Then yo
 - draggable taskbar items (desktop and mobile)
 - allow dragging open tabs on desktop and mobile. Allow closing tabs on mobile
 - associate multiple widgets on one url
-- add button to stop all animations
 - custom scrollbar
-- ship fonts locally and prioritize loading them
 - wait for fonts / assets to load before closing startup animation
 - regression testing/screenshot testing on prs
-- tweak mobile tabs: prefill based on related widgets , use tabs pattern
 - swipe to switch between open widgets on mobile
 - remove tabindex of desktop icons when fullscreen widget is open
 - universal comment section: use github, bluesky, web mentions, etc. to allow commenting on posts and pages
-- 404 handling
-- auto-close windows after 10 are open to protecc
+- better 404 handling
+- auto-close windows after 10 are open to protect RAM or something
+- update document title on navigation
 
 widgets:
 
@@ -46,6 +43,8 @@ widgets:
 - pictochat
 - feed of liked posts
 - aquarium
+- context menu for paint
+- blogroll
 
 blog posts:
 

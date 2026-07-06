@@ -91,7 +91,19 @@
 	});
 </script>
 
-<div class="paint" bind:this={rootEl} onfocusout={onWidgetFocusOut}>
+<div
+	class="paint"
+	bind:this={rootEl}
+	onfocusout={onWidgetFocusOut}
+	onkeydown={(e) => {
+		const target = e.target as HTMLElement;
+		const isEditable =
+			target instanceof HTMLInputElement ||
+			target instanceof HTMLTextAreaElement ||
+			target.isContentEditable;
+		if (!isEditable) getActiveBehavior()?.onKeydown?.(e);
+	}}
+>
 	<div class="paint-body">
 		<Toolbar
 			bind:activeTool
@@ -114,16 +126,6 @@
 				tabindex="-1"
 				use:drawing.action
 				oncontextmenu={(event) => event.preventDefault()}
-				onkeydown={(e) => {
-					if (
-						(e.key === 'Delete' || e.key === 'Backspace') &&
-						activeTool === 'select' &&
-						selectTool.selectionRect
-					) {
-						e.preventDefault();
-						selectTool.deleteSelection();
-					}
-				}}
 				aria-label="Drawing canvas"
 			></canvas>
 			<SelectionOverlay selectionRect={selectTool.selectionRect} />

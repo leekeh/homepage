@@ -35,4 +35,5 @@ export type ToolBehavior = {
 	onPointerDown?: (context: DrawingContext) => void;
 	onPointerMove?: (context: DrawingContext) => void;
 	onPointerUp?: (context: DrawingContext) => void;
+	onKeydown?: (event: KeyboardEvent) => void;
 };

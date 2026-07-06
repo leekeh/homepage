@@ -1,5 +1,5 @@
 import { execSync } from 'node:child_process';
-import { dirname } from 'node:path';
+import { dirname, relative } from 'node:path';
 
 /**
  * @typedef {{ date: string; message: string }} GitEntry
@@ -13,11 +13,17 @@ import { dirname } from 'node:path';
  */
 function getGitHistory(filePath) {
 	try {
-		const cwd = dirname(filePath);
-		const output = execSync(`git log --follow --format="%ad|%s" --date=short -- "${filePath}"`, {
+		const dir = dirname(filePath);
+		const root = execSync('git rev-parse --show-toplevel', {
 			encoding: 'utf-8',
 			stdio: ['pipe', 'pipe', 'pipe'],
-			cwd
+			cwd: dir
+		}).trim();
+		const relPath = relative(root, filePath);
+		const output = execSync(`git log --follow --format="%ad|%s" --date=short -- "${relPath}"`, {
+			encoding: 'utf-8',
+			stdio: ['pipe', 'pipe', 'pipe'],
+			cwd: root
 		}).trim();
 
 		if (!output) return [];

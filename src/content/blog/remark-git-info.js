@@ -53,7 +53,7 @@ function getGitHistory(filePath) {
  */
 export function remarkGitInfo() {
 	return (_tree, file) => {
-		const filePath = file.history[0];
+		const filePath = file.path ?? file.history[0] ?? file.filename;
 		if (!filePath) return;
 
 		const history = getGitHistory(filePath);

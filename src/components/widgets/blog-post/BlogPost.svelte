@@ -9,7 +9,7 @@
 
 	type PostMetadata = {
 		title?: string;
-		date?: string;
+		publishedAt?: string;
 		description?: string;
 		categories?: string[];
 		tags?: string[];
@@ -48,21 +48,15 @@
 			<div class="body e-content">
 				<header class="post-header">
 					<div class="post-meta">
-						{#if metadata?.date}
-							<span class="post-date"
-								>Posted
-								<time datetime={metadata.date}>{formatDate(metadata.date)}</time>
+						{#if metadata?.publishedAt}
+							<span>
+								Posted
+								<time datetime={metadata.publishedAt}>{formatDate(metadata.publishedAt)}</time>
 							</span>
 						{/if}
+
 						{#if metadata?.readingTime}
 							<span class="post-reading-time">{metadata.readingTime.text}</span>
-						{/if}
-						{#if metadata?.lastModified && metadata.lastModified !== metadata.date}
-							<span class="post-updated"
-								>Updated <time datetime={metadata.lastModified}
-									>{formatDate(metadata.lastModified)}</time
-								></span
-							>
 						{/if}
 					</div>
 				</header>

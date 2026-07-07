@@ -60,7 +60,7 @@ function parsePost(path: string, meta: BlogMetadata): BlogPost | null {
 	}
 
 	// Prefer explicit frontmatter date; fall back to git's first commit date
-	const date = meta.date ?? meta.publishedAt ?? null;
+	const date = meta.date ?? meta.publishedAt ?? new Date().toISOString();
 
 	if (!date) {
 		console.warn(`Blog post ${path} has no date, skipping`);

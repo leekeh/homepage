@@ -39,7 +39,8 @@ function getGitHistory(filePath) {
 					message: line.slice(idx + 1)
 				};
 			});
-	} catch {
+	} catch (e) {
+		console.log('failed git stuff', e);
 		return [];
 	}
 }
@@ -60,6 +61,7 @@ export function remarkGitInfo() {
 		const lastModified = history.length > 0 ? history[0].date : null;
 		const publishedAt = history.length > 0 ? history[history.length - 1].date : null;
 		const changelog = history.map((e) => e.message);
+		console.log({ lastModified, publishedAt, changelog, history, filePath });
 
 		if (!file.data.fm || typeof file.data.fm !== 'object') {
 			file.data.fm = {};

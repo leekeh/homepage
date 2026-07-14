@@ -17,13 +17,11 @@
 	const wm = $derived(useWindowManager());
 	const hasJsSupport = $derived(useJsSupport());
 	const desktopWidgets = $derived.by(() => {
-		const withPositions = widgetNavigationData
-			.filter((widget) => widget.navigable !== false)
-			.map((widget, index) => ({
-				widget,
-				index,
-				position: wm.getIconPosition(widget.id, index)
-			}));
+		const withPositions = widgetNavigationData.map((widget, index) => ({
+			widget,
+			index,
+			position: wm.getIconPosition(widget.id, index)
+		}));
 		// Sort by position to ensure tab order is consistent with visual order.
 		return withPositions.toSorted(
 			(a, b) => a.position.y - b.position.y || a.position.x - b.position.x || a.index - b.index
@@ -112,6 +110,9 @@
 		position: absolute;
 		inset: 0;
 		pointer-events: none;
+		:global(.desktop-icon) {
+			pointer-events: auto;
+		}
 	}
 
 	.desktop-icons.no-js {
@@ -125,14 +126,9 @@
 		inset: auto;
 		height: auto;
 		overflow-y: auto;
-	}
-
-	.desktop-icons :global(.desktop-icon) {
-		pointer-events: auto;
-	}
-
-	.desktop-icons.no-js :global(.desktop-icon) {
-		position: static !important;
+		:global(.desktop-icon) {
+			position: static !important;
+		}
 	}
 
 	@media (max-width: 768px), print {

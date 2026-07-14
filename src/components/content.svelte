@@ -42,6 +42,13 @@
 		font-family: var(--font-mono);
 	}
 
+	.content :global(code) {
+		font-family: var(--font-mono);
+		background-color: hsl(var(--theme-color-hue) 40% 92% / 1);
+		border: 1px solid hsl(var(--theme-color-hue) 40% 80% / 1);
+		padding: 0 var(--space-1);
+	}
+
 	.content :global(p) {
 		font-family: var(--font-sans);
 		font-size: inherit;

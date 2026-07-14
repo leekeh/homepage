@@ -11,6 +11,7 @@
 	--color-fg-muted: hsl(var(--theme-color-hue) 60% 30% / 0.8);
 	--color-accent: hsl(var(--theme-color-hue) 50% 75% / 0.8);
 	--color-bg-preview: hsl(var(--theme-color-hue) 80% 88% / 0.5);
+	--color-bg-hover: hsl(var(--theme-color-hue) 80% 88% / 1);
 
 	/* ── Typography ── */
 	--font-mono: 'Chakra Petch', Courier New, monospace;

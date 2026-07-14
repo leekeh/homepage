@@ -7,17 +7,21 @@
 	type AnchorProps = HTMLAnchorAttributes & {
 		href: PathnameWithSearchOrHash;
 		children?: Snippet;
+		iconOnly?: boolean;
 	};
 
 	type ButtonProps = HTMLButtonAttributes & {
 		href?: undefined;
 		children?: Snippet;
+		iconOnly?: boolean;
 	};
 
 	type Props = AnchorProps | ButtonProps;
 
-	let { children, href, class: className = '', ...rest }: Props = $props();
-	const classes = $derived(`button squiggle-border ${className}`.trim());
+	let { children, href, class: className = '', iconOnly = false, ...rest }: Props = $props();
+	const classes = $derived(
+		`button squiggle-border ${className} ${iconOnly ? 'icon-only' : ''}`.trim()
+	);
 </script>
 
 <!-- 
@@ -41,13 +45,26 @@ Basic polymorphic button component that can be used inside widgets.
 		align-items: center;
 		gap: var(--space-2);
 		border: none;
-		background-color: transparent;
+		background-color: var(--color-bg-primary);
+		color: var(--color-fg-primary);
 		font-family: var(--font-mono);
 		border-radius: var(--radius-lg);
 		padding: var(--space-2) var(--space-4);
 
+		&.icon-only {
+			aspect-ratio: 1/1;
+			border-radius: var(--radius-round);
+			flex-shrink: 0;
+			flex-grow: 0;
+
+			:global(svg) {
+				width: 1.4em;
+				height: 1.4em;
+			}
+		}
+
 		&:hover {
-			background-color: var(--color-bg-preview);
+			background-color: var(--color-bg-hover);
 		}
 
 		&:active,

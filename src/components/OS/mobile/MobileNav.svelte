@@ -23,10 +23,3 @@
 </button>
 
 <AppMenuPopover {id} {buttonId} direction="down" onClose={() => menuBtn?.focus()} />
-
-<style>
-	/* Sized and styled by MobileShell's :global(.menu-btn) rule */
-	.menu-btn {
-		border-radius: 0;
-	}
-</style>

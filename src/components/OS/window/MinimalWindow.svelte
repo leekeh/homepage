@@ -97,8 +97,7 @@
 	.minimal-window {
 		position: absolute;
 		border-radius: var(--radius-lg);
-		overflow: hidden;
-		touch-action: none;
+		overflow: auto;
 		cursor: grab;
 		:global(a),
 		:global(button) {
@@ -140,7 +139,7 @@
 	.minimal-content {
 		width: 100%;
 		height: 100%;
-		overflow: hidden;
+		overflow: auto;
 		color: var(--color-text-light);
 	}
 </style>

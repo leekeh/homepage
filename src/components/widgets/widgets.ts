@@ -1,6 +1,7 @@
 import type { PathnameWithSearchOrHash } from '$app/types';
 import { widgetConfigs, type WidgetConfig } from './widgets.config';
 import type { Component } from 'svelte';
+import { getBlogPostBySlug } from '../../content/blog/server';
 
 export type WidgetDef = WidgetConfig;
 
@@ -62,7 +63,11 @@ export function getWidgetByRoute(
 			if (normalized.startsWith(prefix) && normalized.length > prefix.length) {
 				const paramName = def.route.match(/\[([^\]]+)\]/)?.[1] ?? 'param';
 				const paramValue = normalized.slice(prefix.length);
-				return { widget: def, params: { [paramName]: paramValue } };
+				const params = { [paramName]: paramValue };
+				// Override the widget title with the actual blog post title if available
+				const post = paramName === 'slug' ? getBlogPostBySlug(paramValue) : undefined;
+				const widget = post ? { ...def, title: post.title } : def;
+				return { widget, params };
 			}
 		}
 	}

@@ -63,14 +63,12 @@
 		font-weight: 600;
 		height: 28px;
 		flex-shrink: 0;
-
 		&:hover {
 			box-shadow: inset 0 0 0 4px var(--color-bg-primary);
 		}
-	}
-
-	.start-button :global(svg) {
-		width: 16px;
-		height: 16px;
+		:global(svg) {
+			width: 16px;
+			height: 16px;
+		}
 	}
 </style>

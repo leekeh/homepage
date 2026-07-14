@@ -17,11 +17,13 @@
 	const wm = $derived(useWindowManager());
 	const hasJsSupport = $derived(useJsSupport());
 	const desktopWidgets = $derived.by(() => {
-		const withPositions = widgetNavigationData.map((widget, index) => ({
-			widget,
-			index,
-			position: wm.getIconPosition(widget.id, index)
-		}));
+		const withPositions = widgetNavigationData
+			.filter((widget) => widget.navigable !== false)
+			.map((widget, index) => ({
+				widget,
+				index,
+				position: wm.getIconPosition(widget.id, index)
+			}));
 		// Sort by position to ensure tab order is consistent with visual order.
 		return withPositions.toSorted(
 			(a, b) => a.position.y - b.position.y || a.position.x - b.position.x || a.index - b.index
@@ -74,7 +76,7 @@
 					{@render renderWindow({
 						id: fallbackWidgetId,
 						widgetId: fallbackWidgetId,
-						title: def.title,
+						title: routeMatch?.widget.title ?? def.title,
 						x: def.defaultX ?? 80,
 						y: def.defaultY ?? 60,
 						width: def.defaultWidth,
@@ -133,7 +135,7 @@
 		position: static !important;
 	}
 
-	@media (max-width: 768px) {
+	@media (max-width: 768px), print {
 		.desktop-shell {
 			display: none;
 		}

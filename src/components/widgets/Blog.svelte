@@ -6,15 +6,22 @@
 	import { formatDate } from '@utils/date';
 	const posts = $derived((page.data.blogPosts ?? []) as BlogPost[]);
 	const categories = $derived((page.data.blogCategories ?? []) as string[]);
+
+	function capitalizeFirstLetter(str: string) {
+		return str.charAt(0).toUpperCase() + str.slice(1);
+	}
 </script>
 
 {#snippet feedLink(category?: string)}
+	{@const formattedName = category
+		? capitalizeFirstLetter(category.replace(/-/g, ' '))
+		: 'All posts'}
 	<li>
 		<a
 			class="feed-link"
 			href={resolve(category ? `/rss/${category}.xml` : '/rss.xml')}
-			aria-label={category ? `RSS feed for ${category}` : 'Global RSS feed'}
-			data-sveltekit-reload>{category ?? 'All posts'}</a
+			aria-label={category ? `RSS feed for ${formattedName}` : 'Global RSS feed'}
+			data-sveltekit-reload>{formattedName}</a
 		>
 	</li>
 {/snippet}
@@ -32,7 +39,9 @@
 					aria-describedby={excerptId}
 				>
 					<time class="post-date" datetime={post.date}>{formatDate(post.date)}</time>
-					<span class="post-title" id={titleId}>{post.title}</span>
+					<div class="post-title-wrapper">
+						<span class="post-title" id={titleId}>{post.title}</span>
+					</div>
 					<span class="post-excerpt" id={excerptId}>{post.description}</span>
 					<span class="post-meta">{post.readingTimeText}</span>
 				</a>
@@ -72,6 +81,7 @@
 		display: flex;
 		margin-top: auto;
 		gap: var(--space-3);
+
 		h2 {
 			font-size: var(--font-size-sm);
 			font-family: var(--font-sans);
@@ -79,7 +89,9 @@
 			:global(svg) {
 				width: 1.2em;
 				height: 1.2em;
+				max-width: 1.2em;
 				filter: var(--filter-squiggle);
+				flex-shrink: 0;
 				display: inline-block;
 				vertical-align: middle;
 			}
@@ -101,7 +113,6 @@
 		border: 1px solid transparent;
 		border-radius: var(--radius-md);
 		text-decoration: none;
-		color: var(--color-text);
 
 		&:hover {
 			background-color: var(--color-bg-preview);
@@ -119,13 +130,15 @@
 		padding-top: 2px;
 	}
 
-	.post-title {
-		font-size: var(--font-size-md);
-		background-color: var(--color-bg-highlight);
-		width: fit-content;
-		font-weight: 600;
+	.post-title-wrapper {
 		grid-column: 2;
 		grid-row: 1;
+	}
+
+	.post-title {
+		font-size: var(--font-size-base);
+		background-color: var(--color-bg-highlight);
+		font-weight: 600;
 	}
 
 	.post-excerpt {

@@ -4,6 +4,7 @@
 	import { getWidgetByRoute, loadWidgetComponent } from '../../widgets/widgets';
 	import { resolve } from '$app/paths';
 	import { useJsSupport } from '../shared/useJsSupport.svelte';
+	import { useIsPrint } from '../shared/useIsPrint.svelte';
 	import { useTime } from '../shared/useTime.svelte';
 	import SkipLink from '../shared/SkipLink.svelte';
 	import AppDrawer from './AppDrawer.svelte';
@@ -20,9 +21,10 @@
 	// 'apps' is a widget like any other. beforeNavigate opens it when navigating to /apps.
 	// We detect it here and show the AppDrawer instead of a tabpanel, without showing a tab.
 	const viewApps = $derived(activeWindow?.widgetId === 'apps' || !activeWindow);
+	const isPrint = $derived(useIsPrint());
 </script>
 
-{#if !hasJsSupport || wm.isMobile}
+{#if !hasJsSupport || wm.isMobile || isPrint}
 	<SkipLink id="mobile-content" />
 	<div class="mobile-shell">
 		<header class="mobile-header squiggle-border" aria-label="Mobile navigation">
@@ -159,10 +161,24 @@
 		overflow: auto;
 	}
 
-	@media (max-width: 768px) {
+	@media (max-width: 768px), print {
 		.mobile-shell {
 			display: flex;
 			flex-direction: column;
+		}
+	}
+
+	@media print {
+		.mobile-header {
+			display: none !important;
+		}
+
+		.tabpanel,
+		.mobile-content {
+			display: block;
+			width: auto;
+			height: auto;
+			overflow: visible;
 		}
 	}
 </style>

@@ -103,4 +103,10 @@
 	.comment-form input {
 		border: 1px solid var(--color-border);
 	}
+
+	@media print {
+		.comment-form {
+			display: none;
+		}
+	}
 </style>

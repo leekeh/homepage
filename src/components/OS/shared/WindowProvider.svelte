@@ -18,6 +18,7 @@
 	import { enableJsSupport } from './useJsSupport.svelte.js';
 	import { initializeSquiggles } from './useSquiggles.svelte.js';
 	import { initializeTime } from './useTime.svelte.js';
+	import { initializeIsPrint } from './useIsPrint.svelte.js';
 	import { resolve } from '$app/paths';
 
 	interface Props {
@@ -41,11 +42,9 @@
 		const overrides: Record<string, unknown> = {};
 		if (data) {
 			overrides.data = data;
-			if (data.slug) {
-				overrides.title = String(data.slug)
-					.replace(/-/g, ' ')
-					.replace(/\b\w/g, (l) => l.toUpperCase());
-			}
+			const route = getRouteForWindow(widgetId, data);
+			const match = getWidgetByRoute(route);
+			if (match) overrides.title = match.widget.title;
 		}
 		// focus() inside open() will trigger onFocusChange → URL sync
 		wm.open(widgetId, overrides);
@@ -104,7 +103,7 @@
 		const currentPath = $page.url.pathname;
 		const match = getWidgetByRoute(currentPath);
 		if (match) {
-			wm.open(match.widget.id, match.params ? { data: match.params } : undefined);
+			wm.open(match.widget.id, { data: match.params, title: match.widget.title });
 		} else {
 			wm.open('about');
 		}
@@ -117,6 +116,7 @@
 		enableJsSupport();
 		initializeSquiggles();
 		stopClock = initializeTime();
+		const stopPrint = initializeIsPrint();
 
 		mq = window.matchMedia('(max-width: 768px)');
 		wm.isMobile = mq.matches;
@@ -135,7 +135,7 @@
 		if (restored) {
 			// Layout restored — if current URL points to a specific widget, focus it
 			if (match) {
-				wm.open(match.widget.id, match.params ? { data: match.params } : undefined);
+				wm.open(match.widget.id, { data: match.params, title: match.widget.title });
 			} else {
 				// Focus the topmost window if any
 				const active = wm.activeWindow;
@@ -144,7 +144,7 @@
 		} else {
 			// No saved layout — open the widget matching the current route
 			if (match) {
-				wm.open(match.widget.id, match.params ? { data: match.params } : undefined);
+				wm.open(match.widget.id, { data: match.params, title: match.widget.title });
 			} else {
 				wm.open('about');
 			}
@@ -154,6 +154,7 @@
 		// Cleanup
 		return () => {
 			if (stopClock) stopClock();
+			stopPrint();
 		};
 	});
 
@@ -184,7 +185,7 @@
 		const path = window.location.pathname;
 		const m = getWidgetByRoute(path);
 		if (m) {
-			wm.open(m.widget.id, m.params ? { data: m.params } : undefined);
+			wm.open(m.widget.id, { data: m.params, title: m.widget.title });
 		}
 		suppressUrlSync = false;
 	}

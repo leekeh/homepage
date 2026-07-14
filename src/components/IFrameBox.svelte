@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { useIsPrint } from './OS/shared/useIsPrint.svelte';
+
 	type Props = {
 		src: string;
 		title: string;
@@ -8,33 +10,54 @@
 
 	const titleId = $props.id();
 
+	const isPrint = $derived(useIsPrint());
+
 	let { src, title, height = '400px', caption }: Props = $props();
 </script>
 
-<figure class="tv squiggle-border" aria-labelledby={titleId}>
-	<span class="antenna antenna-left" aria-hidden="true"></span>
-	<span class="antenna antenna-right" aria-hidden="true"></span>
-	<div class="tv-body">
-		<div class="tv-screen">
-			<iframe {src} {title} width="100%" style:height loading="lazy"></iframe>
-			<div class="scanlines" aria-hidden="true"></div>
+{#if isPrint}
+	<p class="print-placeholder squiggle-border">
+		On this section, there was an embedded iframe titled {title}. Iframes are not supported on
+		prints, sadly. You can view the content online at
+		<a href={src} target="_blank" rel="noopener noreferrer nofollow">{src}</a>.
+	</p>
+{:else}
+	<figure class="tv squiggle-border" aria-labelledby={titleId}>
+		<span class="antenna antenna-left" aria-hidden="true"></span>
+		<span class="antenna antenna-right" aria-hidden="true"></span>
+		<div class="tv-body">
+			<div class="tv-screen">
+				<iframe {src} {title} width="100%" style:height loading="lazy"></iframe>
+				<div class="scanlines" aria-hidden="true"></div>
+			</div>
+			<div class="tv-controls" aria-hidden="true">
+				<div class="knob"></div>
+				<div class="knob"></div>
+			</div>
 		</div>
-		<div class="tv-controls" aria-hidden="true">
-			<div class="knob"></div>
-			<div class="knob"></div>
-		</div>
-	</div>
-	<figcaption class="tv-caption" id={titleId}>
-		{#if caption}
-			<span class="caption-text">{caption}</span>
-		{/if}
-		<p class="credit">
-			Source: <a href={src} target="_blank" rel="noopener noreferrer nofollow">{src}</a>
-		</p>
-	</figcaption>
-</figure>
+		<figcaption class="tv-caption" id={titleId}>
+			{#if caption}
+				<span class="caption-text">{caption}</span>
+			{/if}
+			<p class="credit">
+				Source: <a href={src} target="_blank" rel="noopener noreferrer nofollow">{src}</a>
+			</p>
+		</figcaption>
+	</figure>
+{/if}
 
 <style>
+	.print-placeholder {
+		font-family: var(--font-mono);
+		font-size: var(--font-size-sm);
+		padding: var(--space-4) var(--space-5);
+		margin-block: var(--space-7);
+		background-color: var(--color-bg-highlight);
+		border-radius: var(--radius-lg);
+		text-align: center;
+		break-inside: avoid;
+	}
+
 	.tv {
 		position: relative;
 		margin: var(--space-7) 0;
@@ -43,6 +66,7 @@
 		padding: 16px 16px 0px 20px;
 		display: flex;
 		flex-direction: column;
+		break-inside: avoid;
 	}
 
 	/* ── TV body ── */

@@ -1,0 +1,39 @@
+What do I do?  
+I make websites. That is a quick summary what
+
+- explain frontend  
+  So what websites do you make?  
+  I make building blocks for everyone. That is what a Design System is. A design system is a collection of building blocks for developers to make websites. This is something that is common for big and big-ish corporations. Corporations often have various different websites, apps, email templates and so on that need to be consistent in styling. Furthermore, it can save a lot of work if these components are already premade. Basically, you don't need to keep reinventing the wheel.  
+  Sorry I don't understand, what exactly are these building blocks?  
+  Building blocks in my case are components. Here's a button for example:
+  <Button> </Button>
+  But it can also be more complex, like this:
+  <VpAccordion />
+  On the side, I always have some other projects running at work, to have some different things
+  going on. At Eneco, I worked on several internal projects, such as a tool used by customer support
+  agents to easily access information about a customer. At Decathlon I'm currently focused on
+  enabling frontend developers across the company with various tools that the design system does not
+  cover.
+
+Side projects  
+Now that I know how to make websites (and some form of apps), it is enticing to work on my own projects too. Working on personal projects gives me enhanced freedom that is simply not possible in a corporate setting. It allows me to challenge myself and explore things that are beyond my skillset. I
+
+Bonus: How do websites actually work?  
+As I come from a family of teachers, I love explaining these technical things to anyone interested, with or without a technical background. Maybe one day I will find the time to write an elaborate course. But for now, here is a very quick summary of it, in case you are interested.  
+Let's follow the journey of a website. What happens when you open a website on your phone or computer? The environment you access a website is called a browser, this is something like Google Chrome, Safari, Microsoft Edge, etc. Well, you first start by accessing a url, such as "[https://www.google.com](https://www.google.com/?authuser=0)". We want to find the server that has the content for this URL. However, servers are not registered under a URL, but instead they are identified with IP addresses. To get the IP address, your browser will contact a DNS (Domain Name System) server. Think of DNS as the internet's phone book - it converts human-readable URLs like "[google.com](http://google.com/)" into IP addresses that computers can understand, like "142.250.190.78".  
+Once your browser has the IP address, it sends a request to that server asking for the webpage. This request uses a protocol called HTTP (Hypertext Transfer Protocol) or its secure version, HTTPS. The server then responds by sending back the requested files - typically HTML (the structure), CSS (the styling), and JavaScript (the interactive elements).  
+Your browser then goes to work interpreting these files. It processes the HTML to create the basic structure, applies the CSS to make everything look right, and runs the JavaScript to add any interactive features. This whole process is called "rendering" the webpage.  
+Web developers work to write the HTML, CSS and JavaScript code. They might use different strategies in order to combine this code in an intelligent way. This is all to build up the "frontend" of a website, which is the part that the user sees. Frontend is all about how the user views and interacts with the page. For example, I might write some code to determine what happens when a button is clicked. That could be something like "change the background color", "navigate to a different page" or "request information from the server". That last one brings me to the "backend". In many cases, the backend of a website is a separate concern, written by separate developers in separate codebases. Backends are also hosted on a server, but instead of delivering HTML, CSS and Javascript, they deliver information. For example, from my frontend code I can ask a server "give me the post of user x", and the server will verify the request, access the database to get the requested information, and return it in a schematic way. That can look something like this:
+
+```
+{
+aa: bbb
+}
+
+```
+
+Now, we can use this information in the frontend by using JavaScript.
+
+There is far more complexity to this. There are different ways to mix frontend and backend code, there are a lot of security concerns, there are optimizations, caching so that the server does not need to always look up the same information, and so on. But in the essence, it all boils down to this.
+
+At work, I am primarily a frontend developer, although I have played around with backend when the opportunity was there. In my personal projects, I usually handle all parts of an application, which can be challenging but also very fulfilling :)

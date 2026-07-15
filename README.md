@@ -9,22 +9,14 @@ For integrated development, you need to first run `pnpm wrangler login`. Then yo
 
 ## To do:
 
-- chat box
 - finish up web mentions
-- open graph images / data / etc
 - add nested folders to menu
-- add terminal with some common commands (ls, neofetch, help)
 - validate html
 - add a way to change window size with keyboard
-- add proper metadata: OG, rss,
-- add lots of content!
-  - uses page
 - keyboard shortcuts for window managements, opening shortcuts
 - spotlight
 - context menu (right click)
 - remove old vercel integration and move to cloudflare pages
-- draggable taskbar items (desktop and mobile)
-- allow dragging open tabs on desktop and mobile. Allow closing tabs on mobile
 - associate multiple widgets on one url
 - custom scrollbar
 - wait for fonts / assets to load before closing startup animation
@@ -35,21 +27,45 @@ For integrated development, you need to first run `pnpm wrangler login`. Then yo
 - better 404 handling
 - auto-close windows after 10 are open to protect RAM or something
 - update document title on navigation
+- make the blog a txt or pdf file. maybe make it look like a pdf viewer, txt viewer etc.
+- dark mode
+- accessibility statement
 
 widgets:
 
-- add undo/redo functionality on paint widget
-- music player
+- chat box
 - pictochat
+- add terminal with some common commands (ls, neofetch, help)
+- paint improvements:
+  - add undo/redo functionality on paint widget
+  - context menu for paint
+- music player
 - feed of liked posts
 - aquarium
-- context menu for paint
-- blogroll
+- blogroll (as folder)
+- uses
+- fun images
+- image viewer
+- tamagotchi
+- powerpoint
+- trash can (show dead projects)
 
 blog posts:
 
 - please don't give AI access to your personal images
 - implementing all the WAI-aria a11y patterns
 - indie web spelunking
+  - blogroll
+  - web rings https://a11y-webring.club/
+  - 88 x 31
+  - neocities
+  - web mention w3c
+  - rss
+  - neocities
+  - guest book
 - web design styles
 - developer learning design saga
+- Agents.md for a junior engineer
+- AI wants to please you. Here's how you can make it push back dumb ideas.
+- Things to do instead of doomscrolling: Freewriting, Reading Wikipedia, Puzzles, Staring at a wall
+- I've removed all photos of myself online. Multiple times, colleagues have still fed my photos to AI, so I'm not sure it's all worth it anyways.

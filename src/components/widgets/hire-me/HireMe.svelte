@@ -13,7 +13,7 @@
 </svg>
 
 <div class="mobile-bg"></div>
-<div class="inner">
+<div class="inner squiggle-border">
 	<HeaderImage />
 	<Summary />
 	<PromptBlock title="A non-negotiable">
@@ -64,6 +64,7 @@
 		aspect-ratio: 9/16;
 		isolation: isolate;
 		font-family: var(--font-sans);
+		background-color: var(--color-bg-primary);
 	}
 
 	@media (max-width: 768px), print {

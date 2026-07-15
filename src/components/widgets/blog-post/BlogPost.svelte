@@ -47,6 +47,7 @@
 		<Content removeStartPadding>
 			<div class="body e-content">
 				<header class="post-header">
+					<h2 class="title">{metadata?.title}</h2>
 					<div class="post-meta">
 						{#if metadata?.publishedAt}
 							<span>
@@ -84,7 +85,6 @@
 {/if}
 
 <style>
-	/* Post header */
 	.post-header {
 		padding-left: var(--space-1);
 		padding-bottom: var(--space-5);
@@ -101,11 +101,12 @@
 		margin-bottom: var(--space-3);
 		font-style: italic;
 		color: var(--color-fg-muted);
-	}
 
-	.post-meta > * + *::before {
-		content: '·';
-		margin-right: var(--space-3);
+		/* Separate items with a dot */
+		> * + *::before {
+			content: '·';
+			margin-right: var(--space-3);
+		}
 	}
 
 	/* Comments */
@@ -123,6 +124,17 @@
 			border-style: dashed;
 			border-width: var(--border-width);
 			border-bottom: none;
+		}
+	}
+
+	.title {
+		margin-top: var(--space-5);
+	}
+
+	/* On desktop, the window is used to contain the title */
+	@media (min-width: 769px) {
+		.title {
+			display: none;
 		}
 	}
 </style>

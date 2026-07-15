@@ -87,20 +87,22 @@
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-3);
+
+		input,
+		textarea {
+			border: none;
+			background-color: transparent;
+			padding: var(--space-3);
+			width: 100%;
+			flex-grow: 1;
+			font: inherit;
+			resize: vertical;
+		}
 	}
 
-	.comment-form input,
-	.comment-form textarea {
-		border: none;
-		background-color: transparent;
-		padding: var(--space-3);
-		width: 100%;
-		flex-grow: 1;
-		font: inherit;
-		resize: vertical;
-	}
-
-	.comment-form input {
-		border: 1px solid var(--color-border);
+	@media print {
+		.comment-form {
+			display: none;
+		}
 	}
 </style>

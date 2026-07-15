@@ -18,9 +18,8 @@
 		font-family: var(--font-mono);
 		padding: 8px 16px;
 		z-index: 1000;
-	}
-
-	a:focus {
-		top: 8px;
+		&:focus {
+			top: 8px;
+		}
 	}
 </style>

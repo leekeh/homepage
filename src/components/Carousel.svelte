@@ -112,6 +112,7 @@
 		border-radius: var(--radius-lg);
 		padding: var(--space-4) var(--space-5);
 		margin-block: var(--space-7);
+		break-inside: avoid;
 	}
 
 	.header {

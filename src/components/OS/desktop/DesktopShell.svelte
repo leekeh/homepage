@@ -74,7 +74,7 @@
 					{@render renderWindow({
 						id: fallbackWidgetId,
 						widgetId: fallbackWidgetId,
-						title: def.title,
+						title: routeMatch?.widget.title ?? def.title,
 						x: def.defaultX ?? 80,
 						y: def.defaultY ?? 60,
 						width: def.defaultWidth,
@@ -110,6 +110,9 @@
 		position: absolute;
 		inset: 0;
 		pointer-events: none;
+		:global(.desktop-icon) {
+			pointer-events: auto;
+		}
 	}
 
 	.desktop-icons.no-js {
@@ -123,17 +126,12 @@
 		inset: auto;
 		height: auto;
 		overflow-y: auto;
+		:global(.desktop-icon) {
+			position: static !important;
+		}
 	}
 
-	.desktop-icons :global(.desktop-icon) {
-		pointer-events: auto;
-	}
-
-	.desktop-icons.no-js :global(.desktop-icon) {
-		position: static !important;
-	}
-
-	@media (max-width: 768px) {
+	@media (max-width: 768px), print {
 		.desktop-shell {
 			display: none;
 		}

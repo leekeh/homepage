@@ -1,7 +1,15 @@
 import adapter from '@sveltejs/adapter-cloudflare';
-import { mdsvex } from 'mdsvex';
+import { mdsvex, escapeSvelte } from 'mdsvex';
+import { createHighlighter } from 'shiki';
+
 import { remarkReadingTime } from './src/content/blog/remark-reading-time.js';
 import { remarkGitInfo } from './src/content/blog/remark-git-info.js';
+
+const theme = 'github-light';
+const highlighter = await createHighlighter({
+	themes: [theme],
+	langs: ['javascript', 'typescript', 'tsx', 'vue', 'svelte']
+});
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -9,7 +17,13 @@ const config = {
 	preprocess: [
 		mdsvex({
 			extensions: ['.mdx', '.md'],
-			remarkPlugins: [remarkReadingTime, remarkGitInfo]
+			remarkPlugins: [remarkReadingTime, remarkGitInfo],
+			highlight: {
+				highlighter: async (code, lang = 'text') => {
+					const html = escapeSvelte(highlighter.codeToHtml(code, { lang, theme }));
+					return `{@html \`${html}\` }`;
+				}
+			}
 		})
 	],
 	compilerOptions: {

@@ -5,6 +5,7 @@ import IconBlog from '@icons/IconBlog.svelte';
 import IconPaint from '@icons/IconPaint.svelte';
 import IconContact from '@icons/IconContact.svelte';
 import IconApps from '@icons/IconApps.svelte';
+import IconHearts from '@icons/IconHearts.svelte';
 import type { PathnameWithSearchOrHash } from '$app/types';
 
 export interface WidgetConfig {
@@ -105,5 +106,16 @@ export const widgetConfigs: WidgetConfig[] = [
 		resizable: false,
 		minimal: false,
 		navigable: false
+	},
+	{
+		id: 'hire-me',
+		title: 'Bugble | Leekeh',
+		icon: IconHearts,
+		component: () => import('@widgets/hire-me/HireMe.svelte'),
+		route: '/hire-me',
+		defaultWidth: 336,
+		defaultHeight: 544,
+		resizable: true,
+		minimal: false
 	}
 ];

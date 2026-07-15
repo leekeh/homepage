@@ -9,8 +9,11 @@
 	--color-fg-highlight: hsl(var(--theme-color-hue) 80% 75% / 0.8);
 	--color-bg-highlight: hsl(var(--theme-color-hue) 80% 88% / 1);
 	--color-fg-muted: hsl(var(--theme-color-hue) 60% 30% / 0.8);
+	--color-border-subtle: hsl(var(--theme-color-hue) 40% 80% / 1);
 	--color-accent: hsl(var(--theme-color-hue) 50% 75% / 0.8);
 	--color-bg-preview: hsl(var(--theme-color-hue) 80% 88% / 0.5);
+	--color-bg-hover: hsl(var(--theme-color-hue) 80% 88% / 1);
+	--color-bg-subtle: hsl(var(--theme-color-hue) 40% 92% / 1);
 
 	/* ── Typography ── */
 	--font-mono: 'Chakra Petch', Courier New, monospace;
@@ -150,4 +153,17 @@ a {
 *:focus-visible {
 	outline: 4px auto rgb(0, 172, 172) !important;
 	outline-offset: 2px;
+}
+
+.shiki {
+	padding: var(--space-4);
+	margin-block: var(--space-4);
+	font-size: var(--font-size-sm);
+	background-color: var(--color-bg-subtle) !important;
+	border: var(--border-width) solid var(--color-border-subtle);
+	overflow: auto;
+	code {
+		background: transparent !important;
+		border: none !important;
+	}
 }

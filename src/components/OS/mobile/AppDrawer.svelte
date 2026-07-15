@@ -42,11 +42,6 @@
 		min-width: 0;
 	}
 
-	.app-grid-item:hover,
-	.app-grid-item:active {
-		opacity: 0.92;
-	}
-
 	@media (max-width: 420px) {
 		.app-grid {
 			grid-template-columns: repeat(3, minmax(0, 1fr));

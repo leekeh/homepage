@@ -97,30 +97,30 @@
 		--radius: var(--radius-lg);
 		background: var(--color-bg-primary);
 		border: none;
-	}
 
-	.app-menu-popover::backdrop {
-		background: transparent;
+		&::backdrop {
+			background: transparent;
+		}
 	}
 
 	/* Direction: up — opens above the taskbar (desktop start menu) */
 	.direction-up {
 		inset: auto auto calc(var(--taskbar-height) + 1px) 0;
-		border-radius: var(--radius) var(--radius) 0;
-	}
+		border-radius: var(--radius) var(--radius) var(--radius) 0;
 
-	.direction-up:popover-open {
-		display: flex;
+		&:popover-open {
+			display: flex;
+		}
 	}
 
 	/* Direction: down — opens below the top bar (mobile nav) */
 	.direction-down {
 		inset: var(--taskbar-height) 0 auto auto;
 		border-radius: var(--radius) 0 var(--radius) var(--radius);
-	}
 
-	.direction-down:popover-open {
-		display: block;
+		&:popover-open {
+			display: block;
+		}
 	}
 
 	/* Items */
@@ -154,10 +154,10 @@
 		height: 24px;
 		display: grid;
 		place-items: center;
-	}
 
-	.menu-icon :global(svg) {
-		width: 24px;
-		height: 24px;
+		:global(svg) {
+			width: 24px;
+			height: 24px;
+		}
 	}
 </style>

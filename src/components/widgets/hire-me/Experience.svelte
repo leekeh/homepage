@@ -99,6 +99,7 @@
 <style>
 	section {
 		padding: var(--space-6);
+		padding-bottom: 0;
 		display: flex;
 		flex-direction: column;
 		gap: var(--space-4);

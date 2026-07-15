@@ -6,7 +6,7 @@
 
 <section class="summary">
 	<div class="subsection">
-		<h3 id={basicInfoHeaderId}>About me</h3>
+		<h3>About me</h3>
 		<p>On a mission to build a better web. Want to build it together?</p>
 	</div>
 	<div class="subsection">

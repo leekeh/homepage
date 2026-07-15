@@ -36,8 +36,8 @@
 		<p
 			style="padding: var(--space-4); background-color: var(--color-bg-highlight); font-style: italic;"
 		>
-			In a past life, I was a bookseller with a MA in literature. Maybe that's why I love
-			documentation so much.
+			"In a past life, I was a bookseller with a MA in literature. Maybe that's why I love
+			documentation so much."
 		</p>
 	</section>
 

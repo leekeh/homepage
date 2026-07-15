@@ -148,7 +148,7 @@
 	}
 
 	blockquote {
-		background-color: hsl(var(--theme-color-hue) 80% 94% / 1);
+		background-color: var(--color-bg-subtle);
 		padding: var(--space-4);
 		border-radius: var(--radius-lg);
 

@@ -527,7 +527,7 @@
 
 <style>
 	.summary {
-		background-color: hsl(var(--theme-color-hue) 80% 94% / 1);
+		background-color: var(--color-bg-subtle);
 		padding: var(--space-6);
 		gap: var(--space-6);
 		display: flex;

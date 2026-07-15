@@ -44,8 +44,8 @@
 
 	.content :global(code) {
 		font-family: var(--font-mono);
-		background-color: hsl(var(--theme-color-hue) 40% 92% / 1);
-		border: 1px solid hsl(var(--theme-color-hue) 40% 80% / 1);
+		background-color: var(--color-bg-subtle);
+		border: var(--border-width) solid var(--color-border-subtle);
 		padding: 0 var(--space-1);
 	}
 

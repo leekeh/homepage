@@ -8,7 +8,7 @@ import { remarkGitInfo } from './src/content/blog/remark-git-info.js';
 const theme = 'github-light';
 const highlighter = await createHighlighter({
 	themes: [theme],
-	langs: ['javascript', 'typescript', 'tsx', 'vue']
+	langs: ['javascript', 'typescript', 'tsx', 'vue', 'svelte']
 });
 
 /** @type {import('@sveltejs/kit').Config} */

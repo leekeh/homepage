@@ -14,18 +14,23 @@ description: What can we learn from studying other frameworks, and what are we m
 	"./Frameworks.svelte"; import VirtualDOM from "./VirtualDOM.svelte"; import useNoMemo from
 	"./use-no-memo.png"; import clientSideRendered from "./client-side-rendered.png"; import
 	ServerComponent from "./server-component.png"; import Signals from "./signals.png"; import noReact
-	from "./no-react.png";
+	from "./no-react.png"; import why from "./why.png"; import hydrationError from
+	"./hydration-error.png"; import tailwind from "./tailwind.png"; import ants from "./ants.png";
 </script>
 
-A couple weeks ago, I lost a job offer. During the technical interview, we had a lovely talk about different frontend frameworks, their strengths and weaknesses, and how they work under the hood. I shared my experience and specifically why I like to work with different frameworks. That's not always possible for work, but I always find some projects I can do on the side or during my free time. A couple days later, I got a call back. Even though there was great chemistry, and they could see me being a good fit in the company, they had to say no. Because the companies they work with wanted someone that was specialized in [React](https://react.dev/). That worked with nothing but React.
+A couple of weeks ago, I lost a job offer. During the technical interview, we had a lovely talk about different frontend frameworks, their strengths and weaknesses, and how they work under the hood. I shared my experience and specifically why I like to work with different frameworks. That's not always possible for work, but I always find some projects I can do on the side or during my free time. A few days later, I got a call back. Even though there was great chemistry, and they could see me being a good fit in the company, they had to say no. Because the companies they work with wanted someone that was specialized in [React](https://react.dev/). That worked with nothing but React.
 
-I don't want to focus too much on that specific outcome (although I think it is misguided). Even though I shared my love for [Svelte](https://svelte.dev/) and [Astro](https://astro.build/), I do keep up with React and know my way around [Next.js](https://nextjs.org/). Also the new stuff, the server components, server actions, new caching systems, and so on. But that's not the point. The point is that there is a growing pool of web developers that only know React and have never worked with something else. The industry is encouraging this, and AI is accellerating it even further. But if we embrace a single ecosystem, we risk missing out on valuable lessons. So let's talk about some things we can learn from other frameworks.
+I don't want to focus too much on that specific outcome (although I think it is misguided). Even though I shared my love for [Svelte](https://svelte.dev/) and [Astro](https://astro.build/), I do keep up with React and know my way around [Next.js](https://nextjs.org/). Also the new stuff, the server components, server actions, new caching systems, and so on. But that's not the point. The point is that there is a growing pool of web developers that only know React and have never worked with something else. The industry is encouraging this, and AI is accelerating it even further. But if we embrace a single ecosystem, we risk missing out on valuable lessons. So let's talk about some things we can learn from other frameworks.
 
-TODO an image
+<Image
+	src={why}
+	alt="Twitter thread. Philippe: Hi Daniel, I'm the guy responsible for implementing the start menu with React Native in Windows 11. Lemme know if you have any questions. Daniel: first question why. Philippe: I’m a React developer so it only made sense. Any other questions? Aadit: what was the performance consideration for such an implementation? Philippe: I try not to let such considerations get in the way of doing great work."
+	credit="https://x.com/ptremblay/status/1927161666732523596"
+/>
 
 ### Understanding the rendering pipeline
 
-In its essence, frontend frameworks like React provide an opinionated way to create dynamic pages. They provide systems for connecting state with DOM interactions, and how to split up HTML and Javascript intro reusable blocks. In React, you divide your UI into components in the form of Javascript functions that return HTML-like code. Components can have internal state, which is defined with `useState`. The function runs any time its properties change, or the state is updated. Inside the function, you can write any logic and it will execute on every render. You can listen to changes with `useEffect`, avoid rerendering with `useRef` or `useCallback`, and avoid rerunning parts of the logic with `useMemo`. And so on. React has its own world of APIs, focused around hooks (recognizable with the `use` prefix). It is a whole ecosystem, a whole way of coding that takes time to learn.
+In its essence, frontend frameworks like React provide an opinionated way to create dynamic pages. They provide systems for connecting state with DOM interactions, and how to split up HTML and JavaScript into reusable blocks. In React, you divide your UI into components in the form of JavaScript functions that return HTML-like code. Components can have internal state, which is defined with `useState`. The function runs any time its properties change, or the state is updated. Inside the function, you can write any logic and it will execute on every render. You can listen to changes with `useEffect`, avoid rerendering with `useRef` or `useCallback`, and avoid rerunning parts of the logic with `useMemo`. And so on. React has its own world of APIs, focused around hooks (recognizable with the `use` prefix). It is a whole ecosystem, a whole way of coding that takes time to learn.
 
 <Image
 	src={useNoMemo}
@@ -35,11 +40,11 @@ In its essence, frontend frameworks like React provide an opinionated way to cre
 
 #### Virtual DOM
 
-As your knowledge as a developer matures, hopefully you start learning more about how this works under the hood. You learn about the [Virtual DOM](https://legacy.reactjs.org/docs/faq-internals.html). React has its own runtime that keeps a copy of the DOM, the object model of the page. When a component has rerendered, the resulting HTML is first updated into this virtualized version of the page, and the difference is synced to [real DOM](https://developer.mozilla.org/en-US/docs/Glossary/DOM) with regular DOM mutations. Unless you are using React compiler, which compiles down the stateful logic to something closer to regular DOM APIs, you will need this runtime on the client to manage reactive UI. Knowing about the rendering pipeline helps developers understand why they need to follow the [rules of React](https://react.dev/reference/rules).
+As your knowledge as a developer matures, hopefully you start learning more about how this works under the hood. You learn about the [Virtual DOM](https://legacy.reactjs.org/docs/faq-internals.html). React has its own runtime that keeps a copy of the DOM, the object model of the page. When a component has rerendered, the resulting HTML is first updated into this virtualized version of the page, and the difference is synced to [real DOM](https://developer.mozilla.org/en-US/docs/Glossary/DOM) with regular DOM mutations. Unless you are using React compiler, which compiles down the stateful logic to something closer to regular DOM APIs, you will need this runtime on the client to manage reactive UI. Knowing about the rendering pipeline helps developers understand why they need to follow the [rules of React](https://react.dev/reference/rules). And it helps explain why the client bundle size for React applications tends to be larger than other frameworks.
 
 #### Building your own system
 
-I feel like you can understand something better if you understand the alternatives. If you only ever know React, you might think of the virtual DOM approach as the only way to create an interactive interface. This is especially true if you did not spend much time writing vanilla applications. In the same year that React first shipped, a suite of technologies for [Web Components](https://developer.mozilla.org/en-US/docs/Web/API/Web_component) started rolling out to browsers. It is possible to replicate a lot of what a React component does with web components. You might need to write a bit more boilerplate to define reactivity and listen to changes. But this is also an opportunity to learn and reflect on how state is managed. A while ago, I followed the [You Might Not Need that Framework
+I feel like you can understand something better if you understand the alternatives. If you only ever know React, you might think of the virtual DOM approach as the only way to create an interactive interface. This is especially true if you did not spend much time writing vanilla applications. In the same year that React first shipped, a suite of technologies for [Web Components](https://developer.mozilla.org/en-US/docs/Web/API/Web_component) started rolling out to browsers. It is possible to replicate a lot of what a React component does with web components. You might need to write a bit more boilerplate to define reactivity and listen to changes, but this is also an opportunity to learn and reflect on how state is managed. A while ago, I followed the [You Might Not Need that Framework
 ](https://master.dev/blog/you-might-not-need-that-framework/) course from [Maximiliano Firtman](https://firt.dev/), which is an interactive course where you learn to build a SPA coffee-ordering app with just web components. I encourage any developer to make at least one simple project like that, just to learn about the possibilities of web components and to figure out your own system for reactivity. It will make you a better problem-solver and help you appreciate what frameworks do for you.
 
 <Image
@@ -56,7 +61,7 @@ Like a Psychopath."
 
 #### Proxies
 
-As much as I love web components, I do still appreciate the abstractions a framework like React brings, especially for state management. But the way React does it is only one way. Take Svelte, for example. Svelte is a framework that compiles down to basically native DOM mutations, which makes it lighter on the client-side JavaScript. State, which is declared with `$state`, works with [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy), which is a built-in browser feature. It allows you to wrap an object and listen to any changes, intercepting them as needed. The Svelte documentation regularly mentions this and explain how proxies are used to build fine-grained reactivity:
+As much as I love web components, I do still appreciate the abstractions a framework like React brings, especially for state management. But the way React does it is only one way. Take Svelte, for example. Svelte is a framework that compiles down to basically native DOM mutations, which makes it lighter on the client-side JavaScript. State, which is declared with `$state`, works with [JavaScript Proxy](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy), which is a built-in browser feature. It allows you to wrap an object and listen to any changes, intercepting them as needed. The Svelte documentation regularly mentions this and explains how proxies are used to build fine-grained reactivity:
 
 <figure style="margin-left: var(--space-4); margin-bottom: var(--space-4)">
 	<blockquote>
@@ -79,7 +84,7 @@ This teaches the developer not only an alternative way of managing state, but al
 
 #### Signals
 
-The same thing goes for [Solid](https://www.solidjs.com/), which introduced a new system for fine-grained reactivity called signals. While Solid is still not as popular as frameworks such as React, Svelt, Angular or Vue, its concept of signals has been very influential. Svelte, Preact, Angular and Qwik have all adopted signals in their systems for reactivity. There is currently [a proposal to add signals to Javascript itself](https://github.com/tc39/proposal-signals). Signals are a huge topic in the JavaScript ecosystem, but React seems to largely bypass it, since it already has its own reactivity system. Of course, there are still plenty of libraries that allow you to use proxies inside React, but it is not part of the core API and neither is it written about in their documentation. The solution for fine-grained reactivity in React is React Compiler, which takes note of the dependencies of a state and automatically applies memoization, essentially replacing manual application of `useMemo`. It's abstracted away from the user, the user just needs to focus on using the React hooks correctly. That is a different way of thinking about state management, as compared to signals. Knowing the pros and cons of these different systems, even if you choose to stay with the "React" way of doing things, makes you a more informed developer, who can explain why systems work the way they do. In other words, a more senior developer.
+The same thing goes for signals, popularized by [Solid](https://www.solidjs.com/), which is a powerful tool for fine-grained reactivity. While Solid is still not as popular as frameworks such as React, Svelte, Angular or Vue, its promotion of signals has been very influential. Svelte, Preact, Angular and Qwik have all adopted signals in their systems for reactivity. There is currently [a proposal to add signals to JavaScript itself](https://github.com/tc39/proposal-signals). Signals are a huge topic in the JavaScript ecosystem, but React seems to largely bypass it, since it already has its own reactivity system. Of course, there are still plenty of libraries that allow you to use proxies inside React, but it is not part of the core API and neither is it written about in their documentation. The solution for fine-grained reactivity in React is React Compiler, which takes note of the dependencies of a state and automatically applies memoization, essentially replacing manual application of `useMemo`. It's abstracted away from the user, the user just needs to focus on using the React hooks correctly. That is a different way of thinking about state management, as compared to signals. Knowing the pros and cons of these different systems, even if you choose to stay with the "React" way of doing things, makes you a more informed developer, who can explain why systems work the way they do. In other words, a more senior developer.
 
 <Image
 	src={Signals}
@@ -87,37 +92,143 @@ The same thing goes for [Solid](https://www.solidjs.com/), which introduced a ne
 	credit="https://x.com/fabiospampinato/status/1630199281964466176"
 />
 
-### Javascript dependency
+### JavaScript dependency
 
-The React runtime is normally shipped to the client. In its most vanilla form, old-school React runs as a single-page application that is fully rendered on the client. When the browser receives the HTML from the page, it is largely empty, and after the React ecosystem loads, it will start to mount content to the page. Of course, nowadays it is very common to use a Server Side Rendering-framework such as Next.js. But through hydration, you might still be running more Javascript than you realize. By default, a page built with Next.js will rerun the Javascript for all of the Reactcomponents once the browser has loaded the page. The server already ran the functions before and prepared the page, which gives the advantage of delivering content quicker to the user. But the page only will become interactive once the hydration has run, which means rerunning the components with the same props. This allows Reactto bind the virtual DOM with the prerendered page. This is also why hydration errors are a big deal in React. And this is also why you will find, in projects using Next.js with the pages router, that all the page data (like content from a CMS) is available client-side on the `__NEXT_DATA__` property of the window, injected by an inline script. (In the app router, this is more segmented, but the idea is kind of the same)
+The React runtime is normally shipped to the client. In its most vanilla form, old-school React runs as a single-page application that is fully rendered on the client. When the browser receives the HTML from the page, it is largely empty, and after the React ecosystem loads, it will start to mount content to the page. Of course, nowadays it is very common to use a server-side rendering-framework such as Next.js. But through hydration, you might still be running more JavaScript than you realize. By default, a page built with Next.js will rerun the JavaScript for all of the React components once the browser has loaded the page. The server already ran the component functions and prepared the page, which gives the advantage of delivering content quicker to the user, especially if the output is cached. However, the page only will become interactive once the hydration has run, which means rerunning the component functions with the same props. This allows React to bind the virtual DOM with the prerendered page. This is also why hydration errors are a big deal in React. And this is also why you will find, in projects using Next.js with the pages router, that all the page data (like content from a CMS) is available client-side on the `__NEXT_DATA__` property of the window, injected by an inline script. (In the app router, this is more segmented, but the idea is kind of the same)
 
-Javascript is usually the motor behind React applications. It is no longer that language used to add tiny bits of interactivity, which is how it was originally envisioned. But not all frameworks agree on this. Astro, for example, introduced the concept of [island architecture](https://docs.astro.build/en/concepts/islands/). In an island architecture, most of the page does not need Javascript at all. During the rendering, which happens either on the server, or during the building of the project, the HTML is determined, and it does not need to change after. Developers can mark specific parts of the page to be interactive. It is those parts that will be hydrated and that will run React code (for example, other frameworks are also supported). This is a huge win, especially for content-rich pages like documentation or blogs. The React engine does not need to know all of the content of the post, it just needs to know the data that is used to run the like/dislike widget, the comment feed, etc.
+<Image
+	src={hydrationError}
+	credit="https://memedrop.io/meme/Nm08Lm0e8Loe"
+	alt="Server: html with light class. Client: html with dark class. Hydration error... Hydration error?"
+/>
 
-Progressive enhancement, focused on making pages work without JavaScript, and only using it to enhance the experience of the developer, does not seem to be as popular in the React ecosystem either. When I was first learning SvelteKit, there was a [dedicated page on forms and how they can be used without Javascript](https://svelte.dev/tutorial/kit/progressive-enhancement). Since my first framework was React, this was kind of a foreign concept to me. The default way of interacting with forms was either with controlled state or hooks, and Javascript was used to validate and manage the submission. It's not impossible to use progressive enhancement in React, but it is not part of the core philosophy. Whether you want to support users that disable JavaScript or not is a discussion in itself, but beyond that, there is also the added benefit of just shipping less code to the user, increasing the performance of your project (which can impact conversion more than you think).
+JavaScript is usually the motor behind React applications. It is no longer that language used to add tiny bits of interactivity, which is how it was originally envisioned. But not all frameworks agree on this. Astro, for example, introduced the concept of [island architecture](https://docs.astro.build/en/concepts/islands/). In an island architecture, most of the page does not need JavaScript at all. During the rendering, which happens either on the server, or during the building of the project, the HTML is generated, and it does not need to change after. Developers can mark specific parts of the page to be interactive. It is those parts that will be hydrated and that will run React code (or any other framework). This is a huge win, especially for content-rich pages like documentation or blogs. The React engine does not need to know all of the content of the post, it just needs to know the data that is used to run the like/dislike widget, the comment feed, etc.
+
+Progressive enhancement, focused on making pages work without JavaScript, and only using it to enhance the experience of the developer, does not seem to be as popular in the React ecosystem either. When I was first learning SvelteKit, there was a [dedicated page on forms and how they can be used without JavaScript](https://svelte.dev/tutorial/kit/progressive-enhancement). Since my first framework was React, this was kind of a foreign concept to me. The default way of interacting with forms was either with controlled state or hooks, and JavaScript was used to validate and manage the submission. It's not impossible to use progressive enhancement in React, but it is not part of the core philosophy. Whether you want to support users that disable JavaScript or not is a discussion in itself, but beyond that, there is also the added benefit of just shipping less code to the user, which increases the performance of your project.
 
 #### Catching up to Web APIs
 
-This focus on JavaScript goes beyond the runtime environment. When you are used to building everything with functions, you might also reach for it earlier than necessarily needed. There are a lot of solutions that have been built in React over the years, that no longer need to be built in the same way. It could be considered a pitfall of such a mature ecosystem.
+This focus on JavaScript goes beyond the runtime environment. When you are used to building everything with functions, you might also reach for it earlier than necessarily needed. There are a lot of React patterns and conventions that could be updated. It could be considered a pitfall of such a mature ecosystem.
 
-Let's take dialogs as an example. As an experiment, I asked Claude Sonnet 5 to implement a dialog component in React. Then I asked it (in a separate chat, without memory) to implement one in Svelte. The difference is striking. In React, the implementation used a div with some aria attributes to make assistive technologies understand the component as a dialog. The code included some custom event handlers to allow the user to open and close the dialog, including keyboard interactions. The AI noted that focus trap is still missing. The LLM furthermore suggested using [React Portal](https://react.dev/reference/react-dom/createPortal) to escape the layout, to be able to manage issues like z-index. It also suggests that if this is all too much, maybe you want to go for the [Radix](https://www.radix-ui.com/primitives/docs/components/dialog) or [Shadcn](https://ui.shadcn.com/docs/components/base/dialog) component instead. With the exact same prompt for Svelte, the AI jumps to the native dialog element, which includes z-index management, focus trap, accessibility and keyboard navigation by default. This is not a difference in core capacity, in each framework you could easily implement it both ways. But it is a difference in philosophy. In React, Javascript is the first tool that is used to tackle a task. Developers are used to deploy state, effect, and portals to get stuff done. In Svelte, there is a bigger focus on understanding DOM apis and using those as your basis, if possible.
+Let's take dialogs as an example. As an experiment, I asked Claude Sonnet 5 to implement a dialog component in React. Then I asked it (in a separate chat, without memory) to implement one in Svelte. The difference is striking. In React, the implementation used a div with some aria attributes to make assistive technologies understand the component as a dialog. The code included some custom event handlers to allow the user to open and close the dialog, including keyboard interactions. The AI noted that focus trap is still missing. The LLM furthermore suggested using [React Portal](https://react.dev/reference/react-dom/createPortal) to escape the layout, to be able to manage issues like z-index. It also suggests that if this is all too much, maybe you want to go for the [Radix](https://www.radix-ui.com/primitives/docs/components/dialog) or [Shadcn](https://ui.shadcn.com/docs/components/base/dialog) component instead. With the exact same prompt for Svelte, the AI jumps to the native dialog element, which includes z-index management, focus trap, accessibility and keyboard navigation by default. This is not a difference in core capacity, in each framework you could easily implement it both ways. But it is a difference in philosophy. In React, JavaScript is the first tool that is used to tackle a task. Developers are used to deploy state, effect, and portals to get stuff done. In Svelte, there is a bigger focus on understanding DOM apis and using those as your basis, if possible.
 
-AI responses are not deterministic, of course, and maybe you will have better luck. This was merily my first attempt, and it confirmed my suspicion. You can check out the <a href="https://claude.ai/share/1fa7a811-d519-4299-b70e-10be3de6682f" aria-label="Claude trying React" target="_blank">React</a> and <a href="https://claude.ai/share/260d9d57-2fd4-4683-838d-00afd4c5c09d" aria-label="Claude trying Svelte" target="_blank">Svelte</a> thread yourself.
+##### React dialog
+
+```tsx
+import { useEffect, useRef } from 'react';
+
+function Dialog({ open, onClose, title, children }) {
+	const dialogRef = useRef(null);
+
+	// Close on Escape key
+	useEffect(() => {
+		if (!open) return;
+		const handleKeyDown = (e) => {
+			if (e.key === 'Escape') onClose();
+		};
+		document.addEventListener('keydown', handleKeyDown);
+		return () => document.removeEventListener('keydown', handleKeyDown);
+	}, [open, onClose]);
+
+	// Prevent background scroll while open
+	useEffect(() => {
+		if (open) {
+			document.body.style.overflow = 'hidden';
+			return () => {
+				document.body.style.overflow = '';
+			};
+		}
+	}, [open]);
+
+	if (!open) return null;
+
+	return (
+		<div onClick={onClose}>
+			<div
+				ref={dialogRef}
+				role="dialog"
+				onClick={(e) => e.stopPropagation()} // don't close on inner click
+				aria-modal="true"
+				aria-labelledby="dialog-title"
+			>
+				<div>
+					<h2 id="dialog-title">{title}</h2>
+					<button onClick={onClose} aria-label="Close dialog">
+						✕
+					</button>
+				</div>
+
+				<div>{children}</div>
+			</div>
+		</div>
+	);
+}
+
+export default Dialog;
+```
+
+#### Svelte dialog
+
+```svelte
+<script>
+	let { open = $bindable(false), title = '', children } = $props();
+	let dialogEl;
+
+	$effect(() => {
+		if (!dialogEl) return;
+		if (open && !dialogEl.open) {
+			dialogEl.showModal();
+		} else if (!open && dialogEl.open) {
+			dialogEl.close();
+		}
+	});
+
+	function handleClose() {
+		open = false;
+	}
+</script>
+
+<dialog
+	bind:this={dialogEl}
+	onclose={handleClose}
+	onclick={(e) => e.target === dialogEl && handleClose()}
+>
+	<div onclick={(e) => e.stopPropagation()}>
+		<header>
+			<h2>{title}</h2>
+			<button onclick={handleClose} aria-label="Close">&times;</button>
+		</header>
+
+		<div class="body">
+			{@render children?.()}
+		</div>
+	</div>
+</dialog>
+```
+
+AI responses are not deterministic, of course, and maybe you will have better luck. This was merely my first attempt, and it confirmed my suspicion. You can check out the <a href="https://claude.ai/share/1fa7a811-d519-4299-b70e-10be3de6682f" aria-label="Claude trying React" target="_blank">React</a> and <a href="https://claude.ai/share/260d9d57-2fd4-4683-838d-00afd4c5c09d" aria-label="Claude trying Svelte" target="_blank">Svelte</a> thread yourself.
 
 ### Missing features
 
-There are some nice-to-have features that are currently not part of the core API of React. Knowing what's possible in other frameworks will give you new ways of thinking about building code. It can inspire you to write React in new ways, or even create a need for innovation inside the framework. It will make people aware of what they are missing.
+There are some nice-to-have features that are currently not part of the core API of React. Knowing what's possible in other frameworks will give you new ways of thinking about building code. It can inspire you to write React in new ways, or even to push for innovation inside the framework. Studying other frameworks and coding paradigms will make you aware of what's missing.
 
 #### First-class CSS support
 
 There is no space in JSX for classes. In React, you either have to inline your CSS, or build your classes in a separate file. In many other frameworks, you can create native or near-native CSS in the same file that you manage the rest of your component in. JavaScript, HTML and CSS are married, just like they are in the browser. This encourages developers to split up style into classes that they can associate with the component. Often, the CSS is scoped by default, so you don't risk leaking classes into the global namespace, accidentally bleeding styles where they are not supposed to apply. But in React, you need to define a separate file for your CSS and import it. I wonder if this is one of the reasons [tailwind CSS](https://tailwindcss.com/) is so popular, since you can just add the classes directly in your component. Personally, though, I prefer [CSS modules](https://www.w3schools.com/react/react_css_modules.asp), but the developer experience is not as smooth as in Svelte or Vue.
 
+<Image
+	src={tailwind}
+	credit="https://www.reddit.com/r/ProgrammerHumor/comments/1qr1gfo/finallyseetailwindclasseswithoutscrolling/"
+	alt="Image of a very wide monitor with the caption 'I can finally see my tailwind classes without scrolling'"
+/>
+
 #### Two-way binding
 
-Svelte, Angular and Vue (and I'm sure many other frameworks) allow for two-way binding of state. You can define a state inside a component, pass it down to a child component, and if the child component updates that state, the changes will ripple back up. For example, you can do this with an input component by binding to the value. In React, to achieve the same, you need to pass both the state value and the function that updates it. `useState` returns the value and the setter, and you always need to pass those around in order to both read and manage the state. Not a big deal, but it is a nice developer experience. It also envisions the state and its updater as part of one whole system, such as a proxy. A different way of seeing things.
+Svelte, Angular and Vue (and I'm sure many other frameworks) allow for two-way binding of state. You can define a state inside a component, pass it down to a child component, and if the child component updates that state, the changes will ripple back up. For example, you can do this with an input component by binding to the value. In React, to achieve the same result, you need to pass both the state value and the function that updates it. `useState` returns the value and a callback used to update the value, and you always need to pass those around in order to both read and manage the state. Not a big deal, but it is a nicer developer experience to contain everything in one variable. It also envisions the state and its updater as part of one whole system, such as a proxy. A different way of seeing things.
 
 #### Slots
 
-There are no slots in React, except for perhaps the default slot (i.e. `children`). In many frameworks, slots allow you to define named sections of your markup. For example, you could have a card that has a main area for the body text, but also a title slot in which you can pass the title. In Vue it looks like this:
+There are no [slots](https://developer.mozilla.org/en-US/docs/Web/API/Web_components/Using_templates_and_slots) in React, except for perhaps the default slot (i.e. `children`). In many frameworks, slots allow you to define named sections of your markup. For example, you could have a card that has a main area for the body text, but also a title slot in which you can pass the title. In Vue it looks like this:
 
 ```vue
 <Card>
@@ -136,7 +247,7 @@ function myPage() {
 }
 ```
 
-But once you get more verbose markup, this can start to look cluttered. You might need to store the slot content in a separate variable to keep your JSX looking clean. It would be nice if you could just pass the content for your slot inside the JSX, surrounded by some instructions to tell React to move that bit of content to the named slot.
+But if you want to pass more than one line of HTML, this can start to look cluttered. You might need to store the slot content in a separate variable to keep your JSX looking clean. It would be nice if you could just pass the content for your slot inside the JSX, surrounded by some instructions to tell React to move that bit of content to the named slot.
 
 Slots are also another browser API that you don't come across much as a React developer. They were built mainly to support web components, and if you ever end up building with those, it's nice to be familiar.
 
@@ -174,8 +285,16 @@ where this code is. Client-side and server-side code are connected easily, but s
 
 ### In conclusion
 
-In the last couple years, server components have made more possible. You could build an island architecture, or progressively enhanced pages more easily than before. But what remains is still a set of established practices. By learning about other ways of doing, we can continue to innovate with and without React. And we can grow as developers.
+For all the junior frontend developers I mentor, one of the first things I ask them is whether they have tried other frameworks. And if not, we come up with some side project or opportunity to try one out. They always find some key differences, including things that are simply missing in React. It also strengthens their capacity for making their own architectural decisions, by giving them more context and background knowledge.
 
-For all the frontend developers I mentor, one of the first things I ask them is whether they have tried other frameworks. And if not, we come up with some side project or opportunity to try one out. They always find some key differences, including things that are simply missing in React. And that will make them better developers in the end.
+React is no longer synonymous with client-side rendering. Especially in the advent of server components, even though they are also scrutinized, they do allow us to innovate the architecture of our React apps. It is possible to create an island architecture and progressively enhance a Next.js application. But what remains is still a set of established practices. By learning about other ways of doing, we can continue to innovate with and without React.
 
-React is as strong as ever. It is a great tool to use, and this article was not meant to slander it or say you should not use it. It is here to stay, offers a lot of features, and is already an ingrained part of many technical organizations. On the other hand, things to be more rumbling on the side of meta frameworks. More optimized, custom solutions are popping up as an alternative to Next.js. Tanstack start offers a more lightweight, standards-based approach, while still offering the main features you might look for at Next.js. We might see more frameworks being developed and ported into more performant packages, thanks to AI. So in a way, it is good to be ready to pivot 😉
+React is as strong as ever. It is a great tool to use, and this article was not meant to slander it or say you should not use it. It is here to stay, offers a lot of features, and is already an ingrained part of many technical organizations. On the other hand, things are rumbling on the side of meta frameworks. More optimized, custom solutions are popping up as an alternative to Next.js. Tanstack start offers a more lightweight, standards-based approach, while still offering the main features you might look for in Next.js. We might start to see more frameworks being developed and ported into more performant binaries, thanks to AI. So in a way, it is good to be ready to pivot 😉
+
+P.S. If you are looking for a great web developer, building with React or any other framework, I'm available for hire! [Hire me](/hire-me).
+
+<Image
+	src={ants}
+	alt="A group of monkeys looks toward you. You're finally awake! What, React? JavaScript? Variables? Bugs? Bro, you hit your head pretty hard. let's go eat some ants"
+	credit="https://www.reddit.com/r/ProgrammerHumor/comments/1m5g4qi/imaginethis/"
+/>

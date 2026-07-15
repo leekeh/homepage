@@ -59,7 +59,7 @@
 
 <section>
 	<div class="list-header">
-		<h3>What others say</h3>
+		<h3>What others say:</h3>
 	</div>
 	<div class="nav">
 		<Button iconOnly onclick={() => scroll(-1)} aria-label="Scroll left"
@@ -125,7 +125,8 @@
 	}
 
 	h3 {
-		font-size: var(--font-size-base);
+		font-size: var(--font-size-sm);
+		font-weight: 600;
 	}
 	section {
 		padding: var(--space-6);
@@ -151,7 +152,6 @@
 		background-color: var(--color-bg-subtle);
 		padding: var(--space-4);
 		border-radius: var(--radius-lg);
-
 		width: 30ch;
 		overflow-wrap: break-word;
 		scroll-snap-align: start;

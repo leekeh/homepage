@@ -3,6 +3,9 @@
 	import Summary from './Summary.svelte';
 	import Recos from './Recos.svelte';
 	import Button from '@components/OS/Button.svelte';
+	import PromptBlock from './PromptBlock.svelte';
+	import Experience from './Experience.svelte';
+	import Certificates from './Certificates.svelte';
 </script>
 
 <svg viewBox="0 0 10 10" id="heart">
@@ -13,29 +16,21 @@
 <div class="inner">
 	<HeaderImage />
 	<Summary />
+	<PromptBlock title="A non-negotiable">
+		<p>Accessibility. And that goes beyond WCAG compliance.</p>
+	</PromptBlock>
+
+	<PromptBlock title="Two truths and a lie">
+		<ul>
+			<li>I've developed a native app.</li>
+			<li>I'm an open source contributor.</li>
+			<li>I've presented on a conference.</li>
+		</ul>
+	</PromptBlock>
+
 	<Recos />
 
-	<section>
-		<h3>Two truths and a lie</h3>
-		<ul>
-			<li>I've developed a native app</li>
-			<li>I'm an open source contributor</li>
-			<li>I've presented on a conference</li>
-		</ul>
-	</section>
-
-	<section>
-		<h3>A non-negotiable...</h3>
-		<p>Accessibility. And that goes beyond WCAG compliance.</p>
-	</section>
-
-	<section>
-		<h3>Experience</h3>
-		<h4>Frontend engineer,</h4>
-		<h4>Frontend engineer</h4>
-
-		<h4>Also add certificates here</h4>
-	</section>
+	<Experience />
 
 	<section>
 		<p
@@ -46,12 +41,21 @@
 		</p>
 	</section>
 
-	<section><Button href="/contact">slide into DMs</Button></section>
+	<Certificates />
+
+	<section>
+		<p>But seriously, I'm for hire!</p>
+		<Button href="/contact">slide into DMs</Button>
+	</section>
 </div>
 
 <style>
 	section {
 		padding: var(--space-6);
+		display: flex;
+		flex-direction: column;
+		gap: var(--space-4);
+		align-items: flex-start;
 	}
 	#heart {
 		display: none;

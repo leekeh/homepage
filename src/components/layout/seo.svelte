@@ -3,6 +3,7 @@
 
 	import { page } from '$app/state';
 	import { getWidgetByRoute } from '../../components/widgets/widgets';
+	import { getTreatById, posterSrc } from '../../components/widgets/treats/data';
 	import { absoluteUrl, SITE_DESCRIPTION, SITE_NAME } from '../../content/site';
 	import { WEBMENTION_ENDPOINT, WEBMENTION_PINGBACK } from '../../content/webmentions';
 
@@ -32,7 +33,34 @@
 		return data.blogPosts.find((post) => post.slug === currentSlug);
 	});
 
+	const currentTreat = $derived.by(() => {
+		const id = currentMatch?.params?.id;
+		if (currentMatch?.widget.id !== 'treatdetail' || !id) {
+			return undefined;
+		}
+		return getTreatById(id);
+	});
+
 	const seo = $derived.by(() => {
+		if (currentTreat) {
+			const review = currentTreat.review;
+			return {
+				title: `${currentTreat.title} - leekeh`,
+				description:
+					review.length > 155 ? `${review.slice(0, 152)}…` : review || 'A sweet treat, scanned in 3D.',
+				type: 'article' as const,
+				url: absoluteUrl(currentPath),
+				image: absoluteUrl(posterSrc(currentTreat.imgId)),
+				imageAlt: currentTreat.title,
+				article: {
+					publishedTime: new Date(currentTreat.date).toISOString(),
+					modifiedTime: undefined,
+					section: 'Sweet Treats' as string | undefined,
+					tags: [] as string[]
+				}
+			};
+		}
+
 		if (currentPost) {
 			return {
 				title: `${currentPost.title} - leekeh`,

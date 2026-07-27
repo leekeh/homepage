@@ -12,3 +12,4 @@ export { default as IconMenu } from './IconMenu.svelte';
 export { default as IconLink } from './IconLink.svelte';
 export { default as IconHome } from './IconHome.svelte';
 export { default as IconRSS } from './IconRSS.svelte';
+export { default as IconTreats } from './IconTreats.svelte';

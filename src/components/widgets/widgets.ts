@@ -2,6 +2,7 @@ import type { PathnameWithSearchOrHash } from '$app/types';
 import { widgetConfigs, type WidgetConfig } from './widgets.config';
 import type { Component } from 'svelte';
 import { getBlogPostBySlug } from '../../content/blog/server';
+import { getTreatById } from './treats/data';
 
 export type WidgetDef = WidgetConfig;
 
@@ -64,9 +65,12 @@ export function getWidgetByRoute(
 				const paramName = def.route.match(/\[([^\]]+)\]/)?.[1] ?? 'param';
 				const paramValue = normalized.slice(prefix.length);
 				const params = { [paramName]: paramValue };
-				// Override the widget title with the actual blog post title if available
-				const post = paramName === 'slug' ? getBlogPostBySlug(paramValue) : undefined;
-				const widget = post ? { ...def, title: post.title } : def;
+				// Override the widget title with the specific entry's title when available
+				// (e.g. the blog post or treat behind this dynamic route).
+				let resolvedTitle: string | undefined;
+				if (paramName === 'slug') resolvedTitle = getBlogPostBySlug(paramValue)?.title;
+				else if (def.id === 'treatdetail') resolvedTitle = getTreatById(paramValue)?.title;
+				const widget = resolvedTitle ? { ...def, title: resolvedTitle } : def;
 				return { widget, params };
 			}
 		}

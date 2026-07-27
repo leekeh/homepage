@@ -6,6 +6,7 @@ import IconPaint from '@icons/IconPaint.svelte';
 import IconContact from '@icons/IconContact.svelte';
 import IconApps from '@icons/IconApps.svelte';
 import IconHearts from '@icons/IconHearts.svelte';
+import IconTreats from '@icons/IconTreats.svelte';
 import type { PathnameWithSearchOrHash } from '$app/types';
 
 export interface WidgetConfig {
@@ -117,5 +118,33 @@ export const widgetConfigs: WidgetConfig[] = [
 		defaultHeight: 544,
 		resizable: true,
 		minimal: false
+	},
+	{
+		id: 'treats',
+		title: 'Sweet Treats',
+		icon: IconTreats,
+		component: () => import('@widgets/treats/Treats.svelte'),
+		route: '/treats',
+		defaultWidth: 400,
+		defaultHeight: 300,
+		defaultX: 100,
+		defaultY: 50,
+		resizable: true,
+		minimal: false,
+		description: 'A visual diary of sweet treats, scanned in 3D.'
+	},
+	{
+		id: 'treatdetail',
+		title: 'Sweet Treat',
+		icon: IconTreats,
+		component: () => import('@widgets/treats/TreatDetail.svelte'),
+		route: '/treats/[id]',
+		defaultWidth: 600,
+		defaultHeight: 520,
+		defaultX: 120,
+		defaultY: 40,
+		resizable: true,
+		minimal: false,
+		description: 'A sweet treat, scanned in 3D.'
 	}
 ];

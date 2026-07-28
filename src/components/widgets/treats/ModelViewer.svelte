@@ -10,26 +10,17 @@
 
 	let { imgId, title }: Props = $props();
 
-	// Google's <model-viewer>, loaded once from the CDN on the client only —
-	// the custom element must never run during SSR.
-	const MODEL_VIEWER_SRC =
-		'https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js';
-
 	let ready = $state(false);
 	let percent = $state(0);
 	let loaded = $state(false);
 
 	let viewer = $state<HTMLElement>();
 
-	onMount(() => {
-		// Load the module once; a data-flag guards against re-injecting it.
-		if (!document.querySelector(`script[data-model-viewer]`)) {
-			const script = document.createElement('script');
-			script.type = 'module';
-			script.src = MODEL_VIEWER_SRC;
-			script.dataset.modelViewer = '';
-			document.head.appendChild(script);
-		}
+	onMount(async () => {
+		// Import @google/model-viewer on the client only — importing it defines
+		// the <model-viewer> custom element and touches `window`, so it must
+		// never run during SSR. The module dedupes its own registration.
+		await import('@google/model-viewer');
 		ready = true;
 	});
 

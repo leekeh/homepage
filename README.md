@@ -32,6 +32,7 @@ For integrated development, you need to first run `pnpm wrangler login`. Then yo
 - accessibility statement
 - handle the overflowing issue of desktop icons
 - implement max sizes for windows
+- add tests!!
 
 widgets:
 

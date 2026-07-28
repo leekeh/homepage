@@ -84,6 +84,34 @@ A progressively-enhanced personal website styled as a retro (Win95-esque) deskto
 
 - Do not add return types for functions that can be inferred.
 
+## Testing
+
+Two layers, both driven by real Chromium (Playwright):
+
+- **Isolated widget / unit tests — Vitest.** Two projects in [vite.config.ts](vite.config.ts):
+  - `client` (browser mode, Playwright-driven Chromium): renders a single component in isolation. Files: `*.svelte.test.ts`, colocated next to the component (e.g. [Palette.svelte.test.ts](src/components/widgets/paint/Palette.svelte.test.ts)). Use `render` from `vitest-browser-svelte` + locators from `@vitest/browser/context`.
+  - `server` (Node): pure logic — route matching, data helpers, geometry, etc. Files: `*.test.ts` (e.g. [widgets.test.ts](src/components/widgets/widgets.test.ts)).
+- **Global OS tests — Playwright E2E** in [e2e/](e2e/). Exercise the whole shell against the built app across three environments, one project per filename suffix:
+  - `*.desktop.spec.ts` — desktop shell (> 768px)
+  - `*.mobile.spec.ts` — mobile shell (≤ 768px, device emulation)
+  - `*.nojs.spec.ts` — progressive enhancement with JavaScript disabled
+
+Commands:
+
+- `pnpm test` — everything (unit then E2E)
+- `pnpm test:unit` / `pnpm test:unit:watch` — Vitest (all / watch)
+- `pnpm test:unit:changed` — **affected only**: runs just the tests whose Vite module graph changed vs `origin/main`. Prefer this while iterating on a single widget.
+- `pnpm test:e2e` / `pnpm test:e2e:ui` — Playwright OS tests
+
+CI ([.github/workflows/test.yml](.github/workflows/test.yml)) runs on every PR: affected unit/widget tests (`vitest --changed`) + all three E2E projects.
+
+**Always manage tests when you change code:**
+
+- Changing a widget's behavior/logic → add or update its colocated `*.svelte.test.ts` (component) and/or `*.test.ts` (logic).
+- Adding a widget → add a logic test for anything in `widgets.config.ts`/routing it touches, and a widget render test if it has interactive behavior.
+- Changing shell, routing, window management, or progressive enhancement → update the relevant `e2e/*.spec.ts` (desktop/mobile/no-js).
+- After any change, run `pnpm test:unit:changed` (fast, affected) and the relevant E2E project before considering the work done. Never delete or skip a test to make a change pass — fix the test or the code.
+
 ## File Structure
 
 ```
@@ -132,6 +160,7 @@ src/
 - Modifying routing or widget registry structure
 - Changing hydration behavior or startup delay (currently 2 seconds)
 - Adding/removing conventions or key architectural decisions
+- Adding/removing test layers, projects, or scripts (keep the Testing section in sync)
 - Any meaningful implementation change that affects architecture, behavior, or workflow
 
 **Key files to check after changes:**

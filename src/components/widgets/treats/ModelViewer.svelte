@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { modelSrc, posterSrc } from './data';
+	import { IconTreats } from '@icons/index';
 
 	interface Props {
 		imgId: string;
@@ -17,24 +18,6 @@
 	let ready = $state(false);
 	let percent = $state(0);
 	let loaded = $state(false);
-
-	// A little delight while loading: a treat-ish emoji picked from the title.
-	const EMOJI_BY_KEYWORD: [RegExp, string][] = [
-		[/cheesecake|cheese/, '🧀'],
-		[/cinnamon|roll|bun/, '🥐'],
-		[/fig|custard|pie|tart/, '🥧'],
-		[/cookie|biscuit/, '🍪'],
-		[/donut|doughnut/, '🍩'],
-		[/choc/, '🍫'],
-		[/cake|milk/, '🍰']
-	];
-	function emojiForTitle(value: string): string {
-		const lower = value.toLowerCase();
-		for (const [pattern, emoji] of EMOJI_BY_KEYWORD) {
-			if (pattern.test(lower)) return emoji;
-		}
-		return '🍰';
-	}
 
 	let viewer = $state<HTMLElement>();
 
@@ -84,20 +67,31 @@
 	});
 </script>
 
-{#if ready}
+<noscript>
 	<div class="viewer-wrap">
+		<img
+			src={posterSrc(imgId)}
+			alt="3D model of {title}"
+			width="100%"
+			height="100%"
+			style="object-fit: contain; background-color: #f7f4d8"
+		/>
+	</div>
+</noscript>
+{#if ready}
+	<div class="viewer-wrap" aria-busy={!loaded} aria-live="polite">
 		<model-viewer
 			bind:this={viewer}
 			alt="3D model of {title}"
 			poster={posterSrc(imgId)}
 			src={modelSrc(imgId)}
-			loading="lazy"
 			camera-controls
 			tone-mapping="neutral"
 			shadow-intensity="0.5"
 			touch-action="none"
 			interpolation-decay="200"
 			auto-rotate
+			auto-rotate-delay="0"
 			camera-target="-0.003m 0.0722m 0.0391m"
 			camera-orbit="0deg 35deg 25m"
 			min-camera-orbit="auto 25deg auto"
@@ -110,8 +104,7 @@
 		></model-viewer>
 
 		<div class="loader" class:loaded>
-			<span class="loader-treat">{emojiForTitle(title)}</span>
-			<progress class="loader-track" value={percent} max="100"> </progress>
+			<span class="loader-treat"><IconTreats /></span>
 			<span class="loader-label">{`Loading 3D model… ${percent}%`}</span>
 			<span class="loader-note">3D scans are big files — hang tight!</span>
 		</div>
@@ -123,6 +116,7 @@
 		position: relative;
 		width: 100%;
 		aspect-ratio: 1;
+		font-family: var(--font-sans);
 	}
 
 	model-viewer {
@@ -139,11 +133,7 @@
 		align-items: center;
 		justify-content: center;
 		gap: var(--space-3);
-		border-radius: var(--radius-md);
-		background: linear-gradient(110deg, #f7f4d8 30%, #fffef2 50%, #f7f4d8 70%);
-		background-size: 200% 100%;
-		animation: shimmer 1.4s ease-in-out infinite;
-		transition: opacity 0.5s ease;
+		background: var(--color-bg-primary);
 	}
 
 	.loader.loaded {
@@ -151,17 +141,14 @@
 		pointer-events: none;
 	}
 
-	@keyframes shimmer {
-		to {
-			background-position: -200% 0;
-		}
-	}
-
 	.loader-treat {
 		font-size: 2.75rem;
 		line-height: 1;
 		animation: bob 1.2s ease-in-out infinite;
-		filter: drop-shadow(0 6px 4px rgba(0, 0, 0, 0.12));
+		:global svg {
+			width: 1em;
+			height: 1em;
+		}
 	}
 
 	@keyframes bob {
@@ -174,32 +161,14 @@
 		}
 	}
 
-	.loader-track {
-		width: 62%;
-		height: 6px;
-		background: rgba(0, 0, 0, 0.1);
-		border-radius: var(--radius-round);
-		overflow: hidden;
-	}
-
-	.loader-fill {
-		height: 100%;
-		width: 0%;
-		background: #333;
-		border-radius: inherit;
-		transition: width 0.25s ease;
-	}
-
 	.loader-label {
 		font-size: var(--font-size-sm);
-		color: #444;
 		font-variant-numeric: tabular-nums;
 		letter-spacing: 0.02em;
 	}
 
 	.loader-note {
 		font-size: var(--font-size-xs);
-		color: #8a875f;
 		max-width: 80%;
 		text-align: center;
 	}

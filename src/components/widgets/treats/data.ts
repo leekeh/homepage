@@ -9,7 +9,7 @@ export interface Treat {
 	imgId: string;
 	locationId: string;
 	/** Numeric string, or "??" when unknown. */
-	price: string;
+	price?: string;
 	/** ISO date, e.g. "2025-09-27". */
 	date: string;
 	review: string;
@@ -37,7 +37,7 @@ export const locations: Record<string, Location> = {
 export const treats: Treat[] = [
 	{
 		title: 'Cinnamon roll with miso and pepper',
-		imgId: '270925cinnamon',
+		imgId: 'cinnamon-bun',
 		locationId: 'pompernikkel',
 		price: '3.5',
 		date: '2025-09-27',
@@ -46,16 +46,16 @@ export const treats: Treat[] = [
 	},
 	{
 		title: 'Pastry with fig and cinnamon custard',
-		imgId: '270925fig',
+		imgId: 'fig-danish',
 		locationId: 'pompernikkel',
-		price: '??',
+		price: undefined,
 		date: '2025-09-27',
 		review:
 			'There was extra fig under the custard. The custard flavor was a bit subtle, and could have been more pronounced. The pastry itself was nice and flaky, but it was missing some wow.'
 	},
 	{
 		title: 'Milk cake',
-		imgId: '041025milk',
+		imgId: 'tres-leches',
 		locationId: 'afternoon',
 		price: '7',
 		date: '2025-10-04',
@@ -64,7 +64,7 @@ export const treats: Treat[] = [
 	},
 	{
 		title: 'San Sebastian Cheesecake',
-		imgId: '041025cheese',
+		imgId: 'basque-cheesecake',
 		locationId: 'afternoon',
 		price: '7.5',
 		date: '2025-10-04',
@@ -76,7 +76,8 @@ export const treats: Treat[] = [
 const dateFormatter = new Intl.DateTimeFormat('en', {
 	year: 'numeric',
 	month: 'long',
-	day: 'numeric'
+	day: 'numeric',
+	weekday: 'long'
 });
 
 // Build the Date from its parts so "2025-09-27" is treated as a local date.

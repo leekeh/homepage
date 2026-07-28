@@ -17,7 +17,6 @@
 	.grid {
 		list-style: none;
 		margin: 0;
-		padding: var(--space-4);
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
 		gap: var(--space-3);

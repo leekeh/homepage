@@ -39,11 +39,27 @@ Basic polymorphic link component that can be used inside widgets.
 {/if}
 
 <style>
-	.link:hover {
-		background-color: var(--color-bg-highlight);
-	}
+	.link {
+		position: relative;
+		color: inherit;
+		text-decoration: none;
+		font-family: var(--font-mono);
+		padding-bottom: var(--space-1);
+		&::before {
+			content: '';
+			position: absolute;
+			bottom: var(--border-width);
+			width: 100%;
+			height: var(--border-width);
+			background-color: currentColor;
+			filter: var(--filter-squiggle);
+		}
 
-	.link:active {
-		background-color: var(--color-button-bg-active);
+		/* on hover animate in a background */
+		&:hover {
+			&::before {
+				background-color: var(--color-fg-highlight);
+			}
+		}
 	}
 </style>

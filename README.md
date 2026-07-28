@@ -30,6 +30,9 @@ For integrated development, you need to first run `pnpm wrangler login`. Then yo
 - make the blog a txt or pdf file. maybe make it look like a pdf viewer, txt viewer etc.
 - dark mode
 - accessibility statement
+- handle the overflowing issue of desktop icons
+- implement max sizes for windows
+- add tests!!
 
 widgets:
 

@@ -1,0 +1,5 @@
+# 3D models and their posters are binary and can be large — store them via
+# Git LFS so clones stay small. Note: each file must still be < 25 MiB to be
+# served by Cloudflare (compress .glb with gltf-transform before committing).
+*.glb filter=lfs diff=lfs merge=lfs -text
+static/models/treats/*.png filter=lfs diff=lfs merge=lfs -text

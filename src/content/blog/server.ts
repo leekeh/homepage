@@ -29,11 +29,10 @@ const ogImageModules = import.meta.glob<string>('./posts/**/og.png', {
 	import: 'default'
 });
 
-// Map from post folder name (== slug) → Vite-processed asset URL
+// Map from post slug (== path under posts/, minus filename) → Vite-processed asset URL
 const autoOgImageBySlug: Record<string, string> = Object.fromEntries(
 	Object.entries(ogImageModules).map(([path, url]) => {
-		const folder = path.split('/').at(-2)!;
-		return [folder, url];
+		return [getSlugFromPath(path), url];
 	})
 );
 
@@ -42,13 +41,13 @@ function normalizeCategory(category: string): string {
 }
 
 function getSlugFromPath(path: string): string {
-	// e.g. "./posts/hello-world/hello-world.mdx" → "hello-world"
-	return (
-		path
-			.split('/')
-			.at(-1)
-			?.replace(/\.mdx$/, '') ?? path
-	);
+	// The slug is the post's directory path relative to posts/, so nested posts
+	// keep their folders in the URL. The redundant filename segment is dropped.
+	// e.g. "./posts/hello-world/hello-world.mdx"            → "hello-world"
+	//      "./posts/indie-web/webmentions/webmentions.mdx"  → "indie-web/webmentions"
+	//      "./posts/indie-web/webmentions/og.png"           → "indie-web/webmentions"
+	const afterPosts = path.split('/posts/').at(-1) ?? path;
+	return afterPosts.split('/').slice(0, -1).join('/');
 }
 
 function parsePost(path: string, meta: BlogMetadata): BlogPost | null {

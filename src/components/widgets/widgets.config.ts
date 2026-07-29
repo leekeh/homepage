@@ -88,7 +88,7 @@ export const widgetConfigs: WidgetConfig[] = [
 		title: 'Blog Post',
 		icon: IconBlog,
 		component: () => import('@widgets/blog-post/BlogPost.svelte'),
-		route: '/blog/[slug]',
+		route: '/blog/[...slug]',
 		defaultWidth: 900,
 		defaultHeight: 700,
 		defaultX: 30,

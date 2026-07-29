@@ -89,7 +89,7 @@ A progressively-enhanced personal website styled as a retro (Win95-esque) deskto
 Two layers, both driven by real Chromium (Playwright):
 
 - **Isolated widget / unit tests — Vitest.** Two projects in [vite.config.ts](vite.config.ts):
-  - `client` (browser mode, Playwright-driven Chromium): renders a single component in isolation. Files: `*.svelte.test.ts`, colocated next to the component (e.g. [Palette.svelte.test.ts](src/components/widgets/paint/Palette.svelte.test.ts)). Use `render` from `vitest-browser-svelte` + locators from `@vitest/browser/context`.
+  - `client` (browser mode, Playwright-driven Chromium): renders a single component in isolation. Files: `*.svelte.test.ts`, colocated next to the component (e.g. [Palette.svelte.test.ts](src/components/widgets/paint/Palette.svelte.test.ts)). Use `render` from `vitest-browser-svelte` + `page`/locators from `vitest/browser`.
   - `server` (Node): pure logic — route matching, data helpers, geometry, etc. Files: `*.test.ts` (e.g. [widgets.test.ts](src/components/widgets/widgets.test.ts)).
 - **Global OS tests — Playwright E2E** in [e2e/](e2e/). Exercise the whole shell against the built app across three environments, one project per filename suffix:
   - `*.desktop.spec.ts` — desktop shell (> 768px)
@@ -102,8 +102,9 @@ Commands:
 - `pnpm test:unit` / `pnpm test:unit:watch` — Vitest (all / watch)
 - `pnpm test:unit:changed` — **affected only**: runs just the tests whose Vite module graph changed vs `origin/main`. Prefer this while iterating on a single widget.
 - `pnpm test:e2e` / `pnpm test:e2e:ui` — Playwright OS tests
+- `pnpm lint` — prettier `--check` + eslint · `pnpm check` — `svelte-check` (via the native `tsgo` compiler)
 
-CI ([.github/workflows/test.yml](.github/workflows/test.yml)) runs on every PR: affected unit/widget tests (`vitest --changed`) + all three E2E projects.
+CI ([.github/workflows/test.yml](.github/workflows/test.yml)) runs on every PR: a quality gate (`pnpm lint` + `pnpm check`), affected unit/widget tests (`vitest --changed`), and all three E2E projects.
 
 **Always manage tests when you change code:**
 
@@ -111,6 +112,7 @@ CI ([.github/workflows/test.yml](.github/workflows/test.yml)) runs on every PR: 
 - Adding a widget → add a logic test for anything in `widgets.config.ts`/routing it touches, and a widget render test if it has interactive behavior.
 - Changing shell, routing, window management, or progressive enhancement → update the relevant `e2e/*.spec.ts` (desktop/mobile/no-js).
 - After any change, run `pnpm test:unit:changed` (fast, affected) and the relevant E2E project before considering the work done. Never delete or skip a test to make a change pass — fix the test or the code.
+- Keep `pnpm lint` and `pnpm check` green — both are hard CI gates.
 
 ## File Structure
 

@@ -1,13 +1,13 @@
 <svg
-  xmlns="http://www.w3.org/2000/svg"
-  width="16"
-  height="16"
-  viewBox="0 0 16 16"
-  fill="none"
-  stroke="currentColor"
-  stroke-width="1.5"
+	xmlns="http://www.w3.org/2000/svg"
+	width="16"
+	height="16"
+	viewBox="0 0 16 16"
+	fill="none"
+	stroke="currentColor"
+	stroke-width="1.5"
 >
-  <line x1="2" y1="4" x2="14" y2="4" />
-  <line x1="2" y1="8" x2="14" y2="8" />
-  <line x1="2" y1="12" x2="14" y2="12" />
+	<line x1="2" y1="4" x2="14" y2="4" />
+	<line x1="2" y1="8" x2="14" y2="8" />
+	<line x1="2" y1="12" x2="14" y2="12" />
 </svg>

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import IconJob from '@icons/IconJob.svelte';
-	import IconHearts from '@icons/IconHearts.svelte';
 	import pf from './pf.png';
 	import IconUserCircle from '@icons/IconUserCircle.svelte';
 	import Button from '@components/OS/Button.svelte';

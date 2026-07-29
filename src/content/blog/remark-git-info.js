@@ -39,7 +39,7 @@ function getGitHistory(filePath) {
 					message: line.slice(idx + 1)
 				};
 			});
-	} catch (e) {
+	} catch {
 		return [];
 	}
 }
@@ -52,7 +52,7 @@ function getGitHistory(filePath) {
  */
 export function remarkGitInfo() {
 	return (_tree, file) => {
-		const filePath = file.path ?? file.history[0] ?? file.filename;
+		const filePath = file.path ?? file.history[0];
 		if (!filePath) return;
 
 		const history = getGitHistory(filePath);
@@ -65,7 +65,7 @@ export function remarkGitInfo() {
 			file.data.fm = {};
 		}
 
-		const fm = file.data.fm;
+		const fm = /** @type {Record<string, unknown>} */ (file.data.fm);
 		fm.publishedAt = publishedAt;
 		fm.lastModified = lastModified;
 		fm.changelog = changelog;

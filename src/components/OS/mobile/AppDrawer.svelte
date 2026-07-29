@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { widgetNavigationData } from '../../widgets/widgets';
-	import { resolve } from '$app/paths';
+	import { resolvePath } from '@utils/resolve';
 	import AppIcon from '../shared/AppIcon.svelte';
 </script>
 
@@ -8,7 +8,7 @@
 	<ul class="app-grid">
 		{#each widgetNavigationData as widget (widget.id)}
 			<li>
-				<a class="app-grid-item" href={resolve(widget.route)}>
+				<a class="app-grid-item" href={resolvePath(widget.route)}>
 					<AppIcon icon={widget.icon} label={widget.title} />
 				</a>
 			</li>

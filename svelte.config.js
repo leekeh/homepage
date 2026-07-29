@@ -38,7 +38,6 @@ const config = {
 			'@icons/*': 'src/icons/*',
 			'@widgets/*': 'src/components/widgets/*',
 			'@assets/*': 'src/assets/*',
-			'@posts/*': 'src/content/blog/posts/*.mdx',
 			'@utils/*': 'src/util/*'
 		}
 	}

@@ -16,6 +16,30 @@ env:
   BASE_REF: ${{ github.base_ref && format('origin/{0}', github.base_ref) || 'HEAD~1' }}
 
 jobs:
+  # Static quality gate: formatting + lint + type-check. Fast, no browsers.
+  quality:
+    name: Lint & type-check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # prettier --check + eslint
+      - run: pnpm run lint
+
+      # svelte-kit sync + svelte-check (tsgo)
+      - run: pnpm run check
+
   # Fast, affected-only unit + isolated-widget tests.
   # vitest uses Vite's module graph, so only tests whose dependencies changed run.
   unit:

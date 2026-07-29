@@ -12,10 +12,10 @@
 	let { id = '' }: Props = $props();
 
 	const treat = $derived(getTreatById(id));
-	const location = $derived(treat ? locations[treat.locationId] : 'undefined');
 </script>
 
 {#if treat}
+	{@const location = locations[treat.locationId]}
 	<article class="detail">
 		<div class="inner">
 			<div class="model">

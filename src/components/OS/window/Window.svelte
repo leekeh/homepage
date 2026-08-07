@@ -117,6 +117,8 @@
 			const nextX = event.clientX - dragOffX;
 			const nextY = event.clientY - dragOffY;
 			wm.move(id, nextX, nextY);
+
+			if (!resizable) return;
 			if (nextY <= SNAP_TOP_THRESHOLD) {
 				snapPreview = 'top';
 			} else if (event.clientX <= SNAP_SIDE_THRESHOLD) {
@@ -133,6 +135,7 @@
 			draggingFromMaximized = false;
 			draggingFromSnapped = false;
 			snapPreview = null;
+			if (!resizable) return;
 
 			if (prevSnap === 'top' && !maximized) {
 				onToggleMaximize();
@@ -211,6 +214,7 @@
 	}
 
 	function onToggleMaximize() {
+		if (!resizable) return;
 		// set animation state before toggling to ensure transition runs when maximizing
 		isAnimating = true;
 		wm.toggleMaximize(id);
@@ -266,13 +270,19 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 				<button class="wbtn" onclick={onMinimize} title="Minimize">
 					<IconMinimize />
 				</button>
-				<button class="wbtn" onclick={onToggleMaximize} title={maximized ? 'Restore' : 'Maximize'}>
-					{#if maximized}
-						<IconRestore />
-					{:else}
-						<IconMaximize />
-					{/if}
-				</button>
+				{#if resizable}
+					<button
+						class="wbtn"
+						onclick={onToggleMaximize}
+						title={maximized ? 'Restore' : 'Maximize'}
+					>
+						{#if maximized}
+							<IconRestore />
+						{:else}
+							<IconMaximize />
+						{/if}
+					</button>
+				{/if}
 			{/if}
 			{#if hasJsSupport}
 				<button class="wbtn close-btn" onclick={onClose} title="Close">

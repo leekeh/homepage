@@ -12,8 +12,6 @@ const gitignorePath = path.resolve(import.meta.dirname, '.gitignore');
 
 export default defineConfig(
 	includeIgnoreFile(gitignorePath),
-	// Embedded standalone project with its own tooling — not part of this app's lint scope.
-	{ ignores: ['sweet-treat-saturday/'] },
 	js.configs.recommended,
 	ts.configs.recommended,
 	svelte.configs.recommended,

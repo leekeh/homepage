@@ -1,5 +1,6 @@
 import type { BlogPost } from '.';
 import { SITE_URL } from '../site';
+import { standardSiteDocumentUri } from '../standard-site';
 
 type BlogMetadata = {
 	title?: string;
@@ -80,7 +81,9 @@ function parsePost(path: string, meta: BlogMetadata): BlogPost | null {
 		categories: (meta.categories ?? []).map(normalizeCategory),
 		tags: (meta.tags ?? []).map((tag) => tag.toLowerCase().trim()),
 		canonicalUrl: `${SITE_URL}/blog/${slug}`,
-		ogImage: meta.ogImage ?? autoOgImageBySlug[slug]
+		ogImage: meta.ogImage ?? autoOgImageBySlug[slug],
+		// standard.site document AT-URI, if this post has been published to the PDS
+		atUri: standardSiteDocumentUri(slug)
 	};
 }
 

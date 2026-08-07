@@ -11,4 +11,7 @@ export type BlogPost = {
 	tags: string[];
 	canonicalUrl: string;
 	ogImage?: string;
+	// AT-URI of this post's site.standard.document record on the PDS, sourced from
+	// standard-site-records.json. Absent until the post has been published.
+	atUri?: string;
 };

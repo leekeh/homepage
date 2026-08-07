@@ -1,0 +1,22 @@
+{
+	"_publication": {
+		"uri": "at://did:plc:y7ibtwut4opwcwurnkioejol/site.standard.publication/3msajgvi6fk2u",
+		"cid": "bafyreighk6mef4eerkrwcwfeanbdqtczii3vkt44tfllm6olrl4fzdh544",
+		"hash": "b26afbe438ea07ff0279dd052b7a5b50d25b0943031cd14da0b08f1a587f2aca"
+	},
+	"aria-patterns/accordion": {
+		"uri": "at://did:plc:y7ibtwut4opwcwurnkioejol/site.standard.document/3msajgvyukt2l",
+		"cid": "bafyreier5edbg2miz4ikvmsiuzjkct3xzehikqcbymsxzdqwywten45hji",
+		"hash": "e1d0007f3768e7e27c13c2f8c97153dadb350c4dd7671f7e2a35467e50f4731f"
+	},
+	"beyond-react": {
+		"uri": "at://did:plc:y7ibtwut4opwcwurnkioejol/site.standard.document/3msajgxi76v2e",
+		"cid": "bafyreihofj575qxuecaygfvkf5jvsfrngha7urmjgyhoquuc4l2bpw54oq",
+		"hash": "cead78f4715067c8f6ba67ebd7985d88a9dc05f0493d5cb4feaf6f00d41c09dd"
+	},
+	"hello-world": {
+		"uri": "at://did:plc:y7ibtwut4opwcwurnkioejol/site.standard.document/3msajgyeho62u",
+		"cid": "bafyreiaunfhhshwdilzcytogp2mnuv6k76vjvvbjwxpbogswh7cdp6642y",
+		"hash": "2ceef8e5298ef64c7f8a683e2d7671db1550b601ae011f0c7a2b91f1f8820a2e"
+	}
+}

@@ -6,6 +6,10 @@
 	import { getTreatById, posterSrc } from '../../components/widgets/treats/data';
 	import { absoluteUrl, SITE_DESCRIPTION, SITE_NAME } from '../../content/site';
 	import { WEBMENTION_ENDPOINT, WEBMENTION_PINGBACK } from '../../content/webmentions';
+	import {
+		STANDARD_SITE_PUBLICATION,
+		hasStandardSitePublication
+	} from '../../content/standard-site';
 
 	// get generated type from route
 	type Props = {
@@ -47,7 +51,9 @@
 			return {
 				title: `${currentTreat.title} - leekeh`,
 				description:
-					review.length > 155 ? `${review.slice(0, 152)}…` : review || 'A sweet treat, scanned in 3D.',
+					review.length > 155
+						? `${review.slice(0, 152)}…`
+						: review || 'A sweet treat, scanned in 3D.',
 				type: 'article' as const,
 				url: absoluteUrl(currentPath),
 				image: absoluteUrl(posterSrc(currentTreat.imgId)),
@@ -130,6 +136,12 @@
 		{/if}
 	{/if}
 	<link rel="alternate" type="application/rss+xml" title="leekeh blog feed" href="/rss.xml" />
+	{#if hasStandardSitePublication}
+		<link rel="site.standard.publication" href={STANDARD_SITE_PUBLICATION} />
+		{#if currentPost?.atUri}
+			<link rel="site.standard.document" href={currentPost.atUri} />
+		{/if}
+	{/if}
 	{#if WEBMENTION_ENDPOINT}
 		<link rel="webmention" href={WEBMENTION_ENDPOINT} />
 	{/if}

@@ -86,7 +86,7 @@ A progressively-enhanced personal website styled as a retro (Win95-esque) deskto
 
 ## Testing
 
-Two layers, both driven by real Chromium (Playwright):
+Two testing layers; browser-facing tests use real Chromium (Playwright):
 
 - **Isolated widget / unit tests — Vitest.** Two projects in [vite.config.ts](vite.config.ts):
   - `client` (browser mode, Playwright-driven Chromium): renders a single component in isolation. Files: `*.svelte.test.ts`, colocated next to the component (e.g. [Palette.svelte.test.ts](src/components/widgets/paint/Palette.svelte.test.ts)). Use `render` from `vitest-browser-svelte` + `page`/locators from `vitest/browser`.

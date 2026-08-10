@@ -8,9 +8,6 @@ bun.lockb
 # Miscellaneous
 /static/
 
-# Embedded standalone project (own tooling)
-/sweet-treat-saturday/
-
 # Test artifacts
 /test-results/
 /playwright-report/

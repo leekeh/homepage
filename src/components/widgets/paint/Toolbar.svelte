@@ -19,6 +19,10 @@
 
 	let toolbarEl: HTMLElement;
 
+	const uid = $props.id();
+	const sizeLabelId = `${uid}-size-label`;
+	const customColorId = `${uid}-custom-color`;
+
 	const toolsRoving = useRovingTabindex({
 		selector: '[data-toolbar-item]',
 		orientation: 'both',
@@ -75,8 +79,8 @@
 	<div class="divider"></div>
 
 	<div class="size-section">
-		<span class="size-label" id="size-label">Size:</span>
-		<div class="size-buttons" role="group" aria-labelledby="size-label">
+		<span class="size-label" id={sizeLabelId}>Size:</span>
+		<div class="size-buttons" role="group" aria-labelledby={sizeLabelId}>
 			{#each SIZE_OPTIONS as size, idx (size)}
 				<Button
 					data-toolbar-item
@@ -94,10 +98,10 @@
 	<div class="divider"></div>
 
 	<div class="color-section">
-		<label class="size-label" for="custom-color">Color:</label>
+		<label class="size-label" for={customColorId}>Color:</label>
 		<input
 			class="custom-color squiggle-border"
-			id="custom-color"
+			id={customColorId}
 			type="color"
 			data-toolbar-item
 			tabindex={activeIndex === TOOLS.length + SIZE_OPTIONS.length ? 0 : -1}

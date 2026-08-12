@@ -1,7 +1,8 @@
 <script lang="ts">
-	const basicInfoHeaderId = 'basic-info-header';
-	const languagesHeaderId = 'languages-header';
-	const toolsIUseHeaderId = 'tools-i-use-header';
+	const uid = $props.id();
+	const basicInfoHeaderId = `${uid}-basic-info-header`;
+	const languagesHeaderId = `${uid}-languages-header`;
+	const toolsIUseHeaderId = `${uid}-tools-i-use-header`;
 </script>
 
 <section class="summary">

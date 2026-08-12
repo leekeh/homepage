@@ -12,3 +12,5 @@ bun.lockb
 /test-results/
 /playwright-report/
 /blob-report/
+/lighthouse-report/
+/lighthouse-urls.json

@@ -17,11 +17,16 @@
 		"test:unit:watch": "vitest",
 		"test:unit:changed": "vitest run --changed origin/main",
 		"test:e2e": "playwright test",
-		"test:e2e:ui": "playwright test --ui"
+		"test:e2e:ui": "playwright test --ui",
+		"test:a11y": "playwright test axe",
+		"test:html": "html-validate \".svelte-kit/cloudflare/**/*.html\"",
+		"test:lighthouse": "lhci autorun"
 	},
 	"devDependencies": {
+		"@axe-core/playwright": "^4.12.1",
 		"@eslint/compat": "^2.1.0",
 		"@eslint/js": "^10.0.1",
+		"@lhci/cli": "^0.15.1",
 		"@playwright/test": "^1.62.0",
 		"@sveltejs/adapter-cloudflare": "^7.2.9",
 		"@sveltejs/kit": "^2.70.1",
@@ -35,6 +40,7 @@
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-svelte": "^3.22.0",
 		"globals": "^17.8.0",
+		"html-validate": "^11.6.2",
 		"mdsvex": "^0.12.8",
 		"playwright": "^1.62.0",
 		"prettier": "^3.9.6",

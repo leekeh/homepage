@@ -1,11 +1,11 @@
 <script lang="ts">
 	import Button from '@components/OS/Button.svelte';
 
-	let listEl: HTMLUListElement | undefined = $state();
+	let listEl: HTMLDivElement | undefined = $state();
 
 	function scroll(dir: -1 | 1) {
 		if (!listEl) return;
-		const card = listEl.querySelector('li');
+		const card = listEl.querySelector<HTMLElement>('.slide');
 		if (!card) return;
 		const gap = parseFloat(getComputedStyle(listEl).gap) || 0;
 		listEl.scrollBy({ left: dir * (card.offsetWidth + gap), behavior: 'smooth' });
@@ -57,12 +57,12 @@
 	];
 </script>
 
-<section>
+<section role="group" aria-roledescription="carousel" aria-labelledby="recos-heading">
 	<div class="list-header">
-		<h3>What others say:</h3>
+		<h3 id="recos-heading">What others say:</h3>
 	</div>
 	<div class="nav">
-		<Button iconOnly onclick={() => scroll(-1)} aria-label="Scroll left"
+		<Button iconOnly onclick={() => scroll(-1)} aria-label="Previous slide"
 			><svg
 				xmlns="http://www.w3.org/2000/svg"
 				width="24"
@@ -79,7 +79,7 @@
 				<path d="M15 6l-6 6l6 6" />
 			</svg></Button
 		>
-		<Button iconOnly onclick={() => scroll(1)} aria-label="Scroll right"
+		<Button iconOnly onclick={() => scroll(1)} aria-label="Next slide"
 			><svg
 				xmlns="http://www.w3.org/2000/svg"
 				width="24"
@@ -97,18 +97,24 @@
 			</svg></Button
 		>
 	</div>
-	<ul bind:this={listEl}>
+	<!--
+		Scroll-snap viewport. tabindex="0" makes the overflow region keyboard-focusable
+		(arrow keys scroll it) — required by WCAG 2.1.1 / axe scrollable-region-focusable.
+		Svelte's a11y heuristic doesn't account for scroll containers, so we opt out here.
+	-->
+	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+	<div class="slides" bind:this={listEl} tabindex="0" aria-label="What others say">
 		{#each recos as reco, i (i)}
-			<li>
+			<div class="slide" role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${recos.length}`}>
 				<blockquote>
 					<p>{reco.text}</p>
 					<footer>
 						<cite>{reco.who}</cite>
 					</footer>
 				</blockquote>
-			</li>
+			</div>
 		{/each}
-	</ul>
+	</div>
 </section>
 
 <style>
@@ -135,7 +141,7 @@
 		gap: var(--space-4);
 	}
 
-	ul {
+	.slides {
 		display: flex;
 		flex-direction: row;
 		gap: var(--space-7);
@@ -148,14 +154,17 @@
 		scrollbar-width: none;
 	}
 
+	.slide {
+		scroll-snap-align: start;
+		flex-shrink: 0;
+	}
+
 	blockquote {
 		background-color: var(--color-bg-subtle);
 		padding: var(--space-4);
 		border-radius: var(--radius-lg);
 		width: 30ch;
 		overflow-wrap: break-word;
-		scroll-snap-align: start;
-		flex-shrink: 0;
 		p {
 			display: -webkit-box;
 			-webkit-line-clamp: 5;
@@ -177,7 +186,7 @@
 		.nav {
 			display: none;
 		}
-		ul {
+		.slides {
 			flex-direction: column;
 		}
 	}

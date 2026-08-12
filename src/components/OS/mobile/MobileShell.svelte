@@ -64,6 +64,7 @@
 				{:else}
 					{@const DefaultComponent = await loadWidgetComponent(routeMatch?.widget.id ?? 'about')}
 					{#if DefaultComponent}
+						<h2 class="sr-only">{routeMatch?.widget.title ?? 'About Me'}</h2>
 						<DefaultComponent {...routeMatch?.params ?? {}} />
 					{/if}
 				{/if}
@@ -80,6 +81,7 @@
 					{#if activeWindow}
 						{@const ActiveComponent = await loadWidgetComponent(activeWindow.widgetId)}
 						{#if ActiveComponent}
+							<h2 class="sr-only">{activeWindow.title}</h2>
 							<ActiveComponent {...activeWindow.data ?? {}} />
 						{/if}
 					{/if}

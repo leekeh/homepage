@@ -82,4 +82,21 @@ describe('blog post load', () => {
 		const { initialComments } = await loadComments(loadEvent({ db: null }));
 		expect(initialComments).toEqual([]);
 	});
+
+	it('returns an empty list when the query fails (e.g. table not provisioned)', async () => {
+		// A DB binding that throws on query — mirrors preview/CI where the
+		// `direct_comments` table doesn't exist. The post must still render.
+		const failingDb = {
+			prepare: () => ({
+				bind: () => ({
+					all: async () => {
+						throw new Error('D1_ERROR: no such table: direct_comments');
+					}
+				})
+			})
+		} as unknown as D1Mock;
+
+		const { initialComments } = await loadComments(loadEvent({ db: failingDb }));
+		expect(initialComments).toEqual([]);
+	});
 });

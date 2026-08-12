@@ -89,7 +89,7 @@
 	{#if hasJsSupport}
 		{#each visibleTabs as win, i (win.id)}
 			{@const isSelected = activeWindow?.id === win.id}
-			<div class="tab-item squiggle-border" class:active={isSelected}>
+			<div class="tab-item squiggle-border" role="presentation" class:active={isSelected}>
 				<button
 					type="button"
 					role="tab"
@@ -97,6 +97,7 @@
 					class="mobile-tab"
 					aria-selected={isSelected}
 					aria-controls="mobile-tabpanel"
+					aria-keyshortcuts="Delete"
 					tabindex={i === clampedFocusIndex ? 0 : -1}
 					onclick={() => selectTab(win.id)}
 				>
@@ -105,7 +106,7 @@
 				<button
 					type="button"
 					class="close-tab-btn"
-					aria-label="Close {win.title}"
+					aria-hidden="true"
 					tabindex="-1"
 					onclick={() => closeTab(win.id)}
 				>

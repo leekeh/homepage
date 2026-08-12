@@ -1,5 +1,5 @@
-<svg id="emoji" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
-	<g id="color">
+<svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+	<g>
 		<polygon fill="#3F3F3F" stroke="none" points="14.5943,53.154 18.2544,56.814 12.6242,59.0928" />
 		<polyline
 			fill="#f4aa41"
@@ -22,10 +22,10 @@
 			points="35.6498,24.2643 43.3318,16.5823 54.6447,27.8952 47.0278,35.512"
 		/>
 	</g>
-	<g id="hair" />
-	<g id="skin" />
-	<g id="skin-shadow" />
-	<g id="line">
+	<g />
+	<g />
+	<g />
+	<g>
 		<polygon
 			fill="none"
 			stroke="#000000"

@@ -1,12 +1,12 @@
-<svg id="emoji" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
-	<g id="color">
+<svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+	<g>
 		<rect x="12.8019" y="24.0856" width="34.8816" height="34.9435" fill="#D0CFCE" stroke="none" />
 		<rect x="24.8936" y="12.0814" width="34.9009" height="34.7857" fill="#FFFFFF" stroke="none" />
 	</g>
-	<g id="hair" />
-	<g id="skin" />
-	<g id="skin-shadow" />
-	<g id="line">
+	<g />
+	<g />
+	<g />
+	<g>
 		<path
 			fill="none"
 			stroke="#000000"

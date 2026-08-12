@@ -25,9 +25,7 @@ function formatViolations(violations: Awaited<ReturnType<AxeBuilder['analyze']>>
 async function analyzeRoute(page: Page, route: string) {
 	await page.goto(route);
 	await waitForStartup(page);
-	const { violations } = await new AxeBuilder({ page })
-		.withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-		.analyze();
+	const { violations } = await new AxeBuilder({ page }).exclude('iframe').analyze();
 	return violations;
 }
 

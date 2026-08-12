@@ -19,6 +19,7 @@ const BASE = process.env.LHCI_BASE_URL ?? 'http://localhost:4173';
 
 let urls;
 try {
+	// eslint-disable-next-line @typescript-eslint/no-require-imports
 	urls = require('./lighthouse-urls.json');
 } catch {
 	urls = ['/', '/blog', '/paint', '/contact', '/hire-me', '/treats'].map((route) =>

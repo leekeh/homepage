@@ -105,7 +105,12 @@
 	<!-- svelte-ignore a11y_no_noninteractive_tabindex -->
 	<div class="slides" bind:this={listEl} tabindex="0" aria-label="What others say">
 		{#each recos as reco, i (i)}
-			<div class="slide" role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${recos.length}`}>
+			<div
+				class="slide"
+				role="group"
+				aria-roledescription="slide"
+				aria-label={`${i + 1} of ${recos.length}`}
+			>
 				<blockquote>
 					<p>{reco.text}</p>
 					<footer>

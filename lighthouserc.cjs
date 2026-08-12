@@ -21,8 +21,8 @@ let urls;
 try {
 	urls = require('./lighthouse-urls.json');
 } catch {
-	urls = ['/', '/blog', '/paint', '/contact', '/hire-me', '/treats'].map(
-		(route) => new URL(route, BASE).toString()
+	urls = ['/', '/blog', '/paint', '/contact', '/hire-me', '/treats'].map((route) =>
+		new URL(route, BASE).toString()
 	);
 }
 

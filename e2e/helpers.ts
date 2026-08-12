@@ -60,7 +60,10 @@ export function registerAxeSweep() {
 			await test.step(route, async () => {
 				const violations = await analyzeRoute(page, route);
 				expect
-					.soft(violations, `Accessibility violations on ${route}:\n${formatViolations(violations)}`)
+					.soft(
+						violations,
+						`Accessibility violations on ${route}:\n${formatViolations(violations)}`
+					)
 					.toEqual([]);
 			});
 		}

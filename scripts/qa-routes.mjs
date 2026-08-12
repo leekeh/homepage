@@ -33,7 +33,9 @@ function walkHtml(dir) {
 
 /** Prerendered file path → route ("index.html" → "/", "treats/x.html" → "/treats/x"). */
 function fileToRoute(file) {
-	const rel = relative(DIST, file).replaceAll('\\', '/').replace(/\.html$/, '');
+	const rel = relative(DIST, file)
+		.replaceAll('\\', '/')
+		.replace(/\.html$/, '');
 	if (rel === 'index') return '/';
 	return '/' + rel.replace(/\/index$/, '');
 }

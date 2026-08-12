@@ -263,10 +263,10 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		</div>
 		<div class="titlebar-buttons" inert={!isActive}>
 			{#if hasJsSupport}
-				<button class="wbtn" onclick={onMinimize} title="Minimize">
+				<button type="button" class="wbtn" onclick={onMinimize} title="Minimize">
 					<IconMinimize />
 				</button>
-				<button class="wbtn" onclick={onToggleMaximize} title={maximized ? 'Restore' : 'Maximize'}>
+				<button type="button" class="wbtn" onclick={onToggleMaximize} title={maximized ? 'Restore' : 'Maximize'}>
 					{#if maximized}
 						<IconRestore />
 					{:else}
@@ -275,7 +275,7 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 				</button>
 			{/if}
 			{#if hasJsSupport}
-				<button class="wbtn close-btn" onclick={onClose} title="Close">
+				<button type="button" class="wbtn close-btn" onclick={onClose} title="Close">
 					<IconClose />
 				</button>
 			{:else if currentPath !== '/'}

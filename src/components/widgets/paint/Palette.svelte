@@ -44,6 +44,7 @@
 <div class="palette-bar" role="toolbar" use:attachPaletteRoving aria-label="Color palette">
 	{#each colors as color, idx (color)}
 		<button
+			type="button"
 			class="palette-cell squiggle-border"
 			class:selected={primaryColor === color}
 			data-palette-btn

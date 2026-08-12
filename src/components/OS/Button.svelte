@@ -34,7 +34,7 @@ Basic polymorphic button component that can be used inside widgets.
 		{@render children?.()}
 	</a>
 {:else}
-	<button class={classes} {...rest as HTMLButtonAttributes}>
+	<button type="button" class={classes} {...rest as HTMLButtonAttributes}>
 		{@render children?.()}
 	</button>
 {/if}

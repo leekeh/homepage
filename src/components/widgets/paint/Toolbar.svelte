@@ -58,6 +58,7 @@
 	<div class="tools">
 		{#each TOOLS as tool, idx (tool.id)}
 			<button
+				type="button"
 				class="tool-btn"
 				class:squiggle-border={activeTool === tool.id}
 				data-toolbar-item

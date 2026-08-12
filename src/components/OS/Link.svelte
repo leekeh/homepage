@@ -35,7 +35,7 @@ Basic polymorphic link component that can be used inside widgets.
 	</a>
 	<!-- eslint-enable svelte/no-navigation-without-resolve -->
 {:else}
-	<button class="link" {...rest as HTMLButtonAttributes}>
+	<button type="button" class="link" {...rest as HTMLButtonAttributes}>
 		{@render children?.()}
 	</button>
 {/if}

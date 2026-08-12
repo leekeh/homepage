@@ -91,6 +91,7 @@
 			{@const isSelected = activeWindow?.id === win.id}
 			<div class="tab-item squiggle-border" class:active={isSelected}>
 				<button
+					type="button"
 					role="tab"
 					id="tab-{win.id}"
 					class="mobile-tab"
@@ -102,6 +103,7 @@
 					<span class="tab-label">{win.title}</span>
 				</button>
 				<button
+					type="button"
 					class="close-tab-btn"
 					aria-label="Close {win.title}"
 					tabindex="-1"

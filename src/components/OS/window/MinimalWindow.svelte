@@ -79,7 +79,7 @@
 	aria-label={title}
 >
 	{#if hasJsSupport}
-		<button class="minimal-close" onclick={onClose} title="Close">
+		<button type="button" class="minimal-close" onclick={onClose} title="Close">
 			<IconClose />
 		</button>
 	{:else if currentPath !== '/'}

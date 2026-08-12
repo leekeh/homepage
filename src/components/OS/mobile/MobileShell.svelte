@@ -55,6 +55,8 @@
 		</header>
 
 		<main class="mobile-content" id="mobile-content">
+			<h1 class="sr-only">leekeh</h1>
+
 			{#if !hasJsSupport}
 				<!-- No-JS: check URL to decide what to render -->
 				{#if routeMatch?.widget.id === 'apps'}

@@ -84,6 +84,10 @@ A progressively-enhanced personal website styled as a retro (Win95-esque) deskto
 
 - Do not add return types for functions that can be inferred.
 
+**Formatting**
+
+- Always run `pnpm prettier --write` on the affected files after you write code
+
 ## Testing
 
 Two testing layers; browser-facing tests use real Chromium (Playwright):

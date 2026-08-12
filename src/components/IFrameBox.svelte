@@ -28,7 +28,7 @@
 		<span class="antenna antenna-right" aria-hidden="true"></span>
 		<div class="tv-body">
 			<div class="tv-screen">
-				<iframe {src} {title} width="100%" style:height loading="lazy"></iframe>
+				<iframe {src} {title} style:height loading="lazy"></iframe>
 				<div class="scanlines" aria-hidden="true"></div>
 			</div>
 			<div class="tv-controls" aria-hidden="true">

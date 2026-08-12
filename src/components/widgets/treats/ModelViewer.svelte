@@ -63,9 +63,7 @@
 		<img
 			src={posterSrc(imgId)}
 			alt="3D model of {title}"
-			width="100%"
-			height="100%"
-			style="object-fit: contain; background-color: #f7f4d8"
+			style="width: 100%; height: 100%; object-fit: contain;"
 		/>
 	</div>
 </noscript>

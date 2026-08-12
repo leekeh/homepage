@@ -2,6 +2,7 @@
 	import Button from '@components/OS/Button.svelte';
 
 	let listEl: HTMLDivElement | undefined = $state();
+	let headingId = $props.id();
 
 	function scroll(dir: -1 | 1) {
 		if (!listEl) return;
@@ -57,9 +58,9 @@
 	];
 </script>
 
-<section role="group" aria-roledescription="carousel" aria-labelledby="recos-heading">
+<section role="group" aria-roledescription="carousel" aria-labelledby={headingId}>
 	<div class="list-header">
-		<h3 id="recos-heading">What others say:</h3>
+		<h3 id={headingId}>What others say:</h3>
 	</div>
 	<div class="nav">
 		<Button iconOnly onclick={() => scroll(-1)} aria-label="Previous slide"

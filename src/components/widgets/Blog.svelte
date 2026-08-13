@@ -6,6 +6,7 @@
 	import { formatDate } from '@utils/date';
 	const posts = $derived((page.data.blogPosts ?? []) as BlogPost[]);
 	const categories = $derived((page.data.blogCategories ?? []) as string[]);
+	const uid = $props.id();
 
 	function capitalizeFirstLetter(str: string) {
 		return str.charAt(0).toUpperCase() + str.slice(1);
@@ -29,8 +30,8 @@
 <div class="blog">
 	<ul class="post-list">
 		{#each posts as post (post.slug)}
-			{const titleId = `post-title-${post.slug}`}
-			{const excerptId = `post-excerpt-${post.slug}`}
+			{const titleId = `${uid}-post-title-${post.slug}`}
+			{const excerptId = `${uid}-post-excerpt-${post.slug}`}
 			<li>
 				<a
 					class="post-item squiggle-border"
@@ -49,7 +50,7 @@
 		{/each}
 	</ul>
 	<div class="feeds">
-		{const labelId = 'rss-feeds-label'}
+		{const labelId = `${uid}-rss-feeds-label`}
 		<h2 id={labelId}><IconRSS /> <span class="visually-hidden">RSS Feeds</span></h2>
 		<ul aria-labelledby={labelId}>
 			{@render feedLink()}

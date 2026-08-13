@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
-	import { resolve } from '$app/paths';
+	import { resolvePath } from '@utils/resolve';
 	import type { PathnameWithSearchOrHash } from '$app/types';
 
 	type AnchorProps = HTMLAnchorAttributes & {
@@ -30,11 +30,11 @@ Basic polymorphic button component that can be used inside widgets.
  -->
 
 {#if href}
-	<a class={classes} href={resolve(href)} {...rest as HTMLAnchorAttributes}>
+	<a class={classes} href={resolvePath(href)} {...rest as HTMLAnchorAttributes}>
 		{@render children?.()}
 	</a>
 {:else}
-	<button class={classes} {...rest as HTMLButtonAttributes}>
+	<button type="button" class={classes} {...rest as HTMLButtonAttributes}>
 		{@render children?.()}
 	</button>
 {/if}

@@ -1,5 +1,5 @@
-<svg id="emoji" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
-	<g id="color">
+<svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+	<g>
 		<rect x="16.4055" y="11.3783" width="39.5645" height="49.0659" fill="#fff" />
 		<polyline
 			fill="#f4aa41"
@@ -15,7 +15,7 @@
 			points="50.4943 29.6593 55.1018 25.0519 61.7836 31.7907 57.2152 36.3591"
 		/>
 	</g>
-	<g id="line">
+	<g>
 		<polygon points="38.0702 47.191 40.4564 49.5772 36.9921 50.8566 38.0702 47.191" />
 		<line
 			x1="22.3215"

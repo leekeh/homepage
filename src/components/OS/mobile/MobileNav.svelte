@@ -9,6 +9,7 @@
 </script>
 
 <button
+	type="button"
 	class="menu-btn squiggled"
 	id={buttonId}
 	bind:this={menuBtn}

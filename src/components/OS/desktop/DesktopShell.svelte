@@ -68,6 +68,7 @@
 		{/snippet}
 
 		<main id="desktop-content">
+			<h1 class="sr-only">leekeh</h1>
 			{#if !hasJsSupport}
 				{@const def = getWidgetById(fallbackWidgetId)}
 				{#if def}

@@ -47,7 +47,9 @@
 			return {
 				title: `${currentTreat.title} - leekeh`,
 				description:
-					review.length > 155 ? `${review.slice(0, 152)}…` : review || 'A sweet treat, scanned in 3D.',
+					review.length > 155
+						? `${review.slice(0, 152)}…`
+						: review || 'A sweet treat, scanned in 3D.',
 				type: 'article' as const,
 				url: absoluteUrl(currentPath),
 				image: absoluteUrl(posterSrc(currentTreat.imgId)),

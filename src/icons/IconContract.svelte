@@ -8,7 +8,6 @@
 	stroke-width="2"
 	stroke-linecap="round"
 	stroke-linejoin="round"
-	class="icon icon-tabler icons-tabler-outline icon-tabler-contract"
 >
 	<path stroke="none" d="M0 0h24v24H0z" fill="none" />
 	<path d="M8 21h-2a3 3 0 0 1 -3 -3v-1h5.5" />

@@ -19,4 +19,15 @@ declare global {
 	}
 }
 
+// The standard `blocking` attribute (e.g. `blocking="render"`) isn't in
+// Svelte's element attribute types yet; declare it so it type-checks in markup.
+declare module 'svelte/elements' {
+	// `T` must mirror the original signature for declaration merging, even
+	// though this augmentation doesn't reference it.
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	interface HTMLAttributes<T extends EventTarget> {
+		blocking?: string;
+	}
+}
+
 export {};

@@ -21,9 +21,10 @@ export function remarkReadingTime(options = {}) {
 	const attribute = options.attribute ?? 'readingTime';
 
 	return (tree, file) => {
+		/** @type {string[]} */
 		const chunks = [];
 
-		visit(tree, 'text', (node) => {
+		visit(tree, 'text', (/** @type {{ value?: string }} */ node) => {
 			chunks.push(node.value ?? '');
 		});
 
@@ -38,6 +39,7 @@ export function remarkReadingTime(options = {}) {
 		if (!file.data.fm || typeof file.data.fm !== 'object') {
 			file.data.fm = {};
 		}
-		file.data.fm[attribute] = readingTime;
+		const fm = /** @type {Record<string, unknown>} */ (file.data.fm);
+		fm[attribute] = readingTime;
 	};
 }

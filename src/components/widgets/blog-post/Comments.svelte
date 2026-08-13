@@ -30,7 +30,6 @@
 		commentsError = null;
 		try {
 			const res = await fetch(`/api/comments/${encodeURIComponent(slug)}`);
-			console.log(res);
 			if (!res.ok) throw new Error(`Failed to load comments (${res.status})`);
 			fetchedComments = await res.json();
 		} catch (e) {

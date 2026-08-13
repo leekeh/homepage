@@ -1,5 +1,5 @@
-<svg id="emoji" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
-	<g id="color">
+<svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+	<g>
 		<path
 			fill="#a57939"
 			stroke="#a57939"
@@ -18,10 +18,10 @@
 			points="26.8108,35.5092 36.0461,44.7445 30.2121,48.8995 22.9382,41.5646"
 		/>
 	</g>
-	<g id="hair" />
-	<g id="skin" />
-	<g id="skin-shadow" />
-	<g id="line">
+	<g />
+	<g />
+	<g />
+	<g>
 		<path
 			fill="none"
 			stroke="#000000"

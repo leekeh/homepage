@@ -7,3 +7,10 @@ bun.lockb
 
 # Miscellaneous
 /static/
+
+# Test artifacts
+/test-results/
+/playwright-report/
+/blob-report/
+/lighthouse-report/
+/lighthouse-urls.json

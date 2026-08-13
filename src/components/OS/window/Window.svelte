@@ -267,11 +267,13 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		</div>
 		<div class="titlebar-buttons" inert={!isActive}>
 			{#if hasJsSupport}
-				<button class="wbtn" onclick={onMinimize} title="Minimize">
+				<button type="button" class="wbtn" onclick={onMinimize} title="Minimize">
 					<IconMinimize />
 				</button>
+
 				{#if resizable}
 					<button
+						type="button"
 						class="wbtn"
 						onclick={onToggleMaximize}
 						title={maximized ? 'Restore' : 'Maximize'}
@@ -285,11 +287,17 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 				{/if}
 			{/if}
 			{#if hasJsSupport}
-				<button class="wbtn close-btn" onclick={onClose} title="Close">
+				<button
+					type="button"
+					class="wbtn close-btn"
+					onclick={onClose}
+					title="Close"
+					aria-label="Close"
+				>
 					<IconClose />
 				</button>
 			{:else if currentPath !== '/'}
-				<a class="wbtn close-btn" href={resolve('/')} title="Close">
+				<a class="wbtn close-btn" href={resolve('/')} title="Close" aria-label="Close">
 					<IconClose />
 				</a>
 			{/if}

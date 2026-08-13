@@ -19,6 +19,7 @@
 	<p class="print-placeholder squiggle-border">
 		On this section, there was an embedded iframe titled {title}. Iframes are not supported on
 		prints, sadly. You can view the content online at
+		<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- external embed URL, not an app route -->
 		<a href={src} target="_blank" rel="noopener noreferrer nofollow">{src}</a>.
 	</p>
 {:else}
@@ -27,7 +28,7 @@
 		<span class="antenna antenna-right" aria-hidden="true"></span>
 		<div class="tv-body">
 			<div class="tv-screen">
-				<iframe {src} {title} width="100%" style:height loading="lazy"></iframe>
+				<iframe {src} {title} style:height loading="lazy"></iframe>
 				<div class="scanlines" aria-hidden="true"></div>
 			</div>
 			<div class="tv-controls" aria-hidden="true">
@@ -40,7 +41,9 @@
 				<span class="caption-text">{caption}</span>
 			{/if}
 			<p class="credit">
-				Source: <a href={src} target="_blank" rel="noopener noreferrer nofollow">{src}</a>
+				Source:
+				<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -- external embed URL, not an app route -->
+				<a href={src} target="_blank" rel="noopener noreferrer nofollow">{src}</a>
 			</p>
 		</figcaption>
 	</figure>

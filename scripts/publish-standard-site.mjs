@@ -43,7 +43,12 @@ const DRY_RUN = process.env.DRY_RUN === '1';
 // site.standard.theme.color#rgb union member from a #rrggbb string.
 function rgb(hex) {
 	const n = parseInt(hex.replace('#', ''), 16);
-	return { $type: 'site.standard.theme.color#rgb', r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+	return {
+		$type: 'site.standard.theme.color#rgb',
+		r: (n >> 16) & 255,
+		g: (n >> 8) & 255,
+		b: n & 255
+	};
 }
 
 const PUBLICATION = {

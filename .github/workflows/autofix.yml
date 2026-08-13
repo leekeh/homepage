@@ -38,10 +38,8 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Install ImageMagick
-        run: sudo apt-get update && sudo apt-get install -y imagemagick
-
       # Shrink any image over the 500 KB budget in place (keeps filename/format).
+      # Uses sharp (a locked dependency) — no system tools to install.
       - name: Optimize images
         run: pnpm run optimize:images
 

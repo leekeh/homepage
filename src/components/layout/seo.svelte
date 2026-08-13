@@ -3,7 +3,7 @@
 
 	import { page } from '$app/state';
 	import { getWidgetByRoute } from '../../components/widgets/widgets';
-	import { getTreatById, posterSrc } from '../../components/widgets/treats/data';
+	import { getTreatById, posterWebp } from '../../components/widgets/treats/data';
 	import { absoluteUrl, SITE_DESCRIPTION, SITE_NAME } from '../../content/site';
 	import { WEBMENTION_ENDPOINT, WEBMENTION_PINGBACK } from '../../content/webmentions';
 
@@ -52,7 +52,7 @@
 						: review || 'A sweet treat, scanned in 3D.',
 				type: 'article' as const,
 				url: absoluteUrl(currentPath),
-				image: absoluteUrl(posterSrc(currentTreat.imgId)),
+				image: absoluteUrl(posterWebp(currentTreat.imgId)),
 				imageAlt: currentTreat.title,
 				article: {
 					publishedTime: new Date(currentTreat.date).toISOString(),

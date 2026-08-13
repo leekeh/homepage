@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { modelSrc, posterSrc } from './data';
+	import { modelSrc, posterWebp } from './data';
 	import { IconTreats } from '@icons/index';
 
 	interface Props {
@@ -61,7 +61,7 @@
 <noscript>
 	<div class="viewer-wrap">
 		<img
-			src={posterSrc(imgId)}
+			src={posterWebp(imgId)}
 			alt="3D model of {title}"
 			style="width: 100%; height: 100%; object-fit: contain;"
 		/>
@@ -72,7 +72,7 @@
 		<model-viewer
 			bind:this={viewer}
 			alt="3D model of {title}"
-			poster={posterSrc(imgId)}
+			poster={posterWebp(imgId)}
 			src={modelSrc(imgId)}
 			camera-controls
 			tone-mapping="neutral"

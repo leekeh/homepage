@@ -103,7 +103,7 @@
 	.desktop-shell {
 		position: absolute;
 		inset: 0;
-		background: url('/bg.png');
+		background: url('/bg.webp');
 		background-size: cover;
 	}
 

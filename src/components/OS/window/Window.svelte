@@ -265,7 +265,7 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 			{/if}
 			<h2 class="title-text" id={`window-title-${id}`}>{title}</h2>
 		</div>
-		<div class="titlebar-buttons" inert={!isActive}>
+		<div class="titlebar-buttons">
 			{#if hasJsSupport}
 				<button type="button" class="wbtn" onclick={onMinimize} title="Minimize">
 					<IconMinimize />
@@ -305,7 +305,7 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 	</header>
 
 	<!-- Content area -->
-	<div class="window-content" inert={!isActive}>
+	<div class="window-content">
 		{@render children()}
 	</div>
 

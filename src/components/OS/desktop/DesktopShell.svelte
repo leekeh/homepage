@@ -68,6 +68,7 @@
 		{/snippet}
 
 		<main id="desktop-content">
+			<h1 class="sr-only">leekeh</h1>
 			{#if !hasJsSupport}
 				{@const def = getWidgetById(fallbackWidgetId)}
 				{#if def}
@@ -102,7 +103,7 @@
 	.desktop-shell {
 		position: absolute;
 		inset: 0;
-		background: url('/bg.png');
+		background: url('/bg.webp');
 		background-size: cover;
 	}
 

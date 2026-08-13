@@ -116,7 +116,7 @@ export const widgetConfigs: WidgetConfig[] = [
 		route: '/hire-me',
 		defaultWidth: 336,
 		defaultHeight: 544,
-		resizable: true,
+		resizable: false,
 		minimal: false
 	},
 	{

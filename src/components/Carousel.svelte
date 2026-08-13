@@ -50,14 +50,13 @@
 				<iframe
 					src={item.url}
 					title={item.label}
-					width="100%"
-					height="400px"
+					style="height: 400px;"
 					sandbox="allow-scripts allow-same-origin allow-forms"
 					loading="lazy"
 				></iframe>
 			{:else if item.type === 'video'}
 				<!-- svelte-ignore a11y_media_has_caption -->
-				<video src={item.url} controls width="100%"></video>
+				<video src={item.url} controls></video>
 			{:else}
 				<img src={item.url} alt={item.alt ?? item.label} />
 			{/if}
@@ -147,6 +146,7 @@
 	.slide-media iframe,
 	.slide-media video {
 		display: block;
+		width: 100%;
 		border: none;
 	}
 

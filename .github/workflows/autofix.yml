@@ -1,0 +1,55 @@
+name: Autofix
+
+# Automatically shrinks oversized images and reformats the tree on every PR,
+# then commits the result back to the PR branch. Not a gate — it fixes things
+# rather than failing the build.
+on:
+  pull_request:
+
+# Committing back requires write access to the branch.
+permissions:
+  contents: write
+
+concurrency:
+  group: autofix-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  autofix:
+    name: Optimize images & format
+    runs-on: ubuntu-latest
+    # Same-repo PRs only: forks get a read-only token, so the push would fail.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Check out the PR's real branch (not the detached merge commit) so we
+          # can commit and push back to it.
+          ref: ${{ github.head_ref }}
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Shrink any image over the 500 KB budget in place (keeps filename/format).
+      # Uses sharp (a locked dependency) — no system tools to install.
+      - name: Optimize images
+        run: pnpm run optimize:images
+
+      # Prettier over the whole tree.
+      - name: Format
+        run: pnpm run format
+
+      - name: Commit fixes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: autofix images & formatting'
+          commit_user_name: github-actions[bot]
+          commit_user_email: github-actions[bot]@users.noreply.github.com

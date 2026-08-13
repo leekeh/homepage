@@ -117,6 +117,8 @@
 			const nextX = event.clientX - dragOffX;
 			const nextY = event.clientY - dragOffY;
 			wm.move(id, nextX, nextY);
+
+			if (!resizable) return;
 			if (nextY <= SNAP_TOP_THRESHOLD) {
 				snapPreview = 'top';
 			} else if (event.clientX <= SNAP_SIDE_THRESHOLD) {
@@ -133,6 +135,7 @@
 			draggingFromMaximized = false;
 			draggingFromSnapped = false;
 			snapPreview = null;
+			if (!resizable) return;
 
 			if (prevSnap === 'top' && !maximized) {
 				onToggleMaximize();
@@ -211,6 +214,7 @@
 	}
 
 	function onToggleMaximize() {
+		if (!resizable) return;
 		// set animation state before toggling to ensure transition runs when maximizing
 		isAnimating = true;
 		wm.toggleMaximize(id);
@@ -261,25 +265,39 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 			{/if}
 			<h2 class="title-text" id={`window-title-${id}`}>{title}</h2>
 		</div>
-		<div class="titlebar-buttons" inert={!isActive}>
+		<div class="titlebar-buttons">
 			{#if hasJsSupport}
-				<button class="wbtn" onclick={onMinimize} title="Minimize">
+				<button type="button" class="wbtn" onclick={onMinimize} title="Minimize">
 					<IconMinimize />
 				</button>
-				<button class="wbtn" onclick={onToggleMaximize} title={maximized ? 'Restore' : 'Maximize'}>
-					{#if maximized}
-						<IconRestore />
-					{:else}
-						<IconMaximize />
-					{/if}
-				</button>
+
+				{#if resizable}
+					<button
+						type="button"
+						class="wbtn"
+						onclick={onToggleMaximize}
+						title={maximized ? 'Restore' : 'Maximize'}
+					>
+						{#if maximized}
+							<IconRestore />
+						{:else}
+							<IconMaximize />
+						{/if}
+					</button>
+				{/if}
 			{/if}
 			{#if hasJsSupport}
-				<button class="wbtn close-btn" onclick={onClose} title="Close">
+				<button
+					type="button"
+					class="wbtn close-btn"
+					onclick={onClose}
+					title="Close"
+					aria-label="Close"
+				>
 					<IconClose />
 				</button>
 			{:else if currentPath !== '/'}
-				<a class="wbtn close-btn" href={resolve('/')} title="Close">
+				<a class="wbtn close-btn" href={resolve('/')} title="Close" aria-label="Close">
 					<IconClose />
 				</a>
 			{/if}
@@ -287,7 +305,7 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 	</header>
 
 	<!-- Content area -->
-	<div class="window-content" inert={!isActive}>
+	<div class="window-content">
 		{@render children()}
 	</div>
 

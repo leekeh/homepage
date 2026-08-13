@@ -1,6 +1,5 @@
-<svg id="emoji" viewBox="0 0 72 72" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 72 72" version="1.1" xmlns="http://www.w3.org/2000/svg">
 	<g
-		id="line-supplement"
 		fill="none"
 		stroke="#000"
 		stroke-linecap="round"
@@ -24,7 +23,7 @@
 			d="m11.12 32.52c-0.441 0.391-1.022 0.629-1.659 0.629-1.38 0-2.5-1.119-2.5-2.5v-2 2-2c0-1.381 1.12-2.5 2.5-2.5 0.637 0 1.218 0.238 1.659 0.629"
 		/>
 	</g>
-	<g id="color" stroke-linecap="round">
+	<g stroke-linecap="round">
 		<rect x="12" y="12" width="48" height="47.83" fill="#d0cfce" />
 		<rect x="12" y="12" width="21.54" height="21.58" fill="#3f3f3f" stroke-width="1.822" />
 		<rect x="24.71" y="24.62" width="22.59" height="22.67" fill="#3f3f3f" stroke-width="1.822" />
@@ -75,7 +74,7 @@
 			d="m11.12 32.52c-0.441 0.391-1.022 0.629-1.659 0.629-1.38 0-2.5-1.119-2.5-2.5v-2 2-2c0-1.381 1.12-2.5 2.5-2.5 0.637 0 1.218 0.238 1.659 0.629"
 		/>
 	</g>
-	<g id="line">
+	<g>
 		<rect
 			x="12"
 			y="12"

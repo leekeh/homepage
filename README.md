@@ -20,7 +20,6 @@ Our blog records are synced to standard.site to be discoverable and indexed on t
 - keyboard shortcuts for window managements, opening shortcuts
 - spotlight
 - context menu (right click)
-- remove old vercel integration and move to cloudflare pages
 - associate multiple widgets on one url
 - custom scrollbar
 - wait for fonts / assets to load before closing startup animation
@@ -34,9 +33,7 @@ Our blog records are synced to standard.site to be discoverable and indexed on t
 - make the blog a txt or pdf file. maybe make it look like a pdf viewer, txt viewer etc.
 - dark mode
 - accessibility statement
-- handle the overflowing issue of desktop icons
 - implement max sizes for windows
-- add tests!!
 
 widgets:
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { resolve } from '$app/paths';
+	import { resolvePath } from '@utils/resolve';
 	import { getRouteForWindow } from '@components/widgets/widgets';
 	import { useWindowManager } from '../shared/windowManager.svelte';
 	import { useTime } from '../shared/useTime.svelte';
@@ -52,7 +52,7 @@
 				<a
 					class="window-button squiggle-border"
 					class:active={isActive}
-					href={resolve(getRouteForWindow(win.widgetId, win.data))}
+					href={resolvePath(getRouteForWindow(win.widgetId, win.data))}
 					role="menuitem"
 					tabindex={hasJsSupport ? (index === clampedMenuIndex ? 0 : -1) : undefined}
 					onclick={() => focusWindow(win.id)}

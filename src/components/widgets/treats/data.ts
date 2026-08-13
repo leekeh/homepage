@@ -1,8 +1,9 @@
 // The visual diary of sweet treats, newest last. Ported from the standalone
 // sweet-treat-saturday project. Add an entry by appending to `treats`.
 // `locationId` must match a key in the `locations` map below.
-// Each entry maps to `/models/treats/{imgId}.glb` (3D model) and
-// `/models/treats/{imgId}.png` (thumbnail/poster).
+// Each entry maps to `/models/treats/{imgId}.glb` (3D model),
+// `/models/treats/{imgId}.webp` (full poster / OG image) and
+// `/models/treats/{imgId}-thumb.webp` (grid thumbnail).
 
 export interface Treat {
 	title: string;
@@ -102,6 +103,12 @@ export function modelSrc(imgId: string): string {
 	return `/models/treats/${imgId}.glb`;
 }
 
-export function posterSrc(imgId: string): string {
-	return `/models/treats/${imgId}.png`;
+/** Full-size WebP poster — used both on-page (model-viewer, noscript) and as the OG/social image. */
+export function posterWebp(imgId: string): string {
+	return `/models/treats/${imgId}.webp`;
+}
+
+/** Small WebP thumbnail for the treats grid. */
+export function thumbSrc(imgId: string): string {
+	return `/models/treats/${imgId}-thumb.webp`;
 }

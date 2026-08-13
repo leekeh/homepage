@@ -19,7 +19,7 @@
 	import { initializeSquiggles } from './useSquiggles.svelte.js';
 	import { initializeTime } from './useTime.svelte.js';
 	import { initializeIsPrint } from './useIsPrint.svelte.js';
-	import { resolve } from '$app/paths';
+	import { resolvePath } from '@utils/resolve';
 
 	interface Props {
 		children: Snippet;
@@ -91,7 +91,7 @@
 			if (suppressUrlSync || typeof window === 'undefined') return;
 			const route = getRouteForWindow(win.widgetId, win.data);
 			if (window.location.pathname !== route) {
-				pushState(resolve(route), {});
+				pushState(resolvePath(route), {});
 			}
 		};
 	});
@@ -123,11 +123,13 @@
 		wm.desktopWidth = window.innerWidth;
 		wm.desktopHeight = window.innerHeight;
 		wm.constrainWindowsToViewport();
-		wm.seedIconDefaults(widgetNavigationData);
 
 		// ── Restore saved layout or open widget for current route ──
 		suppressUrlSync = true;
 		const restored = wm.restoreLayout();
+
+		wm.seedIconDefaults(widgetNavigationData);
+		wm.constrainIconsToViewport();
 
 		const path = window.location.pathname;
 		const match = getWidgetByRoute(path);
@@ -177,6 +179,7 @@
 		wm.desktopWidth = window.innerWidth;
 		wm.desktopHeight = window.innerHeight;
 		wm.constrainWindowsToViewport();
+		wm.constrainIconsToViewport();
 	}
 
 	// Handle popstate (browser back/forward)

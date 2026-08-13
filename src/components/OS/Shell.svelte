@@ -7,7 +7,6 @@
 <Startup />
 
 <div class="shell">
-	<h1 class="sr-only">leekeh</h1>
 	<DesktopShell />
 	<MobileShell />
 </div>

@@ -24,6 +24,7 @@
 </script>
 
 <button
+	type="button"
 	class="start-button"
 	id={buttonId}
 	bind:this={startButton}

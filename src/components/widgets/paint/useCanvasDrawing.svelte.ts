@@ -83,9 +83,9 @@ export function createCanvasDrawing(getParams: () => CanvasDrawingParams) {
 
 	function finalizeDrawing(pointerId?: number) {
 		flushPending();
-		if (pointerId !== undefined) {
+		if (pointerId !== undefined && _canvas?.hasPointerCapture(pointerId)) {
 			// canvas reference captured in the action closure
-			_canvas?.hasPointerCapture(pointerId) && _canvas.releasePointerCapture(pointerId);
+			_canvas.releasePointerCapture(pointerId);
 		}
 		if (!isDrawing) return;
 

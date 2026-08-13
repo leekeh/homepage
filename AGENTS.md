@@ -88,6 +88,10 @@ A progressively-enhanced personal website styled as a retro (Win95-esque) deskto
 
 - Always run `pnpm prettier --write` on the affected files after you write code
 
+**Git & commits**
+
+- Do not `git commit` or `git push` unless explicitly asked. Leave changes in the working tree for review; the user decides when to commit.
+
 ## Testing
 
 Two testing layers; browser-facing tests use real Chromium (Playwright):

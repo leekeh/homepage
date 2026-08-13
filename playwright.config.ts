@@ -40,6 +40,13 @@ export default defineConfig({
 			name: 'no-js',
 			testMatch: /\.nojs\.spec\.ts$/,
 			use: { ...devices['Desktop Chrome'], javaScriptEnabled: false }
+		},
+		{
+			// og:image sweep — request-only, so device config is nominal. Run in
+			// its own job (affected-scoped); excluded from the OS `e2e` job.
+			name: 'og',
+			testMatch: /og\.spec\.ts$/,
+			use: { ...devices['Desktop Chrome'] }
 		}
 	],
 	webServer: {

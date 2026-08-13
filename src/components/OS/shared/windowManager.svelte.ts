@@ -306,6 +306,44 @@ export class WindowManager {
 		};
 	}
 
+	/**
+	 * Clamp every stored icon back inside the current viewport, reflowing any
+	 * icon that would overlap an already-placed one into the next free grid slot.
+	 * Clamping alone can pile icons onto the same edge, so de-overlap afterwards.
+	 */
+	constrainIconsToViewport() {
+		const W = WindowManager.ICON_W;
+		const H = WindowManager.ICON_H;
+		const maxX = this.desktopWidth - W;
+		const maxY = this.desktopHeight - H - WindowManager.TASKBAR_H;
+
+		const overlaps = (ax: number, ay: number, bx: number, by: number) =>
+			Math.abs(ax - bx) < W && Math.abs(ay - by) < H;
+
+		const placed: IconPosition[] = [];
+		// Next column-first grid slot not overlapping an already-placed icon.
+		const findFreeSlot = (fallback: IconPosition): IconPosition => {
+			for (let col = 0; 24 + col * W <= maxX; col++) {
+				for (let row = 0; 24 + row * H <= maxY; row++) {
+					const x = 24 + col * W;
+					const y = 24 + row * H;
+					if (!placed.some((p) => overlaps(x, y, p.x, p.y))) return { x, y };
+				}
+			}
+			return fallback; // grid full — keep the clamped position even if overlapping
+		};
+
+		for (const id of Object.keys(this.iconPositions)) {
+			const pos = this.iconPositions[id];
+			let next = this.clampIconPos(pos.x, pos.y);
+			if (placed.some((p) => overlaps(next.x, next.y, p.x, p.y))) {
+				next = findFreeSlot(next);
+			}
+			this.iconPositions[id] = next;
+			placed.push(next);
+		}
+	}
+
 	getIconPosition(widgetId: string, index = 0) {
 		return this.iconPositions[widgetId] ?? { x: 24, y: 24 + index * WindowManager.ICON_H };
 	}

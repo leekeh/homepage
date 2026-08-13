@@ -16,7 +16,6 @@ For integrated development, you need to first run `pnpm wrangler login`. Then yo
 - keyboard shortcuts for window managements, opening shortcuts
 - spotlight
 - context menu (right click)
-- remove old vercel integration and move to cloudflare pages
 - associate multiple widgets on one url
 - custom scrollbar
 - wait for fonts / assets to load before closing startup animation
@@ -30,7 +29,6 @@ For integrated development, you need to first run `pnpm wrangler login`. Then yo
 - make the blog a txt or pdf file. maybe make it look like a pdf viewer, txt viewer etc.
 - dark mode
 - accessibility statement
-- handle the overflowing issue of desktop icons
 - implement max sizes for windows
 
 widgets:

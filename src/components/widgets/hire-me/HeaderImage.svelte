@@ -1,12 +1,12 @@
 <script lang="ts">
 	import IconJob from '@icons/IconJob.svelte';
-	import pf from './pf.png';
+	import pf from './pf.webp';
 	import IconUserCircle from '@icons/IconUserCircle.svelte';
 	import Button from '@components/OS/Button.svelte';
 </script>
 
 <section class="img-section">
-	<img src={pf} alt="" />
+	<img src={pf} alt="" width="600" height="600" fetchpriority="high" />
 	<div class="info">
 		<p class="tag squiggle-border">New here</p>
 		<p class="name">Lieke, 30</p>

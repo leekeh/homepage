@@ -32,6 +32,8 @@ const config = {
 		}
 	},
 	kit: {
+		// Inline critical CSS for better CLS etc
+		inlineStyleThreshold: 24576,
 		adapter: adapter({
 			// The D1 binding is `remote = true`, so `getPlatformProxy` (used by dev,
 			// prerendering and `vite preview`) tries to open a remote proxy session,

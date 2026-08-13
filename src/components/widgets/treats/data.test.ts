@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatPrice, getTreatById, modelSrc, posterSrc, treats } from './data';
+import { formatPrice, getTreatById, modelSrc, posterWebp, thumbSrc, treats } from './data';
 
 describe('getTreatById', () => {
 	it('finds a treat by its imgId', () => {
@@ -37,6 +37,7 @@ describe('formatPrice', () => {
 describe('asset src helpers', () => {
 	it('builds the model and poster paths from the imgId', () => {
 		expect(modelSrc('cinnamon-bun')).toBe('/models/treats/cinnamon-bun.glb');
-		expect(posterSrc('cinnamon-bun')).toBe('/models/treats/cinnamon-bun.png');
+		expect(posterWebp('cinnamon-bun')).toBe('/models/treats/cinnamon-bun.webp');
+		expect(thumbSrc('cinnamon-bun')).toBe('/models/treats/cinnamon-bun-thumb.webp');
 	});
 });

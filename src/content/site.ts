@@ -9,6 +9,13 @@ const rawSiteUrl = (env.PUBLIC_SITE_URL || 'https://www.leekeh.com').trim();
 
 export const SITE_URL = rawSiteUrl.replace(/\/+$/, '');
 
+/**
+ * Site-wide fallback social card, served from `static/`. Used as the og:image
+ * for any route without its own (all the widget pages). Pages with a more
+ * specific image (treats, blog posts with an og.png) override it.
+ */
+export const DEFAULT_OG_IMAGE = '/og-default.webp';
+
 export function absoluteUrl(pathname: string): string {
 	const path = pathname.startsWith('/') ? pathname : `/${pathname}`;
 	return `${SITE_URL}${path}`;

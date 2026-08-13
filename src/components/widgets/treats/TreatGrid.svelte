@@ -1,13 +1,19 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { treats, posterSrc } from './data';
+	import { treats, thumbSrc } from './data';
 </script>
 
 <ul class="grid">
 	{#each treats as treat (treat.imgId)}
 		<li class="squiggle-border">
 			<a href={resolve(`/treats/${treat.imgId}`)} title={treat.title}>
-				<img src={posterSrc(treat.imgId)} alt={treat.title} loading="lazy" />
+				<img
+					src={thumbSrc(treat.imgId)}
+					alt={treat.title}
+					loading="lazy"
+					width="480"
+					height="480"
+				/>
 			</a>
 		</li>
 	{/each}

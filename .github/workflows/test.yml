@@ -93,13 +93,53 @@ jobs:
       - run: pnpm exec playwright install chromium --with-deps
 
       # Includes the axe-core a11y sweep (axe.desktop / axe.mobile specs).
+      # The `og` project is affected-scoped in its own job, so exclude it here.
       - name: Run Playwright OS tests
-        run: pnpm exec playwright test
+        run: pnpm exec playwright test --project=desktop --project=mobile --project=no-js
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
+          path: playwright-report/
+          retention-days: 7
+
+  # Every URL must ship a resolvable og:image. Affected-only: the sweep imports
+  # the route/treats data, so --only-changed re-runs it whenever those change.
+  og-image:
+    name: OG image sweep (affected)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history so --only-changed can diff against the base ref.
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm exec playwright install chromium --with-deps
+
+      - name: Fetch base ref
+        if: github.base_ref != ''
+        run: git fetch --no-tags --depth=1 origin ${{ github.base_ref }}
+
+      # webServer (build + preview) is started automatically by the config.
+      - name: Run affected OG image sweep
+        run: pnpm exec playwright test --project=og --only-changed=${{ env.BASE_REF }}
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: og-report
           path: playwright-report/
           retention-days: 7
 

@@ -4,7 +4,7 @@
 	import { page } from '$app/state';
 	import { getWidgetByRoute } from '../../components/widgets/widgets';
 	import { getTreatById, posterWebp } from '../../components/widgets/treats/data';
-	import { absoluteUrl, SITE_DESCRIPTION, SITE_NAME } from '../../content/site';
+	import { absoluteUrl, DEFAULT_OG_IMAGE, SITE_DESCRIPTION, SITE_NAME } from '../../content/site';
 	import { WEBMENTION_ENDPOINT, WEBMENTION_PINGBACK } from '../../content/webmentions';
 
 	// get generated type from route
@@ -69,7 +69,7 @@
 				description: currentPost.description,
 				type: 'article' as const,
 				url: currentPost.canonicalUrl,
-				image: currentPost.ogImage ? absoluteUrl(currentPost.ogImage) : undefined,
+				image: absoluteUrl(currentPost.ogImage ?? DEFAULT_OG_IMAGE),
 				imageAlt: currentPost.title,
 				article: {
 					publishedTime: new Date(currentPost.date).toISOString(),
@@ -88,8 +88,8 @@
 			description: widget?.description ?? SITE_DESCRIPTION,
 			type: 'website' as const,
 			url: absoluteUrl(currentPath),
-			image: widget?.ogImage ? absoluteUrl(widget.ogImage) : undefined,
-			imageAlt: widget?.title as string | undefined,
+			image: absoluteUrl(widget?.ogImage ?? DEFAULT_OG_IMAGE),
+			imageAlt: (widget?.title as string | undefined) ?? SITE_NAME,
 			article: undefined
 		};
 	});

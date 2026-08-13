@@ -20,7 +20,8 @@
 		"test:e2e:ui": "playwright test --ui",
 		"test:a11y": "playwright test axe",
 		"test:html": "html-validate \".svelte-kit/cloudflare/**/*.html\"",
-		"test:lighthouse": "lhci autorun"
+		"test:lighthouse": "lhci autorun",
+		"optimize:images": "node scripts/optimize-images.mjs"
 	},
 	"devDependencies": {
 		"@axe-core/playwright": "^4.13.0",

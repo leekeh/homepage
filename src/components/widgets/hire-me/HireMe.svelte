@@ -8,10 +8,6 @@
 	import Certificates from './Certificates.svelte';
 </script>
 
-<svg viewBox="0 0 10 10" id="heart">
-	<path d="M2,2 L4,4 L6,2" fill="none" stroke="black" stroke-width="4" stroke-linecap="round" />
-</svg>
-
 <div class="mobile-bg"></div>
 <div class="inner squiggle-border">
 	<HeaderImage />
@@ -56,9 +52,6 @@
 		flex-direction: column;
 		gap: var(--space-4);
 		align-items: flex-start;
-	}
-	#heart {
-		display: none;
 	}
 	.inner {
 		aspect-ratio: 9/16;

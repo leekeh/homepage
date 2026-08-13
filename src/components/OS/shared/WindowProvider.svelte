@@ -19,7 +19,7 @@
 	import { initializeSquiggles } from './useSquiggles.svelte.js';
 	import { initializeTime } from './useTime.svelte.js';
 	import { initializeIsPrint } from './useIsPrint.svelte.js';
-	import { resolve } from '$app/paths';
+	import { resolvePath } from '@utils/resolve';
 
 	interface Props {
 		children: Snippet;
@@ -91,7 +91,7 @@
 			if (suppressUrlSync || typeof window === 'undefined') return;
 			const route = getRouteForWindow(win.widgetId, win.data);
 			if (window.location.pathname !== route) {
-				pushState(resolve(route), {});
+				pushState(resolvePath(route), {});
 			}
 		};
 	});

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { HTMLAnchorAttributes, HTMLButtonAttributes } from 'svelte/elements';
-	import { resolve } from '$app/paths';
+	import { resolvePath } from '@utils/resolve';
 	import type { PathnameWithSearchOrHash } from '$app/types';
 
 	type AnchorProps = HTMLAnchorAttributes & {
@@ -25,15 +25,17 @@ Basic polymorphic link component that can be used inside widgets.
  -->
 
 {#if href}
+	<!-- eslint-disable svelte/no-navigation-without-resolve -- internal routes are resolved; the else branch is an external URL -->
 	<a
 		class="link"
-		href={href.startsWith('/') ? resolve(href as PathnameWithSearchOrHash) : href}
+		href={href.startsWith('/') ? resolvePath(href as PathnameWithSearchOrHash) : href}
 		{...rest as HTMLAnchorAttributes}
 	>
 		{@render children?.()}
 	</a>
+	<!-- eslint-enable svelte/no-navigation-without-resolve -->
 {:else}
-	<button class="link" {...rest as HTMLButtonAttributes}>
+	<button type="button" class="link" {...rest as HTMLButtonAttributes}>
 		{@render children?.()}
 	</button>
 {/if}

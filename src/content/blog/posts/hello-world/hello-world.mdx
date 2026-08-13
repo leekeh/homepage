@@ -9,16 +9,12 @@ description: First post on the new site. Talking about the redesign and what to 
 ---
 
 <script>
-  import Carousel from '../../../../components/Carousel.svelte'; 
-  import IFrameBox from '../../../../components/IFrameBox.svelte'; 
-  import Image from '../../../../components/Image.svelte'; 
-  import abesPage from './abes-page.png'; 
-  import altalenae from './altalenae.png'; 
-  import catReceived from './cat-received.gif';
-  import iraExe from './ira-exe.png';
-  import korenara from './korenara.png';
-  import olliveen from './olliveen.png';
-  import amazonTabs from './amazon-tabs.gif';
+	import Carousel from '../../../../components/Carousel.svelte'; import IFrameBox from
+	'../../../../components/IFrameBox.svelte'; import Image from
+	'../../../../components/Image.svelte'; import abesPage from './abes-page.png'; import altalenae
+	from './altalenae.png'; import catReceived from './cat-received.gif'; import iraExe from
+	'./ira-exe.png'; import korenara from './korenara.png'; import olliveen from './olliveen.png';
+	import amazonTabs from './amazon-tabs.gif';
 </script>
 
 Today is the day I'm launching my new personal site. It's been a while in the making, and to celebrate it I wanted to sit down and write some of the thoughts behind it.
@@ -32,7 +28,7 @@ That's not how the internet started. Originally, it was a decentralized network 
 <Image
 	src={abesPage}
 	alt="Screenshot of a website from 1995, demonstrating a classic retro aesthetic. It shows links to different sections, including a guest book. There is a visitor counter and several pictures."
-  credit="https://aesthetics.fandom.com/wiki/Old_Web?file=Https---knowyourmeme.com-photos-1327890-geocities.png"
+	credit="https://aesthetics.fandom.com/wiki/Old_Web?file=Https---knowyourmeme.com-photos-1327890-geocities.png"
 />
 
 This observation is really not a very unique one. A lot of people seem unhappy about the current state and experience of the internet. People are tired of being constantly marketed towards. Many are simply [logging off](https://www.cnbc.com/2026/02/07/young-people-quiet-revolution-social-media.html). But while big businesses demand a lot of bandwidth, it does not mean that that is the only way to make websites. The underlying principles of the web have not changed. You can still write some HTML, put it up on a server and create your own custom corner of the internet. And people still do.
@@ -88,34 +84,32 @@ Still, pages aligned with this style can often have their limitations. I wanted 
 
 The Retro OS aesthetic is based on a desktop design. Inherently, this makes it difficult to make it nice or even usable on mobile. In my explorations, I found that people would either use the same layout on desktop and mobile, which makes it tricky to organize open windows and navigate between views, or they would just outright disable the website on mobile.
 
-After thinking about it for a while, I decided to have a separate design for smaller screens. Instead of focusing on a desktop operating system with a task bar and draggable windows, I went for a different, kind of vintage, UX pattern: tabs. They are still used from time to time to navigate between different different views of a content section or graph, but you don't really see them as much anymore for top-level navigation. 
+After thinking about it for a while, I decided to have a separate design for smaller screens. Instead of focusing on a desktop operating system with a task bar and draggable windows, I went for a different, kind of vintage, UX pattern: tabs. They are still used from time to time to navigate between different views of a content section or graph, but you don't really see them as much anymore for top-level navigation.
 
 <Image
 	src={amazonTabs}
 	alt="Different screenshots from Amazon in 1999, showing navigation on the top"
-  caption="Amazon used tabs for its main navigation in 1999"
-  credit="https://htmlburger.com/blog/90s-website-design-examples/"
+	caption="Amazon used tabs for its main navigation in 1999"
+	credit="https://htmlburger.com/blog/90s-website-design-examples/"
 />
-
 
 ### Progressive enhancement
 
 It's debatable whether a website should work without JavaScript. On the one hand, JavaScript is an important factor in probably most of the websites you visit. Frontend frameworks, most prominently [React](https://react.dev/), allow developers to create highly dynamic and interactive websites. Especially in a project like mine, there is a lot of complexity in managing windows. Users can minimize windows, drag and resize them, and this state is restored when the page is reloaded. All is pointing towards a [Single-page application](https://en.wikipedia.org/wiki/Single-page_application).
 
-At the same time, there is a community of opinionated web experts  that argue that we have become too dependent on JavaScript. We need to load a heavy framework just to deliver some static content, while HTML should work perfectly fine for this. On top of that JavaScript can be used in all kinds of malicious ways to spy on users, inject malicious code, etc. There is a [small group of users](https://news.ycombinator.com/item?id=45824962) that navigates the web with JavaScript entirely disabled, which can be done from the settings of most browsers. Should you cater to them? Realistically speaking, unless you are offering a public service, probably not. But I like a challenge.
+At the same time, there is a community of opinionated web experts that argue that we have become too dependent on JavaScript. We need to load a heavy framework just to deliver some static content, while HTML should work perfectly fine for this. On top of that JavaScript can be used in all kinds of malicious ways to spy on users, inject malicious code, etc. There is a [small group of users](https://news.ycombinator.com/item?id=45824962) that navigates the web with JavaScript entirely disabled, which can be done from the settings of most browsers. Should you cater to them? Realistically speaking, unless you are offering a public service, probably not. But I like a challenge.
 
 #### State in the URL
+
 How do we know which windows to show users when we answer their requests from the server? The answer is quite simple, and it goes back to the first principle of the web: [hyperlinks](https://info.cern.ch/hypertext/WWW/WhatIs.html). The "H" in HTML stands for HyperText. We can use links to link to different pages on the site. Even though our UI might be dynamic, stateful, and use client-side routing, we can still use this principle to organize our UI. Every button triggering a window to open, is also a link. By default, this triggers a new page to be fetched from the server, which works for any user. If the JavaScript loads, this navigation is cancelled, and instead we only open a new window in the existing view. This way, the user with JavaScript never leaves the page and gets the smoothes experience, while the user without JavaScript can still read most of the content including the blog.
 
 #### Interactivity
 
 Of course not all the interactive features would work without JavaScript. The [paint widget](/paint) is entirely disabled. But we can still do a lot with modern web features. Windows can still be resized with the [resize feature](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/resize). We can have a custom menu using the [Popover API](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/popover), which can be used imperatively. By focusing on no-JS solutions, you might discover that you can replace your code with HTML-only solutions, reducing your JavaScript bundle and often making it easier to be accessible. Speaking of which...
 
-
 ### Accessibility
 
 I wanted to make sure that the website was not only usable but also accessible. This could probably be its own post, so I will keep it short for now. The usual suspects were tackled: sufficient contrast between foreground and background, proper labeling where applicable, and controls to disable animations. Specific effort needed to be done to make the task bar and menus inside the [paint widget](/paint) usable for keyboard navigation. For this, the [toolbar pattern](https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/) was implemented, including a [roving tabindex](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex). I'm sure there is more to say about this part, and more to improve! It's a fine line between creativity and usability, and that's something I'm essentially exploring in this project. I know of a lot of developer blogs that keep a very minimal UI, just the basics. That would make my job a lot easier 😜
-
 
 ### What to expect
 

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import IconJob from '@icons/IconJob.svelte';
-	import IconHearts from '@icons/IconHearts.svelte';
 	import pf from './pf.png';
 	import IconUserCircle from '@icons/IconUserCircle.svelte';
 	import Button from '@components/OS/Button.svelte';
@@ -24,14 +23,14 @@
 			Image credit
 		</a>
 		<Button iconOnly href="/contact" aria-label="hire me">
-			<svg id="emoji" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
-				<g id="color">
+			<svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+				<g>
 					<path
 						fill="#E1C8F9"
 						d="m59.5,25.4802c0-6.9036-5.5964-12.5-12.5-12.5-4.7533,0-8.8861,2.6536-11,6.5598-2.1139-3.9062-6.2467-6.5598-11-6.5598-6.9036,0-12.5,5.5964-12.5,12.5,0,2.9699,1.0403,5.6942,2.7703,7.8387l-.0043.0034,20.734,25.6976,20.7339-25.6975-.0043-.0034c1.7301-2.1446,2.7704-4.8689,2.7704-7.8388Z"
 					/>
 				</g>
-				<g id="line">
+				<g>
 					<path
 						fill="none"
 						stroke="#000"

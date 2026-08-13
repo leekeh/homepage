@@ -50,12 +50,19 @@ export const load: PageServerLoad = async ({ platform, params }) => {
 	let initialComments: Comment[] = [];
 
 	if (platform?.env?.DB) {
-		const { results } = await platform.env.DB.prepare(
-			'SELECT id, name, Content, Timestamp FROM direct_comments WHERE PostSlug = ? AND Approved = 1 ORDER BY Timestamp DESC'
-		)
-			.bind(slug)
-			.all<Comment>();
-		initialComments = results;
+		// Comments are non-essential: if the query fails (e.g. the table isn't
+		// provisioned in preview/CI, or the DB is unavailable), still render the
+		// post with an empty comment list rather than crashing the page.
+		try {
+			const { results } = await platform.env.DB.prepare(
+				'SELECT id, name, Content, Timestamp FROM direct_comments WHERE PostSlug = ? AND Approved = 1 ORDER BY Timestamp DESC'
+			)
+				.bind(slug)
+				.all<Comment>();
+			initialComments = results;
+		} catch (error) {
+			console.error('Failed to load comments for %s:', slug, error);
+		}
 	}
 
 	return { initialComments };

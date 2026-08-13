@@ -4,7 +4,7 @@
 	import { useWindowManager } from '../shared/windowManager.svelte';
 	import AppIcon from '../shared/AppIcon.svelte';
 	import { useJsSupport } from '../shared/useJsSupport.svelte';
-	import { resolve } from '$app/paths';
+	import { resolvePath } from '@utils/resolve';
 	import type { PathnameWithSearchOrHash } from '$app/types';
 
 	type Props = {
@@ -75,7 +75,7 @@
 	class="desktop-icon"
 	draggable="true"
 	class:dragging
-	href={resolve(href)}
+	href={resolvePath(href)}
 	onclick={onClick}
 	{@attach drag}
 	style={iconStyles}

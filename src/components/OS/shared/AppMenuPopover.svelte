@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { widgetNavigationData } from '@components/widgets/widgets';
-	import { resolve } from '$app/paths';
+	import { resolvePath } from '@utils/resolve';
 	import { useRovingTabindex } from './useRovingTabindex.svelte';
 	import { useJsSupport } from './useJsSupport.svelte';
 
@@ -73,7 +73,7 @@
 			<li role="none">
 				<a
 					class="menu-item"
-					href={resolve(widget.route)}
+					href={resolvePath(widget.route)}
 					role="menuitem"
 					tabindex={hasJsSupport && open ? (index === activeIndex ? 0 : -1) : undefined}
 					onclick={() => close()}

@@ -1,5 +1,5 @@
-<svg id="emoji" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
-	<g id="color">
+<svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+	<g>
 		<path
 			fill="#92d3f5"
 			d="m44.01,60.96h-16.57c-1.9631-.0096-3.6058-1.4922-3.816-3.444l-2.695-23.7h29.83l-2.936,23.74c-.2307,1.9334-1.864,3.393-3.811,3.406l-.002-.002Z"
@@ -14,7 +14,7 @@
 		/>
 		<path fill="#fff" d="m40.73,8.888v5.155h-9.552v-5.155h9.552Z" />
 	</g>
-	<g id="line">
+	<g>
 		<path
 			fill="none"
 			stroke="#000"

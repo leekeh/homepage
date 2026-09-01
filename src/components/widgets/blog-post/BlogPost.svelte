@@ -37,9 +37,21 @@
 	const postModules = import.meta.glob<{ default: Component; metadata: PostMetadata }>(
 		'../../../content/blog/posts/**/*.mdx'
 	);
+	// Map from slug (== post's directory path under posts/, matching getSlugFromPath
+	// in content/blog/server.ts) → module loader, so nested posts keep their folders
+	// in the URL and resolve correctly.
+	const postLoadersBySlug: Record<
+		string,
+		() => Promise<{ default: Component; metadata: PostMetadata }>
+	> = Object.fromEntries(
+		Object.entries(postModules).map(([path, loader]) => {
+			const afterPosts = path.split('/posts/').at(-1)!;
+			const s = afterPosts.split('/').slice(0, -1).join('/');
+			return [s, loader];
+		})
+	);
 	const loadPost = (s: string) =>
-		postModules[`../../../content/blog/posts/${s}/${s}.mdx`]?.() ??
-		Promise.reject(new Error('Post not found'));
+		postLoadersBySlug[s]?.() ?? Promise.reject(new Error('Post not found'));
 </script>
 
 {#snippet renderPost(PostComponent: Component, metadata: PostMetadata)}

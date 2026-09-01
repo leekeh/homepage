@@ -6,6 +6,10 @@
 	import { getTreatById, posterWebp } from '../../components/widgets/treats/data';
 	import { absoluteUrl, DEFAULT_OG_IMAGE, SITE_DESCRIPTION, SITE_NAME } from '../../content/site';
 	import { WEBMENTION_ENDPOINT, WEBMENTION_PINGBACK } from '../../content/webmentions';
+	import {
+		STANDARD_SITE_PUBLICATION,
+		hasStandardSitePublication
+	} from '../../content/standard-site';
 
 	// get generated type from route
 	type Props = {
@@ -132,6 +136,12 @@
 		{/if}
 	{/if}
 	<link rel="alternate" type="application/rss+xml" title="leekeh blog feed" href="/rss.xml" />
+	{#if hasStandardSitePublication}
+		<link rel="site.standard.publication" href={STANDARD_SITE_PUBLICATION} />
+		{#if currentPost?.atUri}
+			<link rel="site.standard.document" href={currentPost.atUri} />
+		{/if}
+	{/if}
 	{#if WEBMENTION_ENDPOINT}
 		<link rel="webmention" href={WEBMENTION_ENDPOINT} />
 	{/if}

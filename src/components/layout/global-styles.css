@@ -203,6 +203,7 @@ a {
 	padding: var(--space-4);
 	margin-block: var(--space-4);
 	font-size: var(--font-size-sm);
+	tab-size: 2;
 	background-color: var(--color-bg-subtle) !important;
 	border: var(--border-width) solid var(--color-border-subtle);
 	overflow: auto;

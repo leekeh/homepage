@@ -1,0 +1,53 @@
+# Publishes standard.site records to your PDS whenever a blog post changes.
+#
+# scripts/publish-standard-site.mjs creates/updates the publication + document
+# records on your PDS, then writes the resulting AT-URIs into
+# src/content/blog/standard-site-records.json and the /.well-known file. Those
+# are committed back so the Cloudflare build can render the document link tags.
+#
+# One-time setup: create a Bluesky app password (Settings -> Privacy and
+# Security) and add it as the repo secret ATP_APP_PASSWORD.
+#
+# Pushes made with the default GITHUB_TOKEN do not trigger new workflow runs, so
+# the commit-back below cannot cause an infinite loop.
+name: standard.site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/content/blog/posts/**'
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      # fetch-depth: 0 so the script can read each post's first-commit date.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Publish standard.site records
+        env:
+          ATP_IDENTIFIER: leekeh.com
+          ATP_APP_PASSWORD: ${{ secrets.ATP_APP_PASSWORD }}
+        run: node scripts/publish-standard-site.mjs
+
+      - name: Commit updated records
+        run: |
+          if [[ -z "$(git status --porcelain)" ]]; then
+            echo "No record changes to commit."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add src/content/blog/standard-site-records.json static/.well-known/site.standard.publication
+          git commit -m "chore: sync standard.site records [skip ci]"
+          git push

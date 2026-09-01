@@ -1,0 +1,219 @@
+---
+title: We need to talk about accessible accordions
+categories:
+  - accessibility
+tags:
+  - frontend
+  - design
+description: Browsers and ARIA guidelines disagree on what makes a correct accordion, and I'm tired of it.
+---
+
+<script lang="ts">
+	import Image from '../../../../../components/Image.svelte'; import art from "./og.png"; import
+	Accordion from "./accordion.svelte"
+</script>
+
+I thought I could write an article explaining how straightforward it is to make an accessible accordion, using modern web technologies. Unfortunately, it turns out that the current accessibility guidelines are misaligned with what modern browsers offer and recommend. So let's take some time to explore this discrepancy and how we can move forward from it.
+
+### What is an accordion?
+
+An accordion is a UI pattern where multiple so-called "disclosure" widgets are presented together. A disclosure widget is a box of collapsible content labeled with a header. Clicking the header will show and hide the content. Optionally, the accordion can be "exclusive", meaning that only one item in the set is open at a time. Common use cases include displaying frequently asked questions (FAQ) and detailed technical specifications. The benefit of an accordion is that it allows you to hide bulky content that may bloat a page, while still allowing those interested in that content to discover it.
+
+<Accordion />
+
+### The WAI-ARIA pattern
+
+The [ARIA Authoring Practices Guide (APG)](https://www.w3.org/WAI/ARIA/apg/) is a resource for developers to find out how to implement accessibility when building for the web. It is published by the [W3C](https://www.w3.org/). Included in the APG are guidelines on how to implement common UI patterns in an accessible way. For each pattern, there are specific requirements for semantic HTML, keyboard interactions, WAI-ARIA Roles, States, and Properties. Usually, there are also examples on how to implement the pattern. While these examples are supposed to just be illustrative, they are also used to evaluate the support of the specified UI patterns (see [ARIA-AT](https://aria-at.w3.org/report/163649)). In other words, it is authoritative, and as close to a standard as we have for this topic.
+
+So let's have a look at the [Accordion Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/accordion/).
+
+There are a few basic keyboard interactions that are required. When we focus on the header, we must be able to toggle the collapsed state with `Space` and `Enter`, and we must be able to move between accordion elements using regular tab navigation. There is no specific arrow key navigation required, such as the one used for other patterns like [Tabs](https://www.w3.org/WAI/ARIA/apg/patterns/tabs/).
+
+We must also add some semantic meaning to the parts of the accordion. Headers must be buttons wrapped in a heading tag (`h2`/`h3`, etc.). The header must communicate the collapsed state of the panel using `aria-expanded`. The header must be linked to the panel using `aria-controls`. These requirements are important for letting assistive technologies understand the relationship between the panel and the header that controls it. Heading tags are also important for creating the overall structure of the page, they help users navigate it. For example, in VoiceOver (the screen reader shipped with Apple devices), users can use the rotor feature to get a list of all the headings on the page and jump directly to the section that they need. If heading tags were not used, screen reader users would not be able to discover the content of the accordion without navigating through the whole page.
+
+There are two additional optional recommendations. Firstly, developers can choose to assign the [role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles) of `region` to the panel, to be able to organize the content of the panel inside a landmark. This is especially helpful if there is more complex, semantically distinct content inside of the panel. However, it should not be used when there are more than six accordion items together, to avoid crowding the accessibility tree. In tandem with `role="region"`, the developer can link the panel with the header using `aria-labelledby`. This gives the region an accessible name based on the content of the header.
+
+This leaves us with this basic boilerplate that is required:
+
+```html
+<h3>
+	<button id="heading-id" type="button" aria-controls="panel-id" aria-expanded="true">
+		Header content
+	</button>
+</h3>
+<div id="panel-id" aria-labelledby="heading-id" role="region">Panel content</div>
+```
+
+It's interesting to note that there is no information on how to manage exclusive accordions, where only one item can be open at a time. This seems to be an optional behavior with no impact on accessibility: as long as the collapsed state is available in the accessibility tree, it is sufficient.
+
+### Implementing the pattern
+
+A very basic implementation using React would look like this:
+
+```tsx
+export function AccordionDemo() {
+	const [value, setValue] = useState([]);
+
+	function handleClick(id) {
+		if (value.includes(id)) {
+			const newValue = value.filter((item) => item !== id);
+			setValue(newValue);
+		} else {
+			setValue([...value, id]);
+		}
+	}
+	return (
+		<div>
+			{[1, 2, 3].map((i) => {
+				const isExpanded = value.includes(i);
+				return (
+					<>
+						<h3>
+							<button
+								id={`header-apg-${i}`}
+								type="button"
+								onClick={() => handleClick(i)}
+								aria-expanded={isExpanded}
+								aria-controls={`sect-apg-${i}`}
+							>
+								<span>
+									Header {i}
+									<span></span>
+								</span>
+							</button>
+						</h3>
+						<div id={`sect-apg-${i}`} role="region" aria-labelledby={`header-apg-${i}`}>
+							<div hidden={!isExpanded}>...panel content</div>
+						</div>
+					</>
+				);
+			})}
+		</div>
+	);
+}
+```
+
+It's not a super complex feature to implement, as long as we pay attention to the markup guidelines. We just need a small click handler to manually manage the collapsed state of the items, and it could be further enhanced to create an exclusive accordion if desired. Without a JavaScript framework, like in the implemented example on the APG website, the implementation will be a bit more verbose, since we need to manually update several HTML attributes each time a button is clicked.
+
+Most (if not all) popular component libraries will implement accordions in a similar way. The only difference I found is that many will also unmount the content of the panel when the item is collapsed, instead of relying on `hidden`. A benefit of this would be a leaner DOM, potentially saving on browser resources depending on how complex/substantial the content is.
+
+### The native details element
+
+The `details` element was first defined in the HTML specification around 2009, and by 2016 all major browsers had shipped it. It is a native implementation of a disclosure widget. The `details` element must contain a `summary` element, which will be the interactive header used to toggle the open state. The rest of the inner HTML of the `details` element will be rendered as content of the widget and is only shown when the widget is in an open state.
+
+```html
+<details>
+	<summary>Heading content</summary>
+	Panel content
+</details>
+```
+
+<div style="margin-block: var(--space-8)">
+	<details>
+		<summary>Heading content</summary>
+		Panel content
+	</details>
+</div>
+
+Toggling the element can be done by interacting with the `summary` element, this does not require
+JavaScript. The open state can also be set with the `open` attribute, which can be used to change
+the default state to `open` or to interact with the widget through JavaScript. The widget also emits
+a `toggle` event when the state changes. Since 2022, browsers also started supporting searching
+through the text of collapsed `details` elements: if a match is found inside of a collapsed widget,
+it automatically expands.
+
+In late 2023, browsers started shipping a new feature for accordions. If you add a matching `name` attribute to multiple `details` elements, only one of them can be open at the same time. Clearly, it is meant to be used for creating an exclusive accordion. The [HTML specification](https://html.spec.whatwg.org/multipage/interactive-elements.html#the-details-element) mentions the pattern. Browsers also document it, for example on [the Chrome documentation](https://developer.chrome.com/docs/css-ui/exclusive-accordion) and [the Mozilla blog](https://developer.mozilla.org/en-US/blog/html-details-exclusive-accordions/).
+
+The same React component, implemented with a native details element, would look like this:
+
+```tsx
+export function AccordionNative() {
+	return (
+		<div className="accordion">
+			{[1, 2, 3].map((i) => {
+				return (
+					<>
+						<details name="unique-name">
+							<summary>
+								<h3>Header {i}</h3>
+							</summary>
+							...panel content
+						</details>
+					</>
+				);
+			})}
+		</div>
+	);
+}
+```
+
+By removing the `name` attribute, we can create a non-exclusive accordion.
+
+#### Satisfying the requirements
+
+Technically speaking, we are not complying with the APG requirements, since we are not using the required ARIA attributes.
+
+However, the interactions available to the user are roughly the same. Keyboard navigation works as normal, and even without JavaScript.
+
+Maybe we can take a step back when we think about the other requirements of the APG pattern. What we care about, in the end, is that the widget is available to all users, regardless of how they are using a browser or what impairments they may have. To ensure that, we must comply with the [WCAG criteria](https://www.w3.org/TR/WCAG22/#info-and-relationships), and these are the ones that are key when implementing an accessible accordion:
+
+- Users must be able to operate the accordion using only a keyboard ([WCAG 2.1.1](https://www.w3.org/TR/WCAG22/#keyboard))
+- The accordion must respect the focus order ([WCAG 2.4.3](https://www.w3.org/TR/WCAG22/#focus-order))
+- When an accordion item receives keyboard focus, it must be visible ([WCAG 2.4.7](https://www.w3.org/TR/WCAG22/#focus-visible))
+- The header must have an accessible name, and that accessible name should match the text content of the label, if it exists ([WCAG 2.5.3](https://www.w3.org/TR/WCAG22/#label-in-name)).
+- The accessibility tree must know about the semantic meaning of the component ([WCAG 1.3.1](https://www.w3.org/TR/WCAG22/#info-and-relationships)). Information that is visually represented should be translated into semantic properties and structures. In the case of the accordion, it means that the following information must be represented in the accessibility tree (using aria- attributes or native equivalent):
+  - the widget is collapsible
+  - the current state of the widget (expanded / collapsed)
+  - the header is clickable and interactive (role `button` or similar)
+  - the header controls the collapsed state of the panel (relationship between elements is known)
+  - the header is associated with a hierarchical heading level
+
+We know that keyboard operation and focus order function, and focus outlines come with the `summary` element by default. The accessible name of a `summary` is computed from its contents by default, just as it is for a `button` element.
+
+That leaves us with the semantic markup. The way accessibility tools understand the `details` element and its subelements is slightly different from how they understand the APG version. This influences how screen readers read out the content. In the [HTML Accessibility API Mappings](https://www.w3.org/TR/html-aam-1.0/), we can see that the `summary` element is semantically neutral in the mapping, while it exposes a button control that has a toggle state. In other words, assistive technologies know that the `summary` element is interactive, and what the current state of the widget is. The `details` element itself is neutral. In the mapping, we can also see that the relationship between the controlling element and the collapsible content is computed thanks to HTML nesting, so we don't need `aria-controls`.
+
+In other words, we can communicate the same information for which the APG uses `aria-*` attributes just by using these native elements. There is one caveat: some screen readers incorrectly announce the `summary` element to have the role `button`. This is inconsistent with the specifications, and caused by legacy implementations based on older versions of the specification. It can be an issue, especially when we want to use a heading element inside our accordion. This is currently in the APG requirements, and generally a good thing to do to expose accordion headers to the overall heading structure of the page. We cannot wrap a `summary` with a heading, since it needs to be a direct descendant of the `details` element to function. So logically, we would put it inside instead. However, if the screen reader treats the `summary` as a `button` role, it will ignore semantic elements nested inside.
+
+There is not one specific answer here, because there is not one mapping from HTML to the accessibility tree, and not one mapping from the browser to the assistive technology/screen reader. There are multiple implementations of this, and as far as I could tell there is currently no standard implementation. The only things we can rely on are the core specifications, although they often leave room for ambiguity and recommend testing your page/application with the tools you want to support.
+
+### Testing both implementations
+
+I drafted a basic implementation for both approaches. The code can be viewed on [CodeSandbox](https://codesandbox.io/p/sandbox/288jlx) if you would like to use it for further testing.
+
+I must preface this by saying that I am not a screen reader user myself, so I can only test these tools with the basic knowledge that I have, and that it is not a replacement for true user testing. Still, I was curious to see how the screen reader would announce the different elements.
+
+I tested using Chromium 151, Firefox 153, and Safari 26.6.2, with VoiceOver version 10. By the time you read this, things might be slightly different.
+
+I tested both accordion patterns on my MacBook using VoiceOver. First I tried focusing on the first accordion header. On a Chromium browser, the ARIA implementation was announced as `[Name] - collapsed - button - group`, while the native one was announced as `[Name] - collapsed - disclosure triangle - group`. On Safari it was `[Name] - collapsed - button` and `[Name] - collapsed - summary`. Finally, on Firefox it was `[Name] - collapsed - button - group` and `[Name] - collapsed - summary - group`. There are slight differences in the naming of the `summary` element. I especially dislike the announcement of "disclosure triangle". In [Sara Soueidan's article on the topic](https://www.sarasoueidan.com/blog/accordion-markup/), she mentions how the `summary` name for the element is indeed not the most descriptive and that it does not do justice to the function that this element has. I agree. From my personal perspective, calling it something generic like "collapsible panel" or even "disclosure" would be much more accurate, also in screen reader output. But I am not the person using these tools, so if you are, I'd be curious how you would feel about this. I can imagine any breaking change at this point could be annoying.
+
+In all cases except one, when I pressed space to open the accordion item, the screen reader would re-announce the header description, now `expanded` instead of `collapsed`. The exception is Safari, which sadly only reads it for the ARIA implementation, not the native one. There seem to be multiple bugs surrounding the accessibility of the `details` element in Safari, which is a shame since it has been supported there since 2012. [Bug 311029](https://bugs.webkit.org/show_bug.cgi?id=311029) seems to be the one affecting us here.
+
+Another interesting difference is that on Chromium, VoiceOver explains that the button can be clicked, but only for the native HTML approach. So in a way, more useful information for the native version.
+
+Finally, I also checked whether all the heading tags correctly showed up on the VoiceOver rotor, which they did in all cases. So in my testing, there was no issue nesting headings inside the `summary` element.
+
+The only thing I did not manage to validate is whether the relationship between the controlling header and the panel is available, considering that we don't use `aria-controls` in the native implementation. This is seemingly used mainly in the JAWS screen reader (on Windows), to allow the user to jump to the corresponding element. I don't currently have that setup available to test, so I'd be eager to know your findings. Generally, these things should be tested on other operating systems including mobile ones, but this article is already getting quite long 😛
+
+Overall, both patterns seem to be generally supported, besides the Safari bug.
+
+### Conflicting recommendations
+
+On every pattern page in the APG, the guide recommends maximizing use of semantic HTML and mentions that [No ARIA is better than Bad ARIA](https://www.w3.org/WAI/ARIA/apg/practices/read-me-first/#no_aria_better_bad_aria). At the same time, the `details` element seems to currently be at best ignored, at worst discouraged.
+
+There are some articles dissuading the use of `details` as an accordion widget. Most cited was Adrian Roselli's [Details / Summary Are Not [insert control here]](https://adrianroselli.com/2019/04/details-summary-are-not-insert-control-here.html). That one was eventually followed up with a recommendation on how to combine the `details` element with ARIA attributes to create a fully compliant accordion. It seems that in 2026, most of the requirements are either no longer current (Accordion no longer requires arrow navigation, for example), or browsers have fixed a gap in support (such as the issue of `summary` reading as `button`). I struggle to find any argument that is up-to-date on this.
+
+There is a [GitHub issue open on the APG repository](https://github.com/w3c/aria-practices/issues/3391) where it is questioned why the APG does not have an example using the HTML approach. In the comment thread, it is even mentioned that on the [WAI resources page](https://www.w3.org/WAI/resources/), the `details` element is actually used, including correct markup for headers. It seems there is already sufficient trust in the `details` element approach. Logically, the next step will be to formalize it.
+
+### In conclusion
+
+Some accessibility resources like [the A11y toolkit](https://www.a11y-toolkit.com/accordion-with-details-and-summary) are already cautiously recommending the usage of the `details` element, while still referring to the Roselli post from 2019. Just like we can use native `dialog` elements now instead of implementing our own, we don't need to implement our own accordion logic with ARIA attributes anymore. If we follow an HTML-first approach, we should really start using the `details` element by now.
+
+### P.S.
+
+Something slightly unrelated, but I don't really understand why there are no recommendations on how to group accordion items together. Shouldn't they be list items in a group? Would it not be nice for screen readers to read out how many items there are in the list? Shouldn't the items be more closely grouped together somehow? Based on Roselli's article, it seems that at least it used to be in the recommendation. Right now, grouping seems to be mainly a visual thing, which goes against the WCAG principle of representing visual information in the accessibility tree. Something to dive into another day.
+
+<Image
+	src={art}
+	alt="Painting of an Italian woman playing the accordion for her baby"
+	credit="https://commons.wikimedia.org/wiki/File:Italian_woman_plays_the_accordion_for_her_baby_(1890s)_-_Giovanni_Battista_Torriglia.jpg"
+/>

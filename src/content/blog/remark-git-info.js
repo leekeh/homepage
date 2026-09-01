@@ -52,7 +52,10 @@ function getGitHistory(filePath) {
  */
 export function remarkGitInfo() {
 	return (_tree, file) => {
-		const filePath = file.path ?? file.history[0];
+		// mdsvex passes the path as `file.filename`, not `file.path` (which is a
+		// getter over `file.history` and stays empty here), so check it first.
+		const filePath =
+			/** @type {{ filename?: string }} */ (file).filename ?? file.path ?? file.history[0];
 		if (!filePath) return;
 
 		const history = getGitHistory(filePath);

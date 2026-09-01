@@ -62,7 +62,8 @@ export function getWidgetByRoute(
 		if (def.route.includes('[')) {
 			const prefix = def.route.split('[')[0];
 			if (normalized.startsWith(prefix) && normalized.length > prefix.length) {
-				const paramName = def.route.match(/\[([^\]]+)\]/)?.[1] ?? 'param';
+				// Strip the rest-param "..." prefix so e.g. [...slug] resolves to "slug"
+				const paramName = (def.route.match(/\[([^\]]+)\]/)?.[1] ?? 'param').replace(/^\.\.\./, '');
 				const paramValue = normalized.slice(prefix.length);
 				const params = { [paramName]: paramValue };
 				// Override the widget title with the specific entry's title when available
@@ -86,7 +87,8 @@ export function getRouteForWindow(
 	const def = getWidgetById(widgetId);
 	if (!def) return '/';
 	if (def.route.includes('[') && data) {
-		const paramName = def.route.match(/\[([^\]]+)\]/)?.[1] ?? 'param';
+		// Strip the rest-param "..." prefix so e.g. [...slug] resolves to "slug"
+		const paramName = (def.route.match(/\[([^\]]+)\]/)?.[1] ?? 'param').replace(/^\.\.\./, '');
 		const paramValue = data[paramName];
 		if (paramValue) {
 			return (def.route.split('[')[0] + String(paramValue)) as PathnameWithSearchOrHash;

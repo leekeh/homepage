@@ -7,6 +7,10 @@ SvelteKit 2.? + Svelte 5 personal website, styled as a retro desktop environment
 For basic development, you can run `pnpm dev`.
 For integrated development, you need to first run `pnpm wrangler login`. Then you can run `pnpm build && pnpm wrangler dev`. This is local development connecting with the remote database.
 
+## Standard.site
+
+Our blog records are synced to standard.site to be discoverable and indexed on the AT protocol. To do a manual sync, run `ATP_APP_PASSWORD='[APP PASSWORD (found in .env)]' pnpm standard:publish`
+
 ## To do:
 
 - finish up web mentions
@@ -30,6 +34,7 @@ For integrated development, you need to first run `pnpm wrangler login`. Then yo
 - dark mode
 - accessibility statement
 - implement max sizes for windows
+- focus management when navigating to new widget / closing widget
 
 widgets:
 
@@ -49,6 +54,7 @@ widgets:
 - tamagotchi
 - powerpoint
 - trash can (show dead projects)
+- liked posts feed
 
 blog posts:
 
@@ -69,3 +75,5 @@ blog posts:
 - AI wants to please you. Here's how you can make it push back dumb ideas.
 - Things to do instead of doomscrolling: Freewriting, Reading Wikipedia, Puzzles, Staring at a wall
 - I've removed all photos of myself online. Multiple times, colleagues have still fed my photos to AI, so I'm not sure it's all worth it anyways.
+- squiggle effects
+- image sources to use instead of AI: public.works, free image sources, hand-drawn, etc.

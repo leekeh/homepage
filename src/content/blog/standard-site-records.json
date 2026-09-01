@@ -1,13 +1,13 @@
 {
 	"_publication": {
 		"uri": "at://did:plc:y7ibtwut4opwcwurnkioejol/site.standard.publication/3msajgvi6fk2u",
-		"cid": "bafyreighk6mef4eerkrwcwfeanbdqtczii3vkt44tfllm6olrl4fzdh544",
-		"hash": "b26afbe438ea07ff0279dd052b7a5b50d25b0943031cd14da0b08f1a587f2aca"
+		"cid": "bafyreih2534noo2we44n2r2yow5qwgfi2whmgrsak7k4cdpx4f6o57jdee",
+		"hash": "97c8aee031d5d1bfa28a42efd6387e9447d3719db971e6c0fdc5bcc745823463"
 	},
 	"aria-patterns/accordion": {
 		"uri": "at://did:plc:y7ibtwut4opwcwurnkioejol/site.standard.document/3msajgvyukt2l",
-		"cid": "bafyreier5edbg2miz4ikvmsiuzjkct3xzehikqcbymsxzdqwywten45hji",
-		"hash": "e1d0007f3768e7e27c13c2f8c97153dadb350c4dd7671f7e2a35467e50f4731f"
+		"cid": "bafyreic5wgux2wcdg3kzc2td4ghzwajnf6aoji267yqq7seab5uqlk2ea4",
+		"hash": "4ce2b798b019fcaa2c42cfa8e2729a97dc43123d504ddf211c5a0fba5f810a65"
 	},
 	"beyond-react": {
 		"uri": "at://did:plc:y7ibtwut4opwcwurnkioejol/site.standard.document/3msajgxi76v2e",
@@ -16,7 +16,7 @@
 	},
 	"hello-world": {
 		"uri": "at://did:plc:y7ibtwut4opwcwurnkioejol/site.standard.document/3msajgyeho62u",
-		"cid": "bafyreiaunfhhshwdilzcytogp2mnuv6k76vjvvbjwxpbogswh7cdp6642y",
-		"hash": "2ceef8e5298ef64c7f8a683e2d7671db1550b601ae011f0c7a2b91f1f8820a2e"
+		"cid": "bafyreid5cph5e4e5gyhtbkwivet5krgygrncc2butz7libwo7p6qrrw5lq",
+		"hash": "81bd82725ee008a5bb147d34e81d1c4b70e3ae61ae391d461cd30973779b2cc4"
 	}
 }

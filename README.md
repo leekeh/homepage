@@ -34,6 +34,7 @@ Our blog records are synced to standard.site to be discoverable and indexed on t
 - dark mode
 - accessibility statement
 - implement max sizes for windows
+- focus management when navigating to new widget / closing widget
 
 widgets:
 

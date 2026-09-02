@@ -9,6 +9,7 @@
 
 	type PostMetadata = {
 		title?: string;
+		date?: string;
 		publishedAt?: string;
 		description?: string;
 		categories?: string[];
@@ -55,16 +56,17 @@
 </script>
 
 {#snippet renderPost(PostComponent: Component, metadata: PostMetadata)}
+	{@const publishedDate = metadata?.date ?? metadata?.publishedAt}
 	<article>
 		<Content removeStartPadding>
 			<div class="body e-content">
 				<header class="post-header">
 					<h2 class="title">{metadata?.title}</h2>
 					<div class="post-meta">
-						{#if metadata?.publishedAt}
+						{#if publishedDate}
 							<span>
 								Posted
-								<time datetime={metadata.publishedAt}>{formatDate(metadata.publishedAt)}</time>
+								<time datetime={publishedDate}>{formatDate(publishedDate)}</time>
 							</span>
 						{/if}
 

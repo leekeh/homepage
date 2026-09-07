@@ -7,6 +7,7 @@ import IconContact from '@icons/IconContact.svelte';
 import IconApps from '@icons/IconApps.svelte';
 import IconHearts from '@icons/IconHearts.svelte';
 import IconTreats from '@icons/IconTreats.svelte';
+import IconAquarium from '@icons/IconAquarium.svelte';
 import type { PathnameWithSearchOrHash } from '$app/types';
 
 export interface WidgetConfig {
@@ -146,5 +147,19 @@ export const widgetConfigs: WidgetConfig[] = [
 		resizable: true,
 		minimal: false,
 		description: 'A sweet treat, scanned in 3D.'
+	},
+	{
+		id: 'aquarium',
+		title: 'Aquarium',
+		icon: IconAquarium,
+		component: () => import('@widgets/aquarium/Aquarium.svelte'),
+		route: '/aquarium',
+		defaultWidth: 480,
+		defaultHeight: 320,
+		defaultX: 140,
+		defaultY: 80,
+		resizable: false,
+		minimal: true,
+		description: 'A retro screensaver aquarium of drifting fish.'
 	}
 ];

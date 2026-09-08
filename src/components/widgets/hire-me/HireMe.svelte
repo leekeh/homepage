@@ -58,6 +58,7 @@
 		isolation: isolate;
 		font-family: var(--font-sans);
 		background-color: var(--color-bg-primary);
+		overflow-x: clip;
 	}
 
 	@media (max-width: 768px), print {
@@ -76,6 +77,7 @@
 			border-radius: var(--radius-lg);
 			height: fit-content;
 			max-width: 336px;
+			overflow-x: visible;
 		}
 	}
 </style>

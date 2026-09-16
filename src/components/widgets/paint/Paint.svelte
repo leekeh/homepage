@@ -91,6 +91,8 @@
 	});
 </script>
 
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<!-- We listen to keys to only attach one event listener, but the interactions happen on non-static elements (buttons/inputs) -->
 <div
 	class="paint"
 	bind:this={rootEl}

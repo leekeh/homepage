@@ -4,7 +4,14 @@
 	import { page } from '$app/state';
 	import { getWidgetByRoute } from '../../components/widgets/widgets';
 	import { getTreatById, posterWebp } from '../../components/widgets/treats/data';
-	import { absoluteUrl, DEFAULT_OG_IMAGE, SITE_DESCRIPTION, SITE_NAME } from '../../content/site';
+	import {
+		absoluteUrl,
+		DEFAULT_OG_IMAGE,
+		SITE_AUTHOR,
+		SITE_DESCRIPTION,
+		SITE_LOCALE,
+		SITE_NAME
+	} from '../../content/site';
 	import { WEBMENTION_ENDPOINT, WEBMENTION_PINGBACK } from '../../content/webmentions';
 	import {
 		STANDARD_SITE_PUBLICATION,
@@ -102,8 +109,10 @@
 <svelte:head>
 	<title>{seo.title}</title>
 	<meta name="description" content={seo.description} />
+	<meta name="author" content={SITE_AUTHOR} />
 	<link rel="canonical" href={seo.url} />
 	<meta property="og:site_name" content={SITE_NAME} />
+	<meta property="og:locale" content={SITE_LOCALE} />
 	<meta property="og:title" content={seo.title} />
 	<meta property="og:description" content={seo.description} />
 	<meta property="og:type" content={seo.type} />
@@ -148,5 +157,4 @@
 	{#if WEBMENTION_PINGBACK}
 		<link rel="pingback" href={WEBMENTION_PINGBACK} />
 	{/if}
-	<link rel="icon" type="image/x-icon" href="/favicon.ico" />
 </svelte:head>

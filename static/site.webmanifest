@@ -1,0 +1,14 @@
+{
+	"name": "leekeh",
+	"short_name": "leekeh",
+	"description": "Digital trinkets and personal ramblings by a Dutch web developer named Lieke.",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#E1C8F9",
+	"theme_color": "#E1C8F9",
+	"icons": [
+		{ "src": "/icon-192.png", "type": "image/png", "sizes": "192x192" },
+		{ "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" },
+		{ "src": "/icon-512-maskable.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+	]
+}

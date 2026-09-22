@@ -18,49 +18,6 @@
 
 <ul>
 	<li>
-		<!-- Isolate DSRing widget, don't run untrusted scripts -->
-		<iframe
-			title="DSring onion webring widget"
-			sandbox="allow-scripts"
-			loading="lazy"
-			class="dsring-frame"
-			style="border: none; width: 500px"
-			srcdoc={`<!doctype html>
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<link rel="stylesheet" href="https://dsring.neocities.org/dswidget/onionring.css" />
-		<style>
-			body {
-				margin: 0;
-				background: transparent;
-			}
-		</style>
-	</head>
-	<body>
-		<div id="dsring" style="padding: 0; margin: 0;"></div>
-		${scriptTag(' src="https://dsring.neocities.org/dswidget/onionring-variables.js"')}
-		${scriptTag(' src="https://dsring.neocities.org/dswidget/onionring-widget.js"')}
-	</body>
-</html>`}
-		>
-		</iframe>
-	</li>
-
-	<!-- Still pending, uncommenting when ready: -->
-	<!-- 
-	<li>
-		<div class="squiggle-border item" style="padding: var(--space-4);">
-			<h4>Responsive Web Directory</h4>
-			<p>
-				This site is a member of the <a rel="external" href="https://kalechips.net/responsive/index"
-					>Responsive Web Directory</a
-				>.
-			</p>
-		</div>
-	</li>
-
-	<li>
 		<div class="squiggle-border item" style="padding: var(--space-4);">
 			<h4>a11y-webring.club</h4>
 			<p>
@@ -91,6 +48,17 @@
 	</li>
 
 	<li>
+		<div class="squiggle-border item" style="padding: var(--space-4);">
+			<h4>Responsive Web Directory</h4>
+			<p>
+				This site is a member of the <a rel="external" href="https://kalechips.net/responsive/index"
+					>Responsive Web Directory</a
+				>.
+			</p>
+		</div>
+	</li>
+
+	<li>
 		<div style="width: 135px;">
 			<iframe
 				style="border: none; width: 100%"
@@ -117,7 +85,36 @@
 				>
 			</div>
 		</div>
-	</li> -->
+	</li>
+	<li>
+		<!-- Isolate DSRing widget, don't run untrusted scripts -->
+		<iframe
+			title="DSring onion webring widget"
+			sandbox="allow-scripts"
+			loading="lazy"
+			class="dsring-frame"
+			style="border: none; width: 500px"
+			srcdoc={`<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="https://dsring.neocities.org/dswidget/onionring.css" />
+		<style>
+			body {
+				margin: 0;
+				background: transparent;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="dsring" style="padding: 0; margin: 0;"></div>
+		${scriptTag(' src="https://dsring.neocities.org/dswidget/onionring-variables.js"')}
+		${scriptTag(' src="https://dsring.neocities.org/dswidget/onionring-widget.js"')}
+	</body>
+</html>`}
+		>
+		</iframe>
+	</li>
 </ul>
 
 <style>

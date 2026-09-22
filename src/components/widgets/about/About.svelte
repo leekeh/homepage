@@ -1,17 +1,12 @@
 <script lang="ts">
-	import { useWindowManager } from '../OS/shared/windowManager.svelte';
-	import { toggleSquiggles, useSquiggles } from '../OS/shared/useSquiggles.svelte.js';
-	import bskyImg from '@assets/web-badges/bsky.gif';
-	import cssImg from '@assets/web-badges/css.gif';
-	import enhancedImg from '@assets/web-badges/enhanced.gif';
-	import html5Img from '@assets/web-badges/html5.gif';
-	import tangledImg from '@assets/web-badges/tangled.gif';
-	import fascistsImg from '@assets/web-badges/fascists.png';
-	import passionImg from '@assets/web-badges/passion.png';
-	import rssImg from '@assets/web-badges/rss.png';
+	import { useWindowManager } from '../../OS/shared/windowManager.svelte.js';
+	import { toggleSquiggles, useSquiggles } from '../../OS/shared/useSquiggles.svelte.js';
+
 	import Content from '@components/content.svelte';
 	import Button from '@components/OS/Button.svelte';
 	import { resolve } from '$app/paths';
+	import WebRings from './WebRings.svelte';
+	import Buttons from './Buttons.svelte';
 
 	const wm = $derived(useWindowManager());
 	const squigglesEnabled = $derived(useSquiggles());
@@ -27,30 +22,8 @@
 		Hi! I'm leekeh, a web developer based in the Netherlands. I'm also an accessibility advocate and
 		proponent of the open web.
 	</p>
-	<ul class="buttons">
-		<li>
-			<a href="https://bsky.app/profile/leekeh.com" target="_blank" rel="noopener">
-				<img src={bskyImg} alt="Bluesky" /></a
-			>
-		</li>
-		<li>
-			<a href="https://tangled.org/leekeh.com" target="_blank" rel="noopener"
-				><img src={tangledImg} alt="Tangled" /></a
-			>
-		</li>
-		<li>
-			<img src={cssImg} alt="Made with Cascading Style Sheets" />
-		</li>
-		<li><img src={enhancedImg} alt="Progressively enhanced" /></li>
-		<li><img src={html5Img} alt="Hypertext Markup Language 5" /></li>
-		<li><img src={fascistsImg} alt="This machine kills fascists" /></li>
-		<li><img src={passionImg} alt="Graphic design is my passion" /></li>
-		<li>
-			<a href={resolve('/rss.xml')} rel="noopener" data-sveltekit-reload
-				><img src={rssImg} alt="Implement RSS now!" /></a
-			>
-		</li>
-	</ul>
+
+	<Buttons />
 	<hr />
 	<h3>My background</h3>
 	<p>
@@ -101,29 +74,13 @@
 		</Button>
 		<Button onclick={resetComputer}>Reset computer</Button>
 	</div>
+
+	<hr />
+	<h3>Web rings</h3>
+	<WebRings />
 </Content>
 
 <style>
-	.buttons {
-		display: grid;
-		grid-template-columns: repeat(4, auto);
-		margin-top: var(--space-4);
-		gap: var(--space-4);
-		width: fit-content;
-		list-style: none;
-		img {
-			image-rendering: pixelated;
-			image-rendering: crisp-edges;
-			image-rendering: -webkit-optimize-contrast;
-		}
-	}
-	@container (width < 500px) {
-		.buttons {
-			display: flex;
-			flex-wrap: wrap;
-		}
-	}
-
 	@media (prefers-reduced-motion: reduce) {
 		:global(.squiggle-toggle) {
 			display: none;

@@ -7,14 +7,7 @@
 	}
 </script>
 
-<p>This website is part of the following groups:</p>
-
-{#snippet ring(data)}
-	<figure>
-		<img src={image.src} alt={image.caption} width={image.width} height={image.height} />
-		<figcaption>{image.caption}</figcaption>
-	</figure>
-{/snippet}
+<p>This area is currently under construction. I'm aiming to join the following rings:</p>
 
 <ul>
 	<li>

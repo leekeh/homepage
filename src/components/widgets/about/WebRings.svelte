@@ -61,10 +61,13 @@
 		</div>
 	</li>
 
-	<li>
+	<!-- <li>
 		<div class="item">
 			<a href="https://gummyring.neocities.org"
-				><img src="http://gummyring.neocities.org/gummyring-2color.png" alt="Gummy Ring webring" /></a
+				><img
+					src="http://gummyring.neocities.org/gummyring-2color.png"
+					alt="Gummy Ring webring"
+				/></a
 			><br />
 			<div class="row">
 				<a href="https://gummyring.neocities.org/?action=previous"
@@ -78,7 +81,7 @@
 				>
 			</div>
 		</div>
-	</li>
+	</li> -->
 	<li>
 		<!-- Isolate DSRing widget, don't run untrusted scripts -->
 		<iframe

@@ -26,7 +26,11 @@ anything else that's a flat list of "click through to a detail page" tiles.
 <ul class="grid">
 	{#each items as item (item.href)}
 		<li class="squiggle-border">
-			<a href={resolvePath(item.href)} title={item.title ?? item.alt}>
+			<a
+				href={resolvePath(item.href)}
+				title={item.title ?? item.alt}
+				aria-label={item.title ?? item.alt}
+			>
 				<img src={item.src} alt={item.alt} loading="lazy" width="480" height="480" />
 			</a>
 		</li>

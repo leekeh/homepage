@@ -41,8 +41,8 @@ async function analyzeRoute(page: Page, route: string) {
  * one test that soft-asserts each post (visiting them all and reporting every
  * offender).
  */
-export function registerAxeSweep() {
-	for (const route of [...STATIC_WIDGET_ROUTES, ...treatRoutes(), ...folderRoutes()]) {
+export async function registerAxeSweep() {
+	for (const route of [...STATIC_WIDGET_ROUTES, ...treatRoutes(), ...(await folderRoutes())]) {
 		test(`axe: ${route}`, async ({ page }) => {
 			const violations = await analyzeRoute(page, route);
 			expect(violations, formatViolations(violations)).toEqual([]);

@@ -45,7 +45,7 @@ async function assertOgImage(request: APIRequestContext, route: string, info: Te
 }
 
 // Widget + treat + folder/photo routes are known at collection time — one isolated test each.
-for (const route of [...STATIC_WIDGET_ROUTES, ...treatRoutes(), ...folderRoutes()]) {
+for (const route of [...STATIC_WIDGET_ROUTES, ...treatRoutes(), ...(await folderRoutes())]) {
 	test(`og:image: ${route}`, async ({ request }, info) => {
 		await assertOgImage(request, route, info);
 	});

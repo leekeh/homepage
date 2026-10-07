@@ -1,6 +1,9 @@
+import { readdirSync } from 'node:fs';
+import { join } from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { treats } from '../src/components/widgets/treats/data';
-import { folders, photos } from '../src/content/folders/server';
 import type { APIRequestContext } from '@playwright/test';
+import type { FolderMeta, PhotoInput } from '../src/content/folders';
 
 /**
  * Single source of truth for the routes the QA gates (axe-core + Lighthouse)
@@ -8,8 +11,8 @@ import type { APIRequestContext } from '@playwright/test';
  *
  *   - the navigable widget routes (mirrors the no-JS widget suite),
  *   - one route per treat (from the treats data module),
- *   - one route per folder and one per photo (from the folders content
- *     module — each folder gets its own top-level path, e.g. `/img`), and
+ *   - one route per folder and one per photo (from each folder's `folder.ts`
+ *     — each folder gets its own top-level path, e.g. `/img`), and
  *   - one route per *published* blog post (discovered from /rss.xml at
  *     runtime, so it reflects the app's own publish logic — including drafts
  *     that have real frontmatter — with zero hardcoded slugs to go stale).
@@ -18,6 +21,33 @@ import type { APIRequestContext } from '@playwright/test';
  * the prerendered HTML output and can only be enumerated against a running
  * server. That's why blog discovery takes an APIRequestContext.
  */
+
+const FOLDERS_DIR = fileURLToPath(new URL('../src/content/folders/', import.meta.url));
+
+/**
+ * `src/content/folders/server.ts` discovers folders with `import.meta.glob`,
+ * a Vite-only macro that doesn't exist when this module is loaded directly
+ * by Playwright (outside the Vite pipeline). Rediscover the same folders by
+ * reading the directory and dynamically importing each `folder.ts` — which,
+ * unlike `server.ts`, has no Vite-only syntax of its own.
+ */
+async function loadFolders(): Promise<{
+	folders: Record<string, FolderMeta>;
+	photos: { folderId: string; imgId: string }[];
+}> {
+	const folders: Record<string, FolderMeta> = {};
+	const photos: { folderId: string; imgId: string }[] = [];
+	const entries = readdirSync(FOLDERS_DIR, { withFileTypes: true }).filter((e) => e.isDirectory());
+	for (const entry of entries) {
+		const mod = (await import(pathToFileURL(join(FOLDERS_DIR, entry.name, 'folder.ts')).href)) as {
+			meta: FolderMeta;
+			photos: PhotoInput[];
+		};
+		folders[entry.name] = mod.meta;
+		photos.push(...mod.photos.map((photo) => ({ folderId: entry.name, imgId: photo.imgId })));
+	}
+	return { folders, photos };
+}
 
 /** Navigable widget routes — the same set the no-JS suite covers. */
 export const STATIC_WIDGET_ROUTES = [
@@ -36,7 +66,8 @@ export function treatRoutes(): string[] {
 }
 
 /** One route per folder, and one per photo, e.g. `/img/chill`. */
-export function folderRoutes(): string[] {
+export async function folderRoutes(): Promise<string[]> {
+	const { folders, photos } = await loadFolders();
 	return [
 		...Object.keys(folders).map((id) => `/${id}`),
 		...photos.map((photo) => `/${photo.folderId}/${photo.imgId}`)
@@ -77,6 +108,6 @@ export async function discoverBlogRoutes(request: APIRequestContext): Promise<st
  * output.
  */
 export async function allContentRoutes(request: APIRequestContext): Promise<string[]> {
-	const blog = await discoverBlogRoutes(request);
-	return [...new Set([...STATIC_WIDGET_ROUTES, ...treatRoutes(), ...folderRoutes(), ...blog])];
+	const [blog, folders] = await Promise.all([discoverBlogRoutes(request), folderRoutes()]);
+	return [...new Set([...STATIC_WIDGET_ROUTES, ...treatRoutes(), ...folders, ...blog])];
 }

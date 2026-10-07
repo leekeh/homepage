@@ -39,8 +39,8 @@ const WIDGETS: WidgetCase[] = [
 	{ route: '/treats', title: 'Sweet Treats', content: (s) => s.getByText('Tasty treats') },
 	{
 		route: '/img',
-		title: 'Cute Pictures',
-		content: (s) => s.getByText('A growing pile of good boys'),
+		title: 'My Pictures',
+		content: (s) => s.locator('a img'),
 		minimal: true
 	},
 	{

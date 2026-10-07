@@ -21,6 +21,17 @@ const ROOT = fileURLToPath(new URL('..', import.meta.url));
 /** Budget: images at or below this are left untouched. */
 const MAX_BYTES = 500 * 1024;
 
+/**
+ * For images still over budget after the full ladder, only overwrite the file
+ * if it saves at least this fraction of the original size. Re-encoding is
+ * lossy and GIF/PNG quantization isn't perfectly deterministic between runs,
+ * so without this floor a "stubborn" image (one the ladder can never get
+ * under budget) gets rewritten — with tiny, sometimes zero-net-size but
+ * byte-different output — on every single CI run, producing an endless
+ * stream of autofix commits that just degrades it further for no real gain.
+ */
+const MIN_SAVINGS_RATIO = 0.05;
+
 /** Directories to scan, relative to the repo root. */
 const SCAN_DIRS = ['static', 'src'];
 
@@ -120,6 +131,7 @@ if (candidates.length === 0) {
 
 let fixed = 0;
 let stubborn = 0;
+let skipped = 0;
 for (const { file, rel } of candidates) {
 	const ext = extname(file).toLowerCase();
 	const original = readFileSync(file);
@@ -134,17 +146,31 @@ for (const { file, rel } of candidates) {
 		if (best.length <= MAX_BYTES) break;
 	}
 
-	writeFileSync(file, best);
-	if (best.length <= MAX_BYTES) {
-		fixed++;
-		console.log(`✓ ${rel}: ${fmtKB(before)} → ${fmtKB(best.length)}`);
+	const fitsBudget = best.length <= MAX_BYTES;
+	const savings = (before - best.length) / before;
+
+	// Always take a real fix. Otherwise only take it if it's a meaningful cut —
+	// skip writing for stubborn images that would just be churned in place.
+	if (fitsBudget || savings >= MIN_SAVINGS_RATIO) {
+		writeFileSync(file, best);
+		if (fitsBudget) {
+			fixed++;
+			console.log(`✓ ${rel}: ${fmtKB(before)} → ${fmtKB(best.length)}`);
+		} else {
+			stubborn++;
+			console.log(
+				`⚠ ${rel}: ${fmtKB(before)} → ${fmtKB(best.length)} (still over ${fmtKB(MAX_BYTES)})`
+			);
+		}
 	} else {
-		stubborn++;
+		skipped++;
 		console.log(
-			`⚠ ${rel}: ${fmtKB(before)} → ${fmtKB(best.length)} (still over ${fmtKB(MAX_BYTES)})`
+			`- ${rel}: ${fmtKB(before)} is already near its practical floor (best effort only reaches ${fmtKB(best.length)}); leaving untouched`
 		);
 	}
 }
 
-console.log(`\nOptimized ${fixed} image(s); ${stubborn} still over budget.`);
+console.log(
+	`\nOptimized ${fixed} image(s); ${stubborn} still over budget; ${skipped} left untouched (no meaningful gain available).`
+);
 process.exit(0);

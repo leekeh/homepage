@@ -13,8 +13,7 @@
 	<h3>The standard</h3>
 	<p>
 		I am aiming to adhere to at least WCAG AA compliance, tracking the <a
-			href="https://www.w3.org/WAI/standards-guidelines/wcag/
-">current stable version (2.2)</a
+			href="https://www.w3.org/WAI/standards-guidelines/wcag/">current stable version (2.2)</a
 		>.
 	</p>
 

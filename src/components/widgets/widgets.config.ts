@@ -182,7 +182,7 @@ export const widgetConfigs: WidgetConfig[] = [
 		defaultHeight: 420,
 		defaultX: 140,
 		defaultY: 70,
-		resizable: false,
+		resizable: true,
 		minimal: false,
 		description: 'A folder of cute pictures.'
 	},

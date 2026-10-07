@@ -84,6 +84,7 @@
 			caption={photo.caption}
 			credit={photo.credit}
 			minimal
+			fit="contain"
 		/>
 	</div>
 {:else if folder}
@@ -102,7 +103,7 @@
 	.viewer {
 		position: relative;
 		width: 100%;
-		min-height: 100%;
+		height: 100%;
 		font-family: var(--font-sans);
 	}
 	.pager {

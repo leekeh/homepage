@@ -10,9 +10,11 @@
 		caption?: string;
 		credit?: string;
 		minimal?: boolean;
+		/** 'contain' scales the image to fit within the available height as well as width, instead of always spanning the full width. */
+		fit?: 'width' | 'contain';
 	};
 
-	let { src, alt, caption, credit, minimal }: Props = $props();
+	let { src, alt, caption, credit, minimal, fit = 'width' }: Props = $props();
 
 	let creditUrl = $derived(credit ? resolveCreditUrl(credit) : null);
 
@@ -57,7 +59,12 @@
 	});
 </script>
 
-<figure class="container" class:squiggle-border={!minimal} class:minimal>
+<figure
+	class="container"
+	class:squiggle-border={!minimal}
+	class:minimal
+	class:contain={fit === 'contain'}
+>
 	<div class="media-wrapper">
 		<!-- Always render the img; hide it when paused to freeze the GIF -->
 		<img bind:this={imgEl} {src} {alt} class:hidden={isGif && paused} />
@@ -108,6 +115,12 @@
 			padding: 0;
 			margin-block: 0;
 		}
+
+		&.contain {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+		}
 	}
 
 	.media-wrapper {
@@ -116,12 +129,28 @@
 		overflow: hidden;
 	}
 
+	.container.contain .media-wrapper {
+		flex: 1;
+		min-height: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
 	img,
 	canvas {
 		width: 100%;
 		height: auto;
 		display: block;
 		object-fit: contain;
+	}
+
+	.container.contain img,
+	.container.contain canvas {
+		width: auto;
+		height: auto;
+		max-width: 100%;
+		max-height: 100%;
 	}
 
 	.hidden {

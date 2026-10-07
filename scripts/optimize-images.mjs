@@ -68,16 +68,21 @@ function fmtKB(bytes) {
 
 /**
  * Re-encode `original` (a Buffer) at the given ladder step, preserving format.
- * sharp strips metadata by default, so no explicit `-strip` is needed.
+ * sharp strips metadata by default, so no explicit `-strip` is needed. It also
+ * doesn't auto-rotate pixels based on EXIF Orientation on its own — without the
+ * `.rotate()` call below, stripping that tag would silently flip how the image
+ * displays everywhere, since the pixels were never physically rotated to match.
  */
 async function encode(original, ext, { maxDim, quality, colors }) {
 	// `animated: true` keeps every frame of animated GIFs/WebPs.
-	let img = sharp(original, { animated: ext === '.gif' || ext === '.webp' }).resize({
-		width: maxDim,
-		height: maxDim,
-		fit: 'inside',
-		withoutEnlargement: true
-	});
+	let img = sharp(original, { animated: ext === '.gif' || ext === '.webp' })
+		.rotate()
+		.resize({
+			width: maxDim,
+			height: maxDim,
+			fit: 'inside',
+			withoutEnlargement: true
+		});
 
 	switch (ext) {
 		case '.png':

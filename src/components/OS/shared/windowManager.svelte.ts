@@ -13,6 +13,7 @@ export interface WindowState {
 	minimized: boolean;
 	maximized: boolean;
 	minimal: boolean;
+	autoHeight?: boolean;
 	data?: Record<string, unknown>;
 }
 
@@ -61,7 +62,11 @@ export class WindowManager {
 
 	// Navigation methods attached by WindowManagerSetup
 	suppressUrlSync?: boolean;
-	openWidgetAndNavigate?: (widgetId: string, data?: Record<string, unknown>) => void;
+	openWidgetAndNavigate?: (
+		widgetId: string,
+		data?: Record<string, unknown>,
+		opts?: { replaceWindowId?: string }
+	) => void;
 
 	private getViewportBounds() {
 		return {
@@ -121,8 +126,29 @@ export class WindowManager {
 	}
 
 	/** Open a widget. If already open, focuses it instead. Returns the window id. */
-	open(widgetId: string, overrides?: Partial<WindowState>): string {
-		// For widgets with data (like blog posts), match on widgetId + data
+	open(widgetId: string, overrides?: Partial<WindowState> & { replaceWindowId?: string }): string {
+		const def = getWidgetById(widgetId);
+		if (!def) return '';
+
+		// A caller can ask a specific, already-open window to update its own
+		// data/title in place rather than opening a new one — e.g. prev/next
+		// inside the photo viewer moves to the next photo without stacking a
+		// window per photo. This only ever touches the one window named, so
+		// other windows of the same widget (opened deliberately) are untouched.
+		if (overrides?.replaceWindowId) {
+			const target = this.windows.find(
+				(w) => w.id === overrides.replaceWindowId && w.widgetId === widgetId
+			);
+			if (target) {
+				target.title = overrides.title ?? def.title;
+				target.data = overrides.data;
+				this.focus(target.id);
+				this.saveLayout();
+				return target.id;
+			}
+		}
+
+		// For widgets with data (like blog posts), match on widgetId + data.
 		const existing = this.windows.find((w) => {
 			if (w.widgetId !== widgetId) return false;
 			// If overrides have data, match on it too (e.g. same blog post slug)
@@ -140,8 +166,6 @@ export class WindowManager {
 			return existing.id;
 		}
 
-		const def = getWidgetById(widgetId);
-		if (!def) return '';
 		this.topZ++;
 		const id = createId();
 		const win: WindowState = {
@@ -156,6 +180,7 @@ export class WindowManager {
 			minimized: overrides?.minimized ?? false,
 			maximized: overrides?.maximized ?? def.defaultMaximized ?? false,
 			minimal: overrides?.minimal ?? def.minimal,
+			autoHeight: def.autoHeight,
 			data: overrides?.data
 		};
 
@@ -503,6 +528,7 @@ export class WindowManager {
 						minimized: saved.minimized,
 						maximized: saved.maximized,
 						minimal: def.minimal,
+						autoHeight: def.autoHeight,
 						data: saved.data
 					};
 					this.constrainWindow(win);
@@ -540,7 +566,11 @@ export function useWindowManager() {
 	return wm;
 }
 
-export type WindowNavigateFn = (widgetId: string, data?: Record<string, unknown>) => void;
+export type WindowNavigateFn = (
+	widgetId: string,
+	data?: Record<string, unknown>,
+	opts?: { replaceWindowId?: string }
+) => void;
 
 export function useWindowNavigate() {
 	const navigate = getContext<WindowNavigateFn>(WINDOW_NAVIGATE_CONTEXT_KEY);

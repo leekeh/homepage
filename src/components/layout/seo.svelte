@@ -2,8 +2,20 @@
 	import type { LayoutData } from '../../routes/$types';
 
 	import { page } from '$app/state';
-	import { getWidgetByRoute } from '../../components/widgets/widgets';
+	import {
+		getRouteForWindow,
+		getWidgetById,
+		getWidgetByRoute
+	} from '../../components/widgets/widgets';
+	import { useWindowManager } from '../OS/shared/windowManager.svelte';
 	import { getTreatById, posterWebp } from '../../components/widgets/treats/data';
+	import {
+		getFolderMeta,
+		getPhotoById,
+		getPhotosByFolder,
+		photoFilename,
+		photoSrc
+	} from '../../content/folders/server';
 	import {
 		absoluteUrl,
 		DEFAULT_OG_IMAGE,
@@ -24,8 +36,32 @@
 	};
 	let { data }: Props = $props();
 
+	const wm = useWindowManager();
 	const currentPath = $derived(page.url.pathname);
-	const currentMatch = $derived(getWidgetByRoute(currentPath));
+
+	// The window manager drives client-side navigation via pushState, which
+	// (by design, per SvelteKit's shallow-routing semantics) does NOT update
+	// `page.url` — so after the first load, `page.url` can be stale while the
+	// desktop has already moved on to a different window. The active window
+	// is the actual source of truth for "what's currently shown"; `page.url`
+	// is only needed as a fallback before any window has been seeded (SSR
+	// first paint, or genuinely no-JS clients that never open one via `wm`).
+	const routeMatch = $derived(getWidgetByRoute(currentPath));
+	const activeWindowMatch = $derived.by(() => {
+		const active = wm.activeWindow;
+		if (!active) return undefined;
+		const widget = getWidgetById(active.widgetId);
+		if (!widget) return undefined;
+		return { widget, params: active.data as Record<string, string> | undefined };
+	});
+	const currentMatch = $derived(activeWindowMatch ?? routeMatch);
+	// The canonical/OG url for the resolved widget — not just `currentPath`,
+	// for the same reason as above.
+	const currentRoute = $derived(
+		currentMatch?.widget
+			? getRouteForWindow(currentMatch.widget.id, currentMatch.params)
+			: currentPath
+	);
 	const pageTitle = $derived.by(() => {
 		const rootTitle = 'leekeh';
 		if (!currentMatch?.widget || currentMatch.widget.id === 'about') return rootTitle;
@@ -52,7 +88,50 @@
 		return getTreatById(id);
 	});
 
+	const currentPhoto = $derived.by(() => {
+		const id = currentMatch?.params?.id;
+		const photoId = currentMatch?.params?.photoId;
+		if (currentMatch?.widget.id !== 'photoviewer' || !id || !photoId) {
+			return undefined;
+		}
+		return getPhotoById(id, photoId);
+	});
+
+	const currentFolder = $derived.by(() => {
+		const id = currentMatch?.params?.id;
+		if (currentMatch?.widget.id !== 'folderdetail' || !id) {
+			return undefined;
+		}
+		const meta = getFolderMeta(id);
+		return meta ? { id, meta } : undefined;
+	});
+
 	const seo = $derived.by(() => {
+		if (currentFolder) {
+			const cover = getPhotosByFolder(currentFolder.id)[0];
+			return {
+				title: `${currentFolder.meta.title} - leekeh`,
+				description: currentFolder.meta.description ?? 'A folder of cute pictures.',
+				type: 'website' as const,
+				url: absoluteUrl(currentRoute),
+				image: absoluteUrl(cover ? photoSrc(cover) : DEFAULT_OG_IMAGE),
+				imageAlt: currentFolder.meta.title,
+				article: undefined
+			};
+		}
+
+		if (currentPhoto) {
+			return {
+				title: `${photoFilename(currentPhoto)} - leekeh`,
+				description: currentPhoto.caption ?? currentPhoto.alt,
+				type: 'website' as const,
+				url: absoluteUrl(currentRoute),
+				image: absoluteUrl(photoSrc(currentPhoto)),
+				imageAlt: currentPhoto.alt,
+				article: undefined
+			};
+		}
+
 		if (currentTreat) {
 			const review = currentTreat.review;
 			return {
@@ -62,7 +141,7 @@
 						? `${review.slice(0, 152)}…`
 						: review || 'A sweet treat, scanned in 3D.',
 				type: 'article' as const,
-				url: absoluteUrl(currentPath),
+				url: absoluteUrl(currentRoute),
 				image: absoluteUrl(posterWebp(currentTreat.imgId)),
 				imageAlt: currentTreat.title,
 				article: {
@@ -98,7 +177,7 @@
 			title: pageTitle,
 			description: widget?.description ?? SITE_DESCRIPTION,
 			type: 'website' as const,
-			url: absoluteUrl(currentPath),
+			url: absoluteUrl(currentRoute),
 			image: absoluteUrl(widget?.ogImage ?? DEFAULT_OG_IMAGE),
 			imageAlt: (widget?.title as string | undefined) ?? SITE_NAME,
 			article: undefined

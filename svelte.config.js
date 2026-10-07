@@ -49,7 +49,6 @@ const config = {
 			'@components/*': 'src/components/*',
 			'@icons/*': 'src/icons/*',
 			'@widgets/*': 'src/components/widgets/*',
-			'@assets/*': 'src/assets/*',
 			'@utils/*': 'src/util/*'
 		}
 	}

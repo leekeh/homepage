@@ -2,15 +2,19 @@
 	import IconPlay from '@icons/IconPlay.svelte';
 	import Button from './OS/Button.svelte';
 	import IconPause from '@icons/IconPause.svelte';
+	import { resolveCreditUrl } from '@utils/url';
 
 	type Props = {
 		src: string;
 		alt: string;
 		caption?: string;
 		credit?: string;
+		minimal?: boolean;
 	};
 
-	let { src, alt, caption, credit }: Props = $props();
+	let { src, alt, caption, credit, minimal }: Props = $props();
+
+	let creditUrl = $derived(credit ? resolveCreditUrl(credit) : null);
 
 	let isGif = $derived(src.split('?')[0].toLowerCase().endsWith('.gif'));
 	const prefersReducedMotion =
@@ -53,7 +57,7 @@
 	});
 </script>
 
-<figure class="squiggle-border container">
+<figure class="container" class:squiggle-border={!minimal} class:minimal>
 	<div class="media-wrapper">
 		<!-- Always render the img; hide it when paused to freeze the GIF -->
 		<img bind:this={imgEl} {src} {alt} class:hidden={isGif && paused} />
@@ -81,10 +85,14 @@
 		<figcaption>{caption}</figcaption>
 	{/if}
 	{#if credit}
-		<p class="credit">
+		<p class="credit" class:minimal>
 			Source:
-			<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-			<a href={credit} target="_blank" rel="noopener noreferrer nofollow">{credit}</a>
+			{#if creditUrl}
+				<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+				<a href={creditUrl} target="_blank" rel="noopener noreferrer nofollow">{credit}</a>
+			{:else}
+				<span>{credit}</span>
+			{/if}
 		</p>
 	{/if}
 </figure>
@@ -95,6 +103,11 @@
 		padding: var(--space-4) var(--space-5);
 		margin-block: var(--space-7);
 		break-inside: avoid;
+
+		&.minimal {
+			padding: 0;
+			margin-block: 0;
+		}
 	}
 
 	.media-wrapper {
@@ -118,6 +131,7 @@
 	.gif-toggle {
 		float: right;
 		padding: var(--space-2) var(--space-3);
+		z-index: 4;
 	}
 
 	figcaption {
@@ -141,7 +155,13 @@
 		gap: var(--space-2);
 		overflow: hidden;
 
-		a {
+		&.minimal {
+			padding-block-end: var(--space-2);
+			padding-inline: var(--space-4);
+		}
+
+		a,
+		span {
 			display: block;
 			min-width: 0;
 			text-overflow: ellipsis;

@@ -18,6 +18,8 @@ type WidgetCase = {
 	title: string;
 	/** A widget-specific element that must be present in the static HTML. */
 	content: (scope: Locator) => Locator;
+	/** Minimal windows have no <h2> title bar — just an accessible-named region. */
+	minimal?: boolean;
 };
 
 const WIDGETS: WidgetCase[] = [
@@ -34,7 +36,18 @@ const WIDGETS: WidgetCase[] = [
 	},
 	{ route: '/contact', title: 'Contact', content: (s) => s.getByText('Want to get in touch') },
 	{ route: '/hire-me', title: 'Bugble | Leekeh', content: (s) => s.getByText('seriously, I') },
-	{ route: '/treats', title: 'Sweet Treats', content: (s) => s.getByText('Tasty treats') }
+	{ route: '/treats', title: 'Sweet Treats', content: (s) => s.getByText('Tasty treats') },
+	{
+		route: '/img',
+		title: 'My Pictures',
+		content: (s) => s.locator('a img'),
+		minimal: true
+	},
+	{
+		route: '/accessibility',
+		title: 'Accessibility Statement',
+		content: (s) => s.getByText('usable by as many people as possible')
+	}
 ];
 
 test.describe('per-widget no-JS rendering', () => {
@@ -45,7 +58,11 @@ test.describe('per-widget no-JS rendering', () => {
 			// Scope to the desktop shell — without JS both shells are in the DOM.
 			const scope = page.locator('#desktop-content');
 
-			await expect(scope.getByRole('heading', { level: 2, name: widget.title })).toBeVisible();
+			if (widget.minimal) {
+				await expect(scope.getByRole('region', { name: widget.title })).toBeVisible();
+			} else {
+				await expect(scope.getByRole('heading', { level: 2, name: widget.title })).toBeVisible();
+			}
 			await expect(widget.content(scope).first()).toBeVisible();
 		});
 	}

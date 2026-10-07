@@ -37,7 +37,8 @@
 		font-weight: 500;
 		font-family: var(--font-mono);
 		text-align: center;
-		word-break: break-word;
+		overflow-wrap: break-word;
+		hyphens: auto;
 		line-height: 1.2;
 	}
 </style>

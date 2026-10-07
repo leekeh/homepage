@@ -69,6 +69,7 @@ blog posts:
   - rss
   - neocities
   - guest book
+  - web cliques
 - web design styles
 - developer learning design saga
 - Agents.md for a junior engineer
@@ -77,3 +78,13 @@ blog posts:
 - I've removed all photos of myself online. Multiple times, colleagues have still fed my photos to AI, so I'm not sure it's all worth it anyways.
 - squiggle effects
 - image sources to use instead of AI: public.works, free image sources, hand-drawn, etc.
+- catching up on new web developments
+  - CSS (scroll, subgrid,)
+  - HTML:
+  - JS:
+  - web MCP
+  - same format:
+    - what is it?
+    - minimal implementation
+    - why was this needed?
+    - would I use it?

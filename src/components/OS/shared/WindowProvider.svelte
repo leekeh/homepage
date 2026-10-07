@@ -14,6 +14,7 @@
 		getRouteForWindow,
 		widgetNavigationData
 	} from '../../widgets/widgets.js';
+	import { getPhotosByFolder, photoFilename } from '../../../content/folders/server.js';
 	import { applyPolyfills } from '../../../util/polyfills.js';
 	import { enableJsSupport } from './useJsSupport.svelte.js';
 	import { initializeSquiggles } from './useSquiggles.svelte.js';
@@ -38,7 +39,7 @@
 	let suppressUrlSync = $state(false);
 
 	/** Open a widget and update the URL */
-	const openWidgetAndNavigate: WindowNavigateFn = (widgetId, data) => {
+	const openWidgetAndNavigate: WindowNavigateFn = (widgetId, data, opts) => {
 		const overrides: Record<string, unknown> = {};
 		if (data) {
 			overrides.data = data;
@@ -46,6 +47,7 @@
 			const match = getWidgetByRoute(route);
 			if (match) overrides.title = match.widget.title;
 		}
+		if (opts?.replaceWindowId) overrides.replaceWindowId = opts.replaceWindowId;
 		// focus() inside open() will trigger onFocusChange → URL sync
 		wm.open(widgetId, overrides);
 	};
@@ -57,6 +59,23 @@
 		wm.suppressUrlSync = suppressUrlSync;
 		wm.openWidgetAndNavigate = openWidgetAndNavigate;
 	});
+
+	// The home page is prerendered, so it can't bake in a per-visit random
+	// pick — this only runs client-side, after hydration, so About still
+	// renders immediately (and for no-JS visitors, that's all they get).
+	// Guarded on "no photoviewer window yet" so a restored layout that
+	// already has one open doesn't pile up another on every visit.
+	function maybeOpenRandomHomePhoto(match: ReturnType<typeof getWidgetByRoute>) {
+		if (match?.widget.id !== 'about') return;
+		if (wm.windows.some((w) => w.widgetId === 'photoviewer')) return;
+		const candidates = getPhotosByFolder('img');
+		if (candidates.length === 0) return;
+		const photo = candidates[Math.floor(Math.random() * candidates.length)];
+		wm.open('photoviewer', {
+			data: { id: photo.folderId, photoId: photo.imgId },
+			title: photoFilename(photo)
+		});
+	}
 
 	function isNonHtmlPath(pathname: string) {
 		const segment = pathname.split('/').at(-1) ?? '';
@@ -133,6 +152,9 @@
 
 		const path = window.location.pathname;
 		const match = getWidgetByRoute(path);
+
+		// Opened before 'about' below, so About still ends up focused/on top.
+		maybeOpenRandomHomePhoto(match);
 
 		if (restored) {
 			// Layout restored — if current URL points to a specific widget, focus it

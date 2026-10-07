@@ -1,5 +1,5 @@
 import { expect, test, type APIRequestContext, type TestInfo } from '@playwright/test';
-import { STATIC_WIDGET_ROUTES, treatRoutes, discoverBlogRoutes } from './routes';
+import { STATIC_WIDGET_ROUTES, treatRoutes, folderRoutes, discoverBlogRoutes } from './routes';
 
 /**
  * Every URL must expose an og:image whose asset actually resolves — a missing
@@ -44,8 +44,8 @@ async function assertOgImage(request: APIRequestContext, route: string, info: Te
 	}
 }
 
-// Widget + treat routes are known at collection time — one isolated test each.
-for (const route of [...STATIC_WIDGET_ROUTES, ...treatRoutes()]) {
+// Widget + treat + folder/photo routes are known at collection time — one isolated test each.
+for (const route of [...STATIC_WIDGET_ROUTES, ...treatRoutes(), ...(await folderRoutes())]) {
 	test(`og:image: ${route}`, async ({ request }, info) => {
 		await assertOgImage(request, route, info);
 	});

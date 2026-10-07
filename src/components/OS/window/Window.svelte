@@ -23,6 +23,8 @@
 		maximized?: boolean;
 		defaultMaximized?: boolean;
 		resizable?: boolean;
+		/** Height flows with content via CSS instead of a stored pixel value — only width stays user-resizable. */
+		autoHeight?: boolean;
 		children: Snippet;
 	};
 
@@ -39,6 +41,7 @@
 		minimized = false,
 		maximized = defaultMaximized,
 		resizable = true,
+		autoHeight = false,
 		children
 	}: Props = $props();
 
@@ -203,6 +206,10 @@
 		resizeDirections.map((dir) => [dir, createResizeAttachment(dir)])
 	) as Record<ResizeDirection, ReturnType<typeof useDrag>>;
 
+	// autoHeight windows size their height to content — only the side handles
+	// stay, so dragging never fights the CSS flow.
+	const visibleResizeDirections = $derived(autoHeight ? (['e', 'w'] as const) : resizeDirections);
+
 	// Window management
 	function onFocus() {
 		if (isActive) return;
@@ -243,12 +250,19 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
  -->
 
 <section
-	class={['window squiggle-border', maximized, minimized, resizing, !hasJsSupport && 'no-js']}
+	class={[
+		'window squiggle-border',
+		maximized,
+		minimized,
+		resizing,
+		!hasJsSupport && 'no-js',
+		autoHeight && 'auto-height'
+	]}
 	style="
 		left: {maximized ? 0 : x}px;
 		top: {maximized ? 0 : y}px;
 		width: {maximized ? '100%' : `${width}px`};
-		height: {maximized ? `calc(100% - var(--taskbar-height))` : `${height}px`};
+		height: {maximized ? `calc(100% - var(--taskbar-height))` : autoHeight ? 'auto' : `${height}px`};
 		z-index: {zIndex};
         transition: {isAnimating ? 'all 0.3s ease' : 'none'};
 	"
@@ -311,7 +325,7 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 
 	<!-- Resize handles -->
 	{#if resizable && hasJsSupport && !maximized}
-		{#each resizeDirections as dir (dir)}
+		{#each visibleResizeDirections as dir (dir)}
 			<div class={`resize-handle ${dir}`} {@attach resizeAttachments[dir]}></div>
 		{/each}
 	{/if}
@@ -478,6 +492,12 @@ OS-style window with title bar, optional menubar, and content area. Supports dra
 		overscroll-behavior: none;
 		position: relative;
 		border-radius: inherit;
+	}
+
+	/* With no fixed window height, flex-basis must size to content instead
+	   of the default 0% — otherwise the flex algorithm collapses it. */
+	.window.auto-height .window-content {
+		flex: 1 1 auto;
 	}
 
 	/* ── Resize Handles ── */

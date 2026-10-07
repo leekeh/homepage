@@ -29,3 +29,8 @@ pnpm-debug.log*
 /lighthouse-urls.json
 /lighthouse-report/
 /.lighthouseci/
+
+# Auto-generated photo grid thumbnails (see vite-plugins/folder-thumbnails.ts)
+# — regenerated on `vite dev`/`vite build`, not hand-authored, so they're not
+# committed. Only the source images under src/content/folders/*/ are tracked.
+src/content/folders/*/*-thumb.webp

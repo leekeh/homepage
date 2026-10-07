@@ -6,9 +6,9 @@
 	let { data } = $props();
 </script>
 
-<Seo {data} />
 <GlobalStyles />
 
 <WindowProvider>
+	<Seo {data} />
 	<Shell />
 </WindowProvider>

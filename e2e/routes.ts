@@ -1,4 +1,5 @@
 import { treats } from '../src/components/widgets/treats/data';
+import { folders, photos } from '../src/content/folders/server';
 import type { APIRequestContext } from '@playwright/test';
 
 /**
@@ -6,7 +7,9 @@ import type { APIRequestContext } from '@playwright/test';
  * sweep across. Everything here is derived, never hand-maintained:
  *
  *   - the navigable widget routes (mirrors the no-JS widget suite),
- *   - one route per treat (from the treats data module), and
+ *   - one route per treat (from the treats data module),
+ *   - one route per folder and one per photo (from the folders content
+ *     module — each folder gets its own top-level path, e.g. `/img`), and
  *   - one route per *published* blog post (discovered from /rss.xml at
  *     runtime, so it reflects the app's own publish logic — including drafts
  *     that have real frontmatter — with zero hardcoded slugs to go stale).
@@ -23,12 +26,21 @@ export const STATIC_WIDGET_ROUTES = [
 	'/paint',
 	'/contact',
 	'/hire-me',
-	'/treats'
+	'/treats',
+	'/accessibility'
 ] as const;
 
 /** One route per treat detail page, e.g. `/treats/cinnamon-bun`. */
 export function treatRoutes(): string[] {
 	return treats.map((treat) => `/treats/${treat.imgId}`);
+}
+
+/** One route per folder, and one per photo, e.g. `/img/chill`. */
+export function folderRoutes(): string[] {
+	return [
+		...Object.keys(folders).map((id) => `/${id}`),
+		...photos.map((photo) => `/${photo.folderId}/${photo.imgId}`)
+	];
 }
 
 /**
@@ -60,10 +72,11 @@ export async function discoverBlogRoutes(request: APIRequestContext): Promise<st
 }
 
 /**
- * The full route set for a QA sweep: widgets + treats + published blog posts.
- * Deduped, in a stable order for readable test/report output.
+ * The full route set for a QA sweep: widgets + treats + folders/photos +
+ * published blog posts. Deduped, in a stable order for readable test/report
+ * output.
  */
 export async function allContentRoutes(request: APIRequestContext): Promise<string[]> {
 	const blog = await discoverBlogRoutes(request);
-	return [...new Set([...STATIC_WIDGET_ROUTES, ...treatRoutes(), ...blog])];
+	return [...new Set([...STATIC_WIDGET_ROUTES, ...treatRoutes(), ...folderRoutes(), ...blog])];
 }

@@ -1,6 +1,6 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { STATIC_WIDGET_ROUTES, discoverBlogRoutes, treatRoutes } from './routes';
+import { STATIC_WIDGET_ROUTES, discoverBlogRoutes, folderRoutes, treatRoutes } from './routes';
 
 /**
  * The shell shows a ~1.5s "Starting up computer" overlay on first paint that
@@ -35,13 +35,14 @@ async function analyzeRoute(page: Page, route: string) {
  * DOM). Call this at the top level of a `*.desktop.spec.ts` / `*.mobile.spec.ts`
  * file; the project's device config supplies the viewport.
  *
- * Static widget + treat routes are known at collection time, so each gets its
- * own isolated test (parallelised, independent timeout). Blog posts are
- * SSR-only and discovered from /rss.xml at runtime, so they share one test that
- * soft-asserts each post (visiting them all and reporting every offender).
+ * Static widget + treat + folder/photo routes are known at collection time, so
+ * each gets its own isolated test (parallelised, independent timeout). Blog
+ * posts are SSR-only and discovered from /rss.xml at runtime, so they share
+ * one test that soft-asserts each post (visiting them all and reporting every
+ * offender).
  */
 export function registerAxeSweep() {
-	for (const route of [...STATIC_WIDGET_ROUTES, ...treatRoutes()]) {
+	for (const route of [...STATIC_WIDGET_ROUTES, ...treatRoutes(), ...folderRoutes()]) {
 		test(`axe: ${route}`, async ({ page }) => {
 			const violations = await analyzeRoute(page, route);
 			expect(violations, formatViolations(violations)).toEqual([]);

@@ -82,7 +82,7 @@
 						{@const ActiveComponent = await loadWidgetComponent(activeWindow.widgetId)}
 						{#if ActiveComponent}
 							<h2 class="sr-only">{activeWindow.title}</h2>
-							<ActiveComponent {...activeWindow.data ?? {}} />
+							<ActiveComponent {...activeWindow.data ?? {}} windowId={activeWindow.id} />
 						{/if}
 					{/if}
 				</div>

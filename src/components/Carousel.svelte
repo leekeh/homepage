@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Button from './OS/Button.svelte';
 	import { useJsSupport } from './OS/shared/useJsSupport.svelte';
+	import { resolveCreditUrl } from '@utils/url';
 
 	type Item = {
 		label: string;
@@ -65,10 +66,15 @@
 			{item.label}
 		</p>
 		{#if item.credit}
+			{@const creditUrl = resolveCreditUrl(item.credit)}
 			<p class="credit">
 				Source:
-				<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-				<a href={item.credit} target="_blank" rel="noopener noreferrer nofollow"> {item.credit}</a>
+				{#if creditUrl}
+					<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+					<a href={creditUrl} target="_blank" rel="noopener noreferrer nofollow">{item.credit}</a>
+				{:else}
+					<span>{item.credit}</span>
+				{/if}
 			</p>
 		{/if}
 	</div>
@@ -171,7 +177,8 @@
 		gap: var(--space-2);
 		overflow: hidden;
 
-		a {
+		a,
+		span {
 			display: block;
 			min-width: 0;
 			text-overflow: ellipsis;

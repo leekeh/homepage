@@ -13,3 +13,6 @@ export { default as IconLink } from './IconLink.svelte';
 export { default as IconHome } from './IconHome.svelte';
 export { default as IconRSS } from './IconRSS.svelte';
 export { default as IconTreats } from './IconTreats.svelte';
+export { default as IconFolders } from './IconFolders.svelte';
+export { default as IconChevronLeft } from './IconChevronLeft.svelte';
+export { default as IconChevronRight } from './IconChevronRight.svelte';

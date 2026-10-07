@@ -1,9 +1,10 @@
 import { sveltekit } from '@sveltejs/kit/vite';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vitest/config';
+import { folderThumbnails } from './vite-plugins/folder-thumbnails.ts';
 
 export default defineConfig({
-	plugins: [sveltekit()],
+	plugins: [sveltekit(), folderThumbnails()],
 	test: {
 		// An unrelated diff may match no tests in a given project — that's fine.
 		passWithNoTests: true,

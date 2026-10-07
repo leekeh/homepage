@@ -62,7 +62,7 @@
 			>
 				{@const WidgetComponent = await loadWidgetComponent(win.widgetId)}
 				{#if WidgetComponent}
-					<WidgetComponent {...win.data ?? {}} />
+					<WidgetComponent {...win.data ?? {}} windowId={win.id} />
 				{/if}
 			</WindowComponent>
 		{/snippet}
@@ -84,6 +84,7 @@
 						minimized: false,
 						maximized: def.defaultMaximized ?? false,
 						minimal: def.minimal,
+						autoHeight: def.autoHeight,
 						data: routeMatch?.params
 					})}
 				{/if}

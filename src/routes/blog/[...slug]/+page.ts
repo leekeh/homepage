@@ -30,6 +30,8 @@ const postLoadersBySlug = Object.fromEntries(
 
 export const load: PageLoad = async ({ params, data }) => {
 	const { slug } = params;
+	// Handle root path
+	if (!slug) return { slug, initialComments: data.initialComments };
 	const loader = postLoadersBySlug[slug];
 	if (!loader) error(404, 'Post not found');
 	const { default: PostComponent, metadata } = await loader();

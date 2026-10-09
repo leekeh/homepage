@@ -66,5 +66,10 @@
 		"gray-matter": "^4.0.3",
 		"shiki": "^4.5.0",
 		"unist-util-visit": "^5.1.0"
+	},
+	"pnpm": {
+		"overrides": {
+			"sharp": "^0.35.5"
+		}
 	}
 }

@@ -40,6 +40,9 @@ jobs:
       # svelte-kit sync + svelte-check (tsgo)
       - run: pnpm run check
 
+      # Unused files, dependencies, and exports.
+      - run: pnpm run knip
+
   # Fast, affected-only unit + isolated-widget tests.
   # vitest uses Vite's module graph, so only tests whose dependencies changed run.
   unit:

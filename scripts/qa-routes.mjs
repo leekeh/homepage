@@ -6,14 +6,23 @@
 //   - blog posts (prerender = false, SSR-only) come from /rss.xml, the app's
 //     own authoritative list of published posts.
 //
+// Every folder photo renders through the same PhotoViewer component — only
+// the image differs — so a full Lighthouse audit (3 runs/url) of every photo
+// buys nothing over auditing one, and folders can hold dozens of photos.
+// Folder index pages are kept in full; photo pages are capped to one static
+// image + one gif (gifs render differently — no thumbnail animation) total.
+//
 // Usage: node scripts/qa-routes.mjs [baseUrl] > lighthouse-urls.json
 //        (baseUrl defaults to http://localhost:4173)
 
+import { extname, join, relative } from 'node:path';
 import { readdirSync } from 'node:fs';
-import { join, relative } from 'node:path';
 
 const BASE = process.argv[2] ?? 'http://localhost:4173';
 const DIST = '.svelte-kit/cloudflare';
+const FOLDERS_SRC_DIR = 'src/content/folders';
+const THUMB_SUFFIX = '-thumb.webp';
+const IMAGE_EXTS = new Set(['.webp', '.gif', '.png', '.jpg', '.jpeg']);
 
 /** Recursively collect every *.html file under `dir`. */
 function walkHtml(dir) {
@@ -44,6 +53,50 @@ function prerenderedRoutes() {
 	return walkHtml(DIST).map(fileToRoute);
 }
 
+function listFolderIds() {
+	try {
+		return readdirSync(FOLDERS_SRC_DIR, { withFileTypes: true })
+			.filter((e) => e.isDirectory())
+			.map((e) => e.name);
+	} catch {
+		return [];
+	}
+}
+
+/** One static-image route and one gif route (if any), across all folders. */
+function sampleFolderPhotoRoutes(folderIds) {
+	let image, gif;
+	for (const folderId of folderIds) {
+		if (image && gif) break;
+		let files;
+		try {
+			files = readdirSync(join(FOLDERS_SRC_DIR, folderId));
+		} catch {
+			continue;
+		}
+		for (const file of files) {
+			if (file.endsWith(THUMB_SUFFIX)) continue;
+			const ext = extname(file).toLowerCase();
+			if (!IMAGE_EXTS.has(ext)) continue;
+			const route = `/${folderId}/${file.slice(0, -ext.length)}`;
+			if (ext === '.gif') gif ??= route;
+			else image ??= route;
+		}
+	}
+	return [image, gif].filter(Boolean);
+}
+
+/** Keep every folder index route, but only the sampled photo routes within folders. */
+function limitFolderPhotoRoutes(routes, folderIds) {
+	const folderIdSet = new Set(folderIds);
+	const sampled = new Set(sampleFolderPhotoRoutes(folderIds));
+	return routes.filter((route) => {
+		const [first, second, ...rest] = route.split('/').filter(Boolean);
+		if (rest.length > 0 || !second || !folderIdSet.has(first)) return true;
+		return sampled.has(`/${first}/${second}`);
+	});
+}
+
 async function blogRoutes() {
 	const res = await fetch(`${BASE}/rss.xml`);
 	if (!res.ok) {
@@ -63,7 +116,8 @@ async function blogRoutes() {
 	return [...paths];
 }
 
-const routes = [...new Set([...prerenderedRoutes(), ...(await blogRoutes())])].sort();
+const limitedPrerenderedRoutes = limitFolderPhotoRoutes(prerenderedRoutes(), listFolderIds());
+const routes = [...new Set([...limitedPrerenderedRoutes, ...(await blogRoutes())])].sort();
 const urls = routes.map((route) => new URL(route, BASE).toString());
 
 process.stdout.write(JSON.stringify(urls, null, 2) + '\n');

@@ -17,6 +17,10 @@ const baseURL = `http://localhost:${PORT}`;
  */
 export default defineConfig({
 	testDir: 'e2e',
+	// The axe/OG sweeps register one test per route in a single file (one per
+	// folder + photo) — without this, Playwright runs a whole file's tests
+	// serially on one worker, so that file alone would serialize ~100+ tests.
+	fullyParallel: true,
 	// Fail the build on CI if test.only was accidentally committed.
 	forbidOnly: !!process.env.CI,
 	retries: process.env.CI ? 2 : 0,

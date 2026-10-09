@@ -15,7 +15,7 @@
 		getPhotosByFolder,
 		photoFilename,
 		photoSrc
-	} from '../../content/folders/server';
+	} from '../../content/folders/data';
 	import {
 		absoluteUrl,
 		DEFAULT_OG_IMAGE,
@@ -121,9 +121,15 @@
 		}
 
 		if (currentPhoto) {
+			// `alt` is authored empty for some folders (e.g. personal photo dumps
+			// with no individual descriptions yet) — `??` wouldn't fall through
+			// past an empty string, and an empty meta description fails SEO
+			// audits, so fall back to the folder title instead.
+			const folderTitle = getFolderMeta(currentMatch?.params?.id ?? '')?.title;
 			return {
 				title: `${photoFilename(currentPhoto)} - leekeh`,
-				description: currentPhoto.caption ?? currentPhoto.alt,
+				description:
+					currentPhoto.caption || currentPhoto.alt || `A photo from ${folderTitle ?? 'leekeh'}.`,
 				type: 'website' as const,
 				url: absoluteUrl(currentRoute),
 				image: absoluteUrl(photoSrc(currentPhoto)),

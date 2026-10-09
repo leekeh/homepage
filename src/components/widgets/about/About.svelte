@@ -61,7 +61,7 @@
 			>Quicksand</a
 		>
 		for the rest. To read about the development process, check out my
-		<a href={resolve('/blog/hello-world')} rel="noopener">blog post</a>
+		<a href={resolve('/blog/[...slug]', { slug: 'hello-world' })} rel="noopener">blog post</a>
 		or go directly to the
 		<a href="https://github.com/leekeh/homepage" target="_blank" rel="noopener">GitHub repository</a
 		>.

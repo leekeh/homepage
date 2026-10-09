@@ -1,4 +1,4 @@
-import { folders } from '../../content/folders/server';
+import { folders } from '../../content/folders/data';
 
 export const prerender = true;
 

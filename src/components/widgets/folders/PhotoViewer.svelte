@@ -9,7 +9,7 @@
 		getFolderMeta,
 		getPhotoById,
 		photoSrc
-	} from '../../../content/folders/server';
+	} from '../../../content/folders/data';
 
 	interface Props {
 		/** The folder's id, taken from the /[id]/[photoId] route params. */

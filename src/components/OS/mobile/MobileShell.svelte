@@ -35,7 +35,7 @@
 			-->
 			<a
 				class="home-btn squiggled"
-				href={resolve('/apps')}
+				href={resolve('apps')}
 				aria-label="Apps"
 				title="Apps"
 				class:active={viewApps}

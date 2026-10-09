@@ -18,7 +18,7 @@ const postModules = import.meta.glob<{ default: Component; metadata: PostMetadat
 );
 
 // Map from slug (== post's directory path under posts/, matching getSlugFromPath
-// in content/blog/server.ts) → module loader, so nested posts keep their folders
+// in content/blog/data.ts) → module loader, so nested posts keep their folders
 // in the URL and resolve correctly.
 const postLoadersBySlug = Object.fromEntries(
 	Object.entries(postModules).map(([path, loader]) => {

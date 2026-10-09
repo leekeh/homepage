@@ -2,7 +2,7 @@
 	import Button from '@components/OS/Button.svelte';
 	import { enhance } from '$app/forms';
 	import { page } from '$app/state';
-	import type { ActionResult } from '@sveltejs/kit';
+	import type { ActionResult } from '$app/forms';
 
 	type Props = {
 		slug: string;

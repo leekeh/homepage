@@ -120,7 +120,7 @@
 			<span class="mobile-tab">
 				<span class="tab-label">{routeMatch.widget.title}</span>
 			</span>
-			<a class="close-tab-btn" href={resolve('/apps')} aria-label="Close {routeMatch.widget.title}">
+			<a class="close-tab-btn" href={resolve('apps')} aria-label="Close {routeMatch.widget.title}">
 				<IconClose />
 			</a>
 		</div>

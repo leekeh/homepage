@@ -13,10 +13,10 @@ import {
 	photoSrc,
 	photos,
 	thumbSrc
-} from './server';
+} from './data';
 
 const FOLDERS_DIR = fileURLToPath(new URL('.', import.meta.url));
-// Keep in sync with the glob in server.ts / SOURCE_EXTS in the thumbnail plugin.
+// Keep in sync with the glob in data.ts / SOURCE_EXTS in the thumbnail plugin.
 const SOURCE_EXTS = new Set(['.webp', '.gif', '.png', '.jpg', '.jpeg']);
 const THUMB_SUFFIX = '-thumb.webp';
 

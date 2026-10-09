@@ -1,14 +1,14 @@
 import type { PathnameWithSearchOrHash } from '$app/types';
 import { widgetConfigs, type WidgetConfig } from './widgets.config';
 import type { Component } from 'svelte';
-import { getBlogPostBySlug } from '../../content/blog/server';
+import { getBlogPostBySlug } from '../../content/blog/data';
 import { getTreatById } from './treats/data';
 import {
 	getAllFolders,
 	getFolderMeta,
 	getPhotoById,
 	photoFilename
-} from '../../content/folders/server';
+} from '../../content/folders/data';
 
 export type WidgetDef = WidgetConfig;
 

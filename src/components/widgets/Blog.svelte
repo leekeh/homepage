@@ -20,7 +20,7 @@
 	<li>
 		<a
 			class="feed-link"
-			href={resolve(category ? `/rss/${category}.xml` : '/rss.xml')}
+			href={category ? resolve('/rss/[category].xml', { category }) : resolve('/rss.xml')}
 			aria-label={category ? `RSS feed for ${formattedName}` : 'Global RSS feed'}
 			data-sveltekit-reload>{formattedName}</a
 		>
@@ -35,7 +35,7 @@
 			<li>
 				<a
 					class="post-item squiggle-border"
-					href={resolve(`/blog/${post.slug}`)}
+					href={resolve('/blog/[...slug]', { slug: post.slug })}
 					aria-labelledby={titleId}
 					aria-describedby={excerptId}
 				>

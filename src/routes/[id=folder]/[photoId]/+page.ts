@@ -1,4 +1,4 @@
-import { photos } from '../../../content/folders/server';
+import { photos } from '../../../content/folders/data';
 
 export const prerender = true;
 

@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { beforeNavigate, pushState } from '$app/navigation';
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import { onMount, setContext, type Snippet } from 'svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import {
 		WindowManager,
 		WM_CONTEXT_KEY,
@@ -14,7 +14,7 @@
 		getRouteForWindow,
 		widgetNavigationData
 	} from '../../widgets/widgets.js';
-	import { getPhotosByFolder, photoFilename } from '../../../content/folders/server.js';
+	import { getPhotosByFolder, photoFilename } from '../../../content/folders/data.js';
 	import { applyPolyfills } from '../../../util/polyfills.js';
 	import { enableJsSupport } from './useJsSupport.svelte.js';
 	import { initializeSquiggles } from './useSquiggles.svelte.js';
@@ -119,7 +119,7 @@
 	// Only run once to avoid infinite loops.
 	$effect(() => {
 		if (ssrSeedDone) return;
-		const currentPath = $page.url.pathname;
+		const currentPath = page.url.pathname;
 		const match = getWidgetByRoute(currentPath);
 		if (match) {
 			wm.open(match.widget.id, { data: match.params, title: match.widget.title });

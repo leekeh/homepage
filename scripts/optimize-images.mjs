@@ -10,6 +10,9 @@
 // install. This is a *fixer*, not a gate: it always exits 0. The autofix
 // workflow runs it, then commits whatever changed. Run locally with
 // `pnpm run optimize:images`.
+//
+// Pass repo-relative file paths as args to check only those files instead of
+// walking SCAN_DIRS (the autofix workflow does this with its PR's diff).
 
 import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative, extname, sep } from 'node:path';
@@ -118,10 +121,26 @@ async function encode(original, ext, { maxDim, quality, colors }) {
 	return img.toBuffer();
 }
 
-const candidates = SCAN_DIRS.flatMap((d) => walk(join(ROOT, d)))
+// With explicit file args (repo-relative paths, e.g. from `git diff --name-only`),
+// check only those instead of walking SCAN_DIRS. Lets CI scope this to the
+// files a PR actually touched instead of the whole tree.
+const argFiles = process.argv.slice(2);
+
+const candidates = (argFiles.length > 0
+	? argFiles.map((f) => join(ROOT, f))
+	: SCAN_DIRS.flatMap((d) => walk(join(ROOT, d)))
+)
 	.map((file) => ({ file, rel: relative(ROOT, file).split(sep).join('/') }))
 	.filter(({ rel }) => !EXCLUDE.has(rel))
-	.filter(({ file }) => statSync(file).size > MAX_BYTES)
+	.filter(({ file }) => EXTS.has(extname(file).toLowerCase()))
+	.filter(({ file }) => {
+		try {
+			return statSync(file).size > MAX_BYTES;
+		} catch {
+			// Already deleted/renamed by a later commit in the diff range.
+			return false;
+		}
+	})
 	.sort((a, b) => a.rel.localeCompare(b.rel));
 
 if (candidates.length === 0) {

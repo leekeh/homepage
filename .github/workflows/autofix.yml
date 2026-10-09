@@ -1,6 +1,6 @@
 name: Autofix
 
-# Automatically shrinks oversized images and reformats the tree on every PR,
+# Automatically shrinks oversized images and reformats whatever a PR changed,
 # then commits the result back to the PR branch. Not a gate — it fixes things
 # rather than failing the build.
 on:
@@ -26,6 +26,8 @@ jobs:
           # Check out the PR's real branch (not the detached merge commit) so we
           # can commit and push back to it.
           ref: ${{ github.head_ref }}
+          # Full history so the diff below can reach the merge-base.
+          fetch-depth: 0
 
       - uses: pnpm/action-setup@v4
         with:
@@ -38,14 +40,30 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      # Shrink any image over the 500 KB budget in place (keeps filename/format).
-      # Uses sharp (a locked dependency) — no system tools to install.
-      - name: Optimize images
-        run: pnpm run optimize:images
+      - name: Fetch base ref
+        run: git fetch --no-tags --depth=1 origin ${{ github.base_ref }}
 
-      # Prettier over the whole tree.
+      # Shrink any changed image over the 500 KB budget in place (keeps
+      # filename/format). Uses sharp (a locked dependency) — no system tools
+      # to install.
+      - name: Optimize images
+        run: |
+          mapfile -t files < <(git diff --name-only --diff-filter=ACMR "origin/${{ github.base_ref }}" -- '*.png' '*.jpg' '*.jpeg' '*.webp' '*.gif')
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No changed images."
+          else
+            pnpm run optimize:images -- "${files[@]}"
+          fi
+
+      # Prettier over the files the PR changed
       - name: Format
-        run: pnpm run format
+        run: |
+          mapfile -t files < <(git diff --name-only --diff-filter=ACMR "origin/${{ github.base_ref }}")
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No changed files."
+          else
+            pnpm exec prettier --ignore-unknown --write "${files[@]}"
+          fi
 
       - name: Commit fixes
         uses: stefanzweifel/git-auto-commit-action@v5

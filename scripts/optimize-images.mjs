@@ -126,9 +126,10 @@ async function encode(original, ext, { maxDim, quality, colors }) {
 // files a PR actually touched instead of the whole tree.
 const argFiles = process.argv.slice(2);
 
-const candidates = (argFiles.length > 0
-	? argFiles.map((f) => join(ROOT, f))
-	: SCAN_DIRS.flatMap((d) => walk(join(ROOT, d)))
+const candidates = (
+	argFiles.length > 0
+		? argFiles.map((f) => join(ROOT, f))
+		: SCAN_DIRS.flatMap((d) => walk(join(ROOT, d)))
 )
 	.map((file) => ({ file, rel: relative(ROOT, file).split(sep).join('/') }))
 	.filter(({ rel }) => !EXCLUDE.has(rel))

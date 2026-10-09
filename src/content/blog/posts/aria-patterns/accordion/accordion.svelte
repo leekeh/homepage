@@ -6,7 +6,7 @@
 	// opening one automatically closes the others. No JS state needed.
 	// Give separate accordions on the same page different names, or leave
 	// this prop unset and they'll each behave as an independent group.
-	export let name = 'accordion';
+	let { name = 'accordion' } = $props();
 </script>
 
 <div class="container">

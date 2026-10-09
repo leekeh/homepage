@@ -31,7 +31,7 @@ A progressively-enhanced personal website styled as a retro (Win95-esque) deskto
 - Dynamic widget routes support any number of `[param]`/`[...rest]` segments (e.g. `/[id]/[photoId]`) via a generic per-segment matcher in `widgets.ts` (`getWidgetByRoute`/`getRouteForWindow`) — not just a single bracket.
 - A widget can also be generated from data at module-load time with a fully static route (e.g. one top-level widget per photo folder in `widgets.config.ts`) — give it a `data` field and `getWidgetByRoute` merges that in as if it were a route param, so the component still receives it as a prop.
 - `beforeNavigate()` intercepts navigation → opens widget via `wm.open()`. This is automatic, global behavior.
-- URL synced via `pushState()` when window focused
+- URL synced via `goto(url, { shallow: true })` when window focused
 - Catch-all route prerender includes blog slugs
 
 **Content, SEO & Syndication**

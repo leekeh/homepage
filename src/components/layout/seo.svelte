@@ -39,8 +39,8 @@
 	const wm = useWindowManager();
 	const currentPath = $derived(page.url.pathname);
 
-	// The window manager drives client-side navigation via pushState, which
-	// (by design, per SvelteKit's shallow-routing semantics) does NOT update
+	// The window manager drives client-side navigation via goto(..., { shallow: true }),
+	// which (by design, per SvelteKit's shallow-routing semantics) does NOT update
 	// `page.url` — so after the first load, `page.url` can be stale while the
 	// desktop has already moved on to a different window. The active window
 	// is the actual source of truth for "what's currently shown"; `page.url`

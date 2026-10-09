@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { beforeNavigate, pushState } from '$app/navigation';
+	import { beforeNavigate, goto } from '$app/navigation';
 	import { browser } from '$app/env';
 	import { onMount, setContext, type Snippet } from 'svelte';
 	import { page } from '$app/state';
@@ -89,6 +89,8 @@
 		if (!browser) return;
 		// Don't intercept back/forward — onpopstate handles those
 		if (navigation.type === 'popstate') return;
+		// Don't intercept our own URL-sync navigation (goto(..., { shallow: true }))
+		if (navigation.shallow) return;
 		const to = navigation.to?.url?.pathname;
 		if (!to) return;
 
@@ -110,7 +112,7 @@
 			if (suppressUrlSync || typeof window === 'undefined') return;
 			const route = getRouteForWindow(win.widgetId, win.data);
 			if (window.location.pathname !== route) {
-				pushState(resolvePath(route), {});
+				goto(resolvePath(route), { state: {}, shallow: true });
 			}
 		};
 	});

@@ -48,7 +48,7 @@ async function generateThumb(sourcePath: string, thumbPath: string) {
 }
 
 /** Generate any missing/stale thumbnails under every folder directory. Safe to call repeatedly — up-to-date thumbnails are skipped. */
-export async function generateFolderThumbnails(): Promise<void> {
+async function generateFolderThumbnails(): Promise<void> {
 	for (const dir of listFolderDirs()) {
 		let files: string[];
 		try {

@@ -10,7 +10,7 @@
  * tests can exercise the handlers without a live database.
  */
 
-export type CommentRow = {
+type CommentRow = {
 	id: string;
 	name: string;
 	Content: string;

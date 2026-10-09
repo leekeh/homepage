@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 	import type { BlogPost } from '../../content/blog';
-	import { IconRSS } from '@icons/index';
+	import IconRSS from '@icons/IconRSS.svelte';
 	import { formatDate } from '@utils/date';
 	const posts = $derived((page.data.blogPosts ?? []) as BlogPost[]);
 	const categories = $derived((page.data.blogCategories ?? []) as string[]);

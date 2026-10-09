@@ -87,7 +87,7 @@ function parsePost(path: string, meta: BlogMetadata): BlogPost | null {
 	};
 }
 
-export const blogPosts: BlogPost[] = Object.entries(metadataModules)
+const blogPosts: BlogPost[] = Object.entries(metadataModules)
 	.map(([path, meta]) => parsePost(path, meta))
 	.filter((post): post is BlogPost => post !== null)
 	.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());

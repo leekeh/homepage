@@ -13,7 +13,7 @@ export function initializeSquiggles() {
 	applySquigglesPreference(squigglesEnabled);
 }
 
-export function setSquigglesEnabled(enabled: boolean) {
+function setSquigglesEnabled(enabled: boolean) {
 	squigglesEnabled = enabled;
 	applySquigglesPreference(enabled);
 	localStorage.setItem(SQUIGGLE_PREF_KEY, enabled ? 'true' : 'false');

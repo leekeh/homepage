@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 	import { resolve } from '$app/paths';
 	import type { BlogPost } from '../../content/blog';
-	import { IconRSS } from '@icons/index';
+	import IconRSS from '@icons/IconRSS.svelte';
 	import { formatDate } from '@utils/date';
 	const posts = $derived((page.data.blogPosts ?? []) as BlogPost[]);
 	const categories = $derived((page.data.blogCategories ?? []) as string[]);
@@ -20,7 +20,7 @@
 	<li>
 		<a
 			class="feed-link"
-			href={resolve(category ? `/rss/${category}.xml` : '/rss.xml')}
+			href={category ? resolve('/rss/[category].xml', { category }) : resolve('/rss.xml')}
 			aria-label={category ? `RSS feed for ${formattedName}` : 'Global RSS feed'}
 			data-sveltekit-reload>{formattedName}</a
 		>
@@ -35,7 +35,7 @@
 			<li>
 				<a
 					class="post-item squiggle-border"
-					href={resolve(`/blog/${post.slug}`)}
+					href={resolve('/blog/[...slug]', { slug: post.slug })}
 					aria-labelledby={titleId}
 					aria-describedby={excerptId}
 				>

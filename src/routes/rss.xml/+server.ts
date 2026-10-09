@@ -1,4 +1,4 @@
-import { getAllBlogPosts } from '../../content/blog/server';
+import { getAllBlogPosts } from '../../content/blog/data';
 import { defaultFeedMeta, generateRssXml } from '../../content/rss';
 
 export const prerender = true;

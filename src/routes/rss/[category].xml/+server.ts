@@ -1,4 +1,4 @@
-import { getBlogCategories, getBlogPostsByCategory } from '../../../content/blog/server';
+import { getBlogCategories, getBlogPostsByCategory } from '../../../content/blog/data';
 import { generateRssXml } from '../../../content/rss';
 
 export const prerender = true;

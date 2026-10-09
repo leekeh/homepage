@@ -556,7 +556,6 @@ export class WindowManager {
 
 export const WM_CONTEXT_KEY = Symbol('window-manager');
 export const WINDOW_NAVIGATE_CONTEXT_KEY = Symbol('window-navigate');
-export const JS_SUPPORT_STATE_KEY = Symbol('js-support-state');
 
 export function useWindowManager() {
 	const wm = getContext<WindowManager>(WM_CONTEXT_KEY);

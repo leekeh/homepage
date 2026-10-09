@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { modelSrc, posterWebp } from './data';
-	import { IconTreats } from '@icons/index';
+	import IconTreats from '@icons/IconTreats.svelte';
 
 	interface Props {
 		imgId: string;

@@ -101,13 +101,3 @@ export async function discoverBlogRoutes(request: APIRequestContext): Promise<st
 	}
 	return [...blogPaths];
 }
-
-/**
- * The full route set for a QA sweep: widgets + treats + folders/photos +
- * published blog posts. Deduped, in a stable order for readable test/report
- * output.
- */
-export async function allContentRoutes(request: APIRequestContext): Promise<string[]> {
-	const [blog, folders] = await Promise.all([discoverBlogRoutes(request), folderRoutes()]);
-	return [...new Set([...STATIC_WIDGET_ROUTES, ...treatRoutes(), ...folders, ...blog])];
-}

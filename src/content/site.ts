@@ -1,4 +1,4 @@
-import { env } from '$env/dynamic/public';
+import { PUBLIC_SITE_URL } from '$app/env/public';
 
 export const SITE_NAME = 'leekeh';
 export const SITE_DESCRIPTION =
@@ -6,7 +6,7 @@ export const SITE_DESCRIPTION =
 export const SITE_AUTHOR = 'Lieke';
 export const SITE_LOCALE = 'en_NL';
 
-const rawSiteUrl = (env.PUBLIC_SITE_URL || 'https://www.leekeh.com').trim();
+const rawSiteUrl = (PUBLIC_SITE_URL || 'https://www.leekeh.com').trim();
 
 export const SITE_URL = rawSiteUrl.replace(/\/+$/, '');
 

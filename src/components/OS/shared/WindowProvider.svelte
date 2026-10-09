@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { beforeNavigate, pushState } from '$app/navigation';
-	import { browser } from '$app/environment';
+	import { beforeNavigate, goto } from '$app/navigation';
+	import { browser } from '$app/env';
 	import { onMount, setContext, type Snippet } from 'svelte';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import {
 		WindowManager,
 		WM_CONTEXT_KEY,
@@ -14,7 +14,7 @@
 		getRouteForWindow,
 		widgetNavigationData
 	} from '../../widgets/widgets.js';
-	import { getPhotosByFolder, photoFilename } from '../../../content/folders/server.js';
+	import { getPhotosByFolder, photoFilename } from '../../../content/folders/data.js';
 	import { applyPolyfills } from '../../../util/polyfills.js';
 	import { enableJsSupport } from './useJsSupport.svelte.js';
 	import { initializeSquiggles } from './useSquiggles.svelte.js';
@@ -89,6 +89,8 @@
 		if (!browser) return;
 		// Don't intercept back/forward — onpopstate handles those
 		if (navigation.type === 'popstate') return;
+		// Don't intercept our own URL-sync navigation (goto(..., { shallow: true }))
+		if (navigation.shallow) return;
 		const to = navigation.to?.url?.pathname;
 		if (!to) return;
 
@@ -110,7 +112,7 @@
 			if (suppressUrlSync || typeof window === 'undefined') return;
 			const route = getRouteForWindow(win.widgetId, win.data);
 			if (window.location.pathname !== route) {
-				pushState(resolvePath(route), {});
+				goto(resolvePath(route), { state: {}, shallow: true });
 			}
 		};
 	});
@@ -119,7 +121,7 @@
 	// Only run once to avoid infinite loops.
 	$effect(() => {
 		if (ssrSeedDone) return;
-		const currentPath = $page.url.pathname;
+		const currentPath = page.url.pathname;
 		const match = getWidgetByRoute(currentPath);
 		if (match) {
 			wm.open(match.widget.id, { data: match.params, title: match.widget.title });

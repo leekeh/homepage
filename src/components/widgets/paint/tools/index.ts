@@ -1,7 +1,7 @@
 import type { Component } from 'svelte';
 import type { ToolId, ToolBehavior } from './types';
 
-export type { ToolId, ToolBehavior, DrawPos } from './types';
+export type { ToolId } from './types';
 
 export { createSelectTool } from './select.svelte';
 export { createTextTool } from './text.svelte';

@@ -1,21 +1,18 @@
-import { readdirSync } from 'node:fs';
-import { resolve } from 'node:path';
 import { defineParams } from '@sveltejs/kit/params';
 
 // This module is loaded three ways: SvelteKit's build-time param validation
 // (a plain Node import of this exact source file), the server bundle, and
-// the client bundle — the client-side router evaluates matchers too, to
-// decide route ids during in-app navigation — the last of which has no
-// filesystem. The try/catch keeps that context from crashing the whole
-// page on load; folder links there are resolved by the app's own
-// widget-router instead (see WindowProvider.svelte), so an empty fallback
-// here never surfaces as a visible bug.
+// the client bundle (the client-side router evaluates matchers too, to
+// decide route ids during in-app navigation). `import.meta.glob` is a
+// Vite-only, build-time macro — Vite statically transforms this call into
+// real imports wherever it bundles (client and server alike), while plain
+// Node (the first case) has no such transform, so `import.meta.glob` is
+// just `undefined` there; calling it throws an ordinary, catchable error.
 function listFolderIds(): Set<string> {
 	try {
+		const folderModules = import.meta.glob('./content/folders/*/folder.ts', { eager: true });
 		return new Set(
-			readdirSync(resolve(process.cwd(), 'src/content/folders'), { withFileTypes: true })
-				.filter((entry) => entry.isDirectory())
-				.map((entry) => entry.name)
+			Object.keys(folderModules).map((path) => path.split('/').slice(0, -1).pop() ?? path)
 		);
 	} catch {
 		return new Set();

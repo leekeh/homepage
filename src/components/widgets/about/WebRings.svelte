@@ -56,7 +56,7 @@
 			<iframe
 				style="border: none; width: 100%"
 				title="WII Ring"
-				src="https://wiiring.jeith.com/snippet?site=YOUR_SITE_HERE&variant=standard"
+				src="https://wiiring.jeith.com/snippet?site=http://www.leekeh.com&variant=standard"
 			></iframe>
 		</div>
 	</li>

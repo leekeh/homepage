@@ -77,7 +77,7 @@
 		<!-- Isolate DSring widget, don't run untrusted scripts on the real page. -->
 		<iframe
 			title="DSring onion webring widget"
-			sandbox="allow-scripts"
+			sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox"
 			loading="lazy"
 			style="border: none; width: 500px"
 			src="/dswidget.html"

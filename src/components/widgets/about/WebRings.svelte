@@ -1,12 +1,3 @@
-<script lang="ts">
-	// Built dynamically so the literal substring "<script>" never appears in this
-	// file's source: svelte-check's tsgo mode misparses it once a real <script>
-	// block (this one) precedes it, misattributing bogus syntax errors to it.
-	function scriptTag(attrs: string, body = '') {
-		return `<${'script'}${attrs}>${body}</${'script'}>`;
-	}
-</script>
-
 <p>This area is currently under construction. I'm aiming to join the following rings:</p>
 
 <ul>
@@ -83,31 +74,13 @@
 		</div>
 	</li> -->
 	<li>
-		<!-- Isolate DSRing widget, don't run untrusted scripts -->
+		<!-- Isolate DSring widget, don't run untrusted scripts on the real page. -->
 		<iframe
 			title="DSring onion webring widget"
 			sandbox="allow-scripts"
 			loading="lazy"
-			class="dsring-frame"
 			style="border: none; width: 500px"
-			srcdoc={`<!doctype html>
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<link rel="stylesheet" href="https://dsring.neocities.org/dswidget/onionring.css" />
-		<style>
-			body {
-				margin: 0;
-				background: transparent;
-			}
-		</style>
-	</head>
-	<body>
-		<div id="dsring" style="padding: 0; margin: 0;"></div>
-		${scriptTag(' src="https://dsring.neocities.org/dswidget/onionring-variables.js"')}
-		${scriptTag(' src="https://dsring.neocities.org/dswidget/onionring-widget.js"')}
-	</body>
-</html>`}
+			src="/dswidget.html"
 		>
 		</iframe>
 	</li>
